@@ -1,15 +1,11 @@
+import { Inter, Poppins } from 'next/font/google';
 import localFont from "next/font/local";
 import "./globals.css";
+import { ClerkProvider, GoogleOneTap } from "@clerk/nextjs";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const poppins = Poppins({
+  weight: ['400', '500', '600'], // Specify the weights you need
+  subsets: ['latin'] // Include subsets as necessary
 });
 
 export const metadata = {
@@ -19,12 +15,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+    <ClerkProvider>
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
+    <GoogleOneTap />
+      <body className={poppins.className}>{children}</body>
     </html>
+    </ClerkProvider>
   );
 }
