@@ -1,6 +1,7 @@
 
 # 🚀 Full Stack AI Course Generator App
 
+(the project is still underdevelopment , it will get updated soon)
 Welcome to the **Full Stack AI Course Generator**! This app leverages powerful technologies like **Next.js**, **React**, **Tailwind CSS**, **Drizzle ORM**, and the **Gemini API** to dynamically generate customized courses powered by AI. Ideal for developers and educators looking to create and manage interactive course content. 
 
 ## 📋 Table of Contents
