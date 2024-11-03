@@ -17,6 +17,7 @@ import uuid4 from "uuid4";
 import { useUser } from "@clerk/nextjs";
 import { UserProfile } from "@clerk/clerk-react";
 import { db } from "@/configs/db";
+import { useRouter } from "next/navigation";
 
 function CreateCourse() {
   const StepperOptions = [
@@ -41,6 +42,7 @@ function CreateCourse() {
   const [loading, setLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const { user } = useUser();
+  const router=useRouter();
 
   useEffect(() => {
     console.log(userCourseInput);
@@ -120,7 +122,9 @@ function CreateCourse() {
         console.error('Error saving course layout:', error);
         // Handle the error, e.g., show an error message to the user
     } finally {
+        
         setLoading(false); // Ensure loading state is reset
+        router.replace('/create-course/'+id)
     }
 };
 
