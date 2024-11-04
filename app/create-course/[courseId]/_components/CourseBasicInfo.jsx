@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import React from "react";
 import { HiOutlinePuzzlePiece } from "react-icons/hi2";
+import EditCourseBasicInfo from "./EditCourseBasicInfo";
 
 function CourseBasicInfo({ course }) {
   return (
@@ -9,7 +10,7 @@ function CourseBasicInfo({ course }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 ">
         <div>
           <h2 className="font-bold text-2xl">
-            {course?.courseOutput?.course?.name}
+            {course?.courseOutput?.course?.name} <EditCourseBasicInfo course={course} />
           </h2>
           <p className="text-sm text-gray-400 mt-3">
             {course?.courseOutput?.course?.description}
