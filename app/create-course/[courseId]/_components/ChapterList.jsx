@@ -1,6 +1,7 @@
 import { index } from "drizzle-orm/mysql-core";
 import React from "react";
 import { HiOutlineCheckCircle, HiOutlineClock } from "react-icons/hi2";
+import EditChapters from "./EditChapters";
 
 function ChapterList({ course }) {
   return (
@@ -14,7 +15,7 @@ function ChapterList({ course }) {
                 {index + 1}
               </h2>
               <div>
-                <h2 className="font-medium text-lg ">{chapter?.name}</h2>
+                <h2 className="font-medium text-lg ">{chapter?.name}<EditChapters /> </h2>
                 <p className="text-sm text-gray-500">{chapter?.about}</p>
                 <p className="flex gap-2 text-primary items-center">
                   <HiOutlineClock />
