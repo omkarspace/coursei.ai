@@ -41,5 +41,27 @@ export const GenerateCourseLayout_AI = model.startChat({
   ],
 });
 
+export const GenerateChapterContent_AI = model.startChat({
+  generationConfig,
+  history: [
+    {
+      role: "user",
+      parts: [
+        {
+          text: "Explain the concept in Detail on Topic: golang, Chapter:Introduction to Go, in JSON Format with list of array with field as title, explanation on give chapter in details, Code Example( Code field in <precode> format) if applicable",
+        },
+      ],
+    },
+    {
+      role: "model",
+      parts: [
+        {
+          text: '```json\n[\n  {\n    "title": "Introduction to Go",\n    "explanation": "Go, often referred to as Golang, is a statically typed, compiled programming language designed at Google by Robert Griesemer, Rob Pike, and Ken Thompson. It is known for its simplicity, efficiency, and concurrency features. Go was created to address the challenges faced by large software development teams working on complex projects, focusing on readability, maintainability, and performance.",\n    "code": ""\n  },\n  {\n    "title": "Key Features of Go",\n    "explanation": "Go is characterized by a set of key features that make it a compelling choice for a wide range of applications:",\n    "code": ""\n  },\n  {\n    "title": "Simplicity and Readability",\n    "explanation": "Go\'s syntax is deliberately minimalistic, making it easy to learn and read. It emphasizes clarity and avoids unnecessary complexity.",\n    "code": ""\n  },\n  {\n    "title": "Static Typing",\n    "explanation": "Go is statically typed, meaning data types are checked at compile time, helping catch errors early in the development process. This improves code quality and reliability.",\n    "code": ""\n  },\n  {\n    "title": "Concurrency",\n    "explanation": "Go excels in handling concurrency through its lightweight goroutines and channels. This allows developers to write code that can efficiently utilize multiple cores and handle many concurrent tasks.",\n    "code": ""\n  },\n  {\n    "title": "Garbage Collection",\n    "explanation": "Go incorporates automatic garbage collection, relieving developers from the burden of manual memory management. This simplifies memory handling and prevents common memory leaks.",\n    "code": ""\n  },\n  {\n    "title": "Built-in Support for Networking",\n    "explanation": "Go provides powerful and easy-to-use libraries for networking, making it well-suited for developing network-intensive applications.",\n    "code": ""\n  },\n  {\n    "title": "Cross-Platform Compatibility",\n    "explanation": "Go compiles to native machine code, enabling it to run on a wide range of platforms without requiring platform-specific modifications.",\n    "code": ""\n  },\n  {\n    "title": "Standard Library",\n    "explanation": "Go comes with a comprehensive standard library that offers a rich set of functionalities for various tasks, reducing the need for external dependencies.",\n    "code": ""\n  },\n  {\n    "title": "Example Go Program",\n    "explanation": "This basic example demonstrates a simple "Hello, World!" program in Go:",\n    "code": "<precode>package main\n\nimport \\"fmt\\"\n\nfunc main() {\n  fmt.Println(\\"Hello, World!\\")\n}\n</precode>"\n  },\n  {\n    "title": "Compiling and Running Go Programs",\n    "explanation": "After writing a Go program, you need to compile and run it. Go provides a command-line tool called `go` for this purpose.",\n    "code": ""\n  },\n  {\n    "title": "Getting Started with Go",\n    "explanation": "To begin using Go, you need to install it on your system. The official Go website (https://golang.org/) provides detailed installation instructions for various operating systems.",\n    "code": ""\n  }\n]\n```',
+        },
+      ],
+    },
+  ],
+});
+
 // const result = await chatSession.sendMessage("INSERT_INPUT_HERE");
 // console.log(result.response.text());
