@@ -5,8 +5,9 @@ import DropDownOption from "./DropDownOption";
 import { db } from "@/configs/db";
 import { CourseList } from "@/configs/schema";
 import { eq } from "drizzle-orm";
+import Link from "next/link";
 
-function CourseCard({ course, refreshData }) {
+function CourseCard({ course, refreshData, displayUser = false }) {
   const handleOnDelete = async () => {
     const resp = await db
       .delete(CourseList)
@@ -22,19 +23,22 @@ function CourseCard({ course, refreshData }) {
       className="shadow-sm rounded-lg border p-2 
      cursor-pointer mt-4  bg-gray-50 hover:border-gray-400"
     >
-      <Image
-        src={course?.courseBanner}
-        width={300}
-        height={200}
-        className="w-full h-[300px] object-cover rounded-lg"
-      />
+      <Link href={"/course/" + course?.courseId}>
+        <Image
+          src={course?.courseBanner}
+          width={300}
+          height={200}
+          className="w-full h-[300px] object-cover rounded-lg"
+          alt="course image"
+        />
+      </Link>
       <div className="p-2">
         <h2 className="font-medium text-lg flex justify-between items-center">
           {course?.courseOutput?.course?.name}
 
-          <DropDownOption handleOnDelete={() => handleOnDelete()}>
+          {!displayUser&&<DropDownOption handleOnDelete={() => handleOnDelete()}>
             <HiMiniEllipsisVertical />
-          </DropDownOption>
+          </DropDownOption>}
         </h2>
         <p className="text-sm text-gray-400 my-1 ">{course?.category}</p>
         <div className="flex items-center justify-between ">
@@ -46,6 +50,18 @@ function CourseCard({ course, refreshData }) {
             {course?.level}
           </h2>
         </div>
+        {displayUser && (
+          <div className="flex gap-2 items-center mt-2">
+            <Image
+              src={course?.userProfileImage}
+              width={35}
+              height={35}
+              className="rounded-full"
+              alt="profile image"
+            />
+            <h2 className="text-sm">{course?.userName}</h2>
+          </div>
+        )}
       </div>
     </div>
   );

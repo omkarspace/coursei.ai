@@ -7,43 +7,43 @@ import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "@/configs/firebaseConfig";
 import { CourseList } from "@/configs/schema";
 import { eq } from "drizzle-orm";
+import Link from "next/link";
 
-function CourseBasicInfo({ course, refreshData }) {
+function CourseBasicInfo({ course, refreshData, edit = true }) {
   const [selectedFile, setSelectedFile] = useState();
 
-  useEffect(()=>{
-    if(course)
-    {
-      setSelectedFile(course?.courseBanner)
+  useEffect(() => {
+    if (course) {
+      setSelectedFile(course?.courseBanner);
     }
-    
-  },[course])
+  }, [course]);
 
   /**
    * Select file and upload to firebase storage
-   * @param {*} event 
+   * @param {*} event
    */
 
-  const onFileSelected =async (event) => {
+  const onFileSelected = async (event) => {
     const file = event.target.files[0];
     setSelectedFile(URL.createObjectURL(file));
 
-    const fileName=Date.now()+'.jpg'
-    const storageRef=ref(storage,'coursei/'+fileName);
-    await uploadBytes(storageRef,file).then((snapshot)=>{
-
-      console.log('Upload File COmplete')
-    }).then(resp=>{
-      getDownloadURL(storageRef).then(async(downloadUrl)=>{
-        console.log(downloadUrl);
-        await db.update(CourseList).set({
-          courseBanner:downloadUrl
-        }).where(eq(CourseList.id,course?.id))
+    const fileName = Date.now() + ".jpg";
+    const storageRef = ref(storage, "coursei/" + fileName);
+    await uploadBytes(storageRef, file)
+      .then((snapshot) => {
+        console.log("Upload File COmplete");
       })
-    })
-
-
-
+      .then((resp) => {
+        getDownloadURL(storageRef).then(async (downloadUrl) => {
+          console.log(downloadUrl);
+          await db
+            .update(CourseList)
+            .set({
+              courseBanner: downloadUrl,
+            })
+            .where(eq(CourseList.id, course?.id));
+        });
+      });
   };
 
   return (
@@ -52,7 +52,12 @@ function CourseBasicInfo({ course, refreshData }) {
         <div>
           <h2 className="font-bold text-2xl">
             {course?.courseOutput?.course?.name}{" "}
-            <EditCourseBasicInfo course={course} />
+            {edit && (
+              <EditCourseBasicInfo
+                course={course}
+                refreshData={() => refreshData(true)}
+              />
+            )}
           </h2>
           <p className="text-sm text-gray-400 mt-3">
             {course?.courseOutput?.course?.description}
@@ -61,7 +66,9 @@ function CourseBasicInfo({ course, refreshData }) {
             <HiOutlinePuzzlePiece />
             {course?.category}
           </h2>
+          {!edit &&<Link href={'/course/'+course?.courseId+"/start"} >
           <Button className="w-full mt-5">Start</Button>
+          </Link>}
         </div>
         <div>
           <label htmlFor="upload-image">
