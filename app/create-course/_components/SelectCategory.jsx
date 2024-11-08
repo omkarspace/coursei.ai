@@ -13,12 +13,12 @@ function SelectCategory() {
   };
 
   return (
-    <div className='px-10 md:px-20'> 
-      <h2 className='my-5'>Select the code Category</h2>
+    <div className='px-4 sm:px-8 md:px-16 lg:px-20'> 
+      <h2 className='my-5 text-lg md:text-xl lg:text-2xl font-semibold'>Select the code Category</h2>
     <div className='grid grid-cols-3 gap-10 '>
       
         {CategoryList.map((item,index)=>(
-        <div className={`flex flex-col p-5 border items-center  rounded-xl hover:border-primary hover:bg-blue-50  cursor-pointer ${userCourseInput?.category==item.name&& 'border-primary bg-blue-50'} `}
+        <div className={`flex flex-col p-5 border items-center  rounded-xl hover:border-primary hover:bg-purple-50  cursor-pointer ${userCourseInput?.category==item.name&& 'border-primary bg-purple-50'} `}
         onClick={()=>handleCategoryChange(item.name)}
         >
             <Image src={item.icon} width={50} height={50} />

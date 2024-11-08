@@ -75,8 +75,8 @@ function CourseBasicInfo({ course, refreshData, edit = true }) {
             <Image
               src={selectedFile ? selectedFile : "/placeholderr.png"}
               width={300}
-              height={300}
-              className="w-full rounded-xl h-[100px] object-cover cursor-pointer"
+              height={200}
+              className="w-full rounded-xl h-[300px] object-cover cursor-pointer"
             />
           </label>
           <input

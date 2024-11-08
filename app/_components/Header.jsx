@@ -14,8 +14,3 @@ function header() {
 }
 
 export default header
-
-
-{/* <Link href={userCourseList>=5?'/dashboard/upgrade':'/create-course '}>
-            <Button>+ Create AI Course</Button>
-        </Link> */}
