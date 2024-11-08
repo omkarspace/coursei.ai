@@ -11,6 +11,7 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.15.1",
     "@clerk/nextjs": "^6.0.2",
     "@google/generative-ai": "^0.21.0",
     "@neondatabase/serverless": "^0.10.1",
@@ -29,8 +30,8 @@
     "firebase": "^11.0.1",
     "lucide-react": "^0.454.0",
     "next": "15.0.2",
-    "react": "19.0.0-rc-02c0e824-20241028",
-    "react-dom": "19.0.0-rc-02c0e824-20241028",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-icons": "^5.3.0",
     "react-markdown": "^9.0.1",
     "react-youtube": "^10.1.0",
