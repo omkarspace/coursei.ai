@@ -6,7 +6,7 @@ import React from "react";
 function Header() {
   return (
     <div className="flex justify-between items-center p-5 shadow-sm ">
-      <Link href="/dashboard" >
+      <Link href="/dashboard">
         <Image src={"/logo.png"} width={50} height={50} />
       </Link>
       <UserButton />
@@ -15,4 +15,3 @@ function Header() {
 }
 
 export default Header;
-

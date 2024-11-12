@@ -91,9 +91,9 @@ function CourseLayout({ params }) {
           console.error("Error inserting chapter into database:", error);
         }
       }
-        await db.update(CourseList).set({
-          publish:true
-        })
+      await db.update(CourseList).set({
+        publish: true
+      })
       // Redirect to finish page after all chapters are processed
       router.replace(`/create-course/${course?.courseId}/finish`);
     } catch (error) {
@@ -103,18 +103,20 @@ function CourseLayout({ params }) {
       setLoading(false);
     }
   };
-  
 
   return (
-    <div className="mt-10 px-7 md:px-20 lg:px-44">
-      <h2 className="font-bold text-center text-2xl">CourseLayout</h2>
+    <div className="mt-10 px-6 sm:px-10 md:px-20 lg:px-32 xl:px-44">
+      <h2 className="font-bold text-center text-2xl sm:text-2xl lg:text-3xl">Course Layout</h2>
 
       <LoadingDialog loading={loading} />
-      <CourseBasicInfo course={course} refreshData={() => GetCourse} />
+      <CourseBasicInfo course={course} refreshData={() => GetCourse()} />
       <CourseDetails course={course} />
-      <ChapterList course={course} refreshData={() => GetCourse} />
+      <ChapterList course={course} refreshData={() => GetCourse()} />
 
-      <Button onClick={GenerateChapterContent} className="my-10">
+      <Button 
+        onClick={GenerateChapterContent} 
+        className="my-6 sm:my-8 lg:my-10 w-full sm:w-auto"
+      >
         Generate Course Content
       </Button>
     </div>

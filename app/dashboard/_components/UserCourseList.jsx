@@ -36,7 +36,8 @@ function UserCourseList() {
     <div className="mt-10">
       <h2 className="font-medium text-xl">My AI Courses</h2>
 
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      {/* Adjusted grid to be responsive for mobile */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {courseList.length > 0 ? (
           courseList.map((course, index) => (
             <CourseCard

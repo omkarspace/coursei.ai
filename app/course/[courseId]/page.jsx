@@ -9,7 +9,8 @@ import { eq } from "drizzle-orm";
 import React, { useEffect, useState } from "react";
 
 function Course({ params }) {
-  const [course,setCourse]=useState();
+  const [course, setCourse] = useState();
+
   useEffect(() => {
     params && GetCourse();
   }, [params]);
@@ -22,17 +23,19 @@ function Course({ params }) {
     setCourse(result[0])
     console.log(result);
   };
+
   return (
     <div>
       <Header />
-      <div className="px-10 p-10 md:px-20 lg:px-44">
-      <CourseBasicInfo course={course} edit={false} />
-      <CourseDetails course={course} />
-      <ChapterList course={course}  />
+      <div className="px-4 sm:px-6 md:px-10 lg:px-20 xl:px-44 py-6 lg:py-10">
+        <div className="space-y-8">
+          <CourseBasicInfo course={course} edit={false} />
+          <CourseDetails course={course} />
+          <ChapterList course={course} />
+        </div>
       </div>
-     
     </div>
-  )
+  );
 }
 
 export default Course;

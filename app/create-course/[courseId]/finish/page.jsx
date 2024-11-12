@@ -41,26 +41,27 @@ function FinishScreen({ params }) {
   };
 
   return (
-    <div className="px-10 md:px-20 lg:px-44 my-7">
-      <h2 className="text-center font-bold text-2xl my-3 text-primary">
+    <div className="px-4 sm:px-6 md:px-12 lg:px-20 xl:px-32 my-7">
+      <h2 className="text-center font-bold text-2xl sm:text-3xl lg:text-4xl my-3 text-primary">
         Congrats! Your course is Ready
       </h2>
       <CourseBasicInfo course={course} refreshData={() => console.log()} />
-      <h2 className="mt-3">Course URL:</h2>
-      <h2 className="text-center text-gray-400 border p-2 round flex gap-5  items-center">
-        {process.env.NEXT_PUBLIC_HOST_NAME}/course/view/{course?.courseId}
-        <HiOutlineClipboardDocumentCheck
-          className="h-5 w-5 cursor-pointer"
-          onClick={async () =>
-            await navigator.clipboard.writeText(
-              "process.env.NEXT_PUBLIC_HOST_NAME+" /
-                course /
-                view /
-                "+course?.courseId"
-            )
-          }
-        />
-      </h2>
+      <div className="mt-4">
+        <h2 className="text-lg sm:text-xl font-medium">Course URL:</h2>
+        <div className="flex items-center justify-center mt-2 p-2 rounded-lg bg-gray-100 border border-gray-300 w-full sm:w-auto">
+          <span className="text-sm sm:text-base text-gray-600 mr-3 truncate">
+            {process.env.NEXT_PUBLIC_HOST_NAME}/course/view/{course?.courseId}
+          </span>
+          <HiOutlineClipboardDocumentCheck
+            className="h-5 w-5 cursor-pointer text-primary"
+            onClick={async () => {
+              await navigator.clipboard.writeText(
+                `${process.env.NEXT_PUBLIC_HOST_NAME}/course/view/${course?.courseId}`
+              );
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 }
