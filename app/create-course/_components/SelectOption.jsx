@@ -20,10 +20,10 @@ function SelectOption() {
   };
 
   return (
-    <div className="px-10 md:px-20 lg:px-44">
-      <div className="grid grid-cols-2 gap-10">
+    <div className="px-6 sm:px-10 md:px-20 lg:px-44">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 sm:gap-10">
         <div>
-          <label className="text-sm">Difficulty Level</label>
+          <label className="text-lg sm:text-xl font-semibold text-[#5F2A95]">Difficulty Level</label>
           <Select onValueChange={(value) => handleInputChange("level", value)}
             defaultValue={userCourseInput?.level}>
             <SelectTrigger className="h-14 text-lg">
@@ -37,7 +37,7 @@ function SelectOption() {
           </Select>
         </div>
         <div>
-          <label className="text-sm">Course Duration</label>
+          <label className="text-lg sm:text-xl font-semibold text-[#5F2A95]">Course Duration</label>
           <Select
             onValueChange={(value) => handleInputChange("duration", value)}
             defaultValue={userCourseInput?.duration}>
@@ -54,7 +54,7 @@ function SelectOption() {
           </Select>
         </div>
         <div>
-          <label className="text-sm">Add Video</label>
+          <label className="text-lg sm:text-xl font-semibold text-[#5F2A95]">Add Video</label>
           <Select
             onValueChange={(value) => handleInputChange("displayVideo", value)}
             defaultValue={userCourseInput?.displayVideo}>
@@ -68,7 +68,7 @@ function SelectOption() {
           </Select>
         </div>
         <div>
-          <label className="text-sm">No. of Chapter</label>
+          <label className="text-lg sm:text-xl font-semibold text-[#5F2A95]">No. of Chapter</label>
           <Input
             type="number"
             className="h-14 text-lg"

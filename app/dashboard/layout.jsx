@@ -7,7 +7,9 @@ import { UserCourseListContext } from "../_context/UserCourseListContext";
 function DashboardLayout({ children }) {
   const [UserCourseList, setUserCourseInput] = useState([]);
   return (
-    <UserCourseListContext.Provider value={{UserCourseList, setUserCourseInput}}>
+    <UserCourseListContext.Provider
+      value={{ UserCourseList, setUserCourseInput }}
+    >
       <div>
         <div className="md: w-64 hidden md:block">
           <SideBar />
