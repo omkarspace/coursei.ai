@@ -4,13 +4,12 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { HiOutlinePuzzlePiece } from "react-icons/hi2";
 import EditCourseBasicInfo from "./EditCourseBasicInfo";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { storage } from "@/configs/firebaseConfig";
 import { updateCourseBanner } from "@/app/actions/course";
 import Link from "next/link";
 
 function CourseBasicInfo({ course, refreshData, edit = true }) {
   const [selectedFile, setSelectedFile] = useState();
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (course) {
@@ -20,14 +19,33 @@ function CourseBasicInfo({ course, refreshData, edit = true }) {
 
   const onFileSelected = async (event) => {
     const file = event.target.files[0];
-    setSelectedFile(URL.createObjectURL(file));
+    if (!file) return;
 
-    const fileName = Date.now() + ".jpg";
-    const storageRef = ref(storage, "coursei/" + fileName);
-    await uploadBytes(storageRef, file).then(async () => {
-      const downloadUrl = await getDownloadURL(storageRef);
-      await updateCourseBanner(course?.courseId, downloadUrl);
-    });
+    setSelectedFile(URL.createObjectURL(file));
+    setUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append(
+        "upload_preset",
+        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+      );
+
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        { method: "POST", body: formData }
+      );
+
+      const data = await res.json();
+      if (data.secure_url) {
+        await updateCourseBanner(course?.courseId, data.secure_url);
+      }
+    } catch (err) {
+      console.error("Upload failed:", err);
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -65,11 +83,17 @@ function CourseBasicInfo({ course, refreshData, edit = true }) {
               className="w-full rounded-xl h-[300px] object-cover cursor-pointer"
               alt="Course banner"
             />
+            {uploading && (
+              <p className="text-sm text-gray-400 mt-2 text-center">
+                Uploading...
+              </p>
+            )}
           </label>
           <input
             type="file"
             id="upload-image"
             className="opacity-0"
+            accept="image/*"
             onChange={onFileSelected}
           />
         </div>
