@@ -19,7 +19,7 @@ function Course({ params }) {
   };
 
   return (
-    <div>
+    <div className="min-h-screen dark:bg-gray-950">
       <Header />
       <div className="px-4 sm:px-6 md:px-10 lg:px-20 xl:px-44 py-6 lg:py-10">
         <div className="space-y-8">

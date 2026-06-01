@@ -1,13 +1,11 @@
-import { UserButton } from "@clerk/nextjs";
 import React from "react";
 import AddCourse from "./_components/AddCourse";
 import UserCourseList from "./_components/UserCourseList";
 
 function Dashboard() {
   return (
-    <div>
+    <div className="min-h-screen dark:bg-gray-950">
       <AddCourse />
-      {/* DIsplay List of Course*/}
       <UserCourseList />
     </div>
   );

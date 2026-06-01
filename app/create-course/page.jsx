@@ -97,7 +97,7 @@ function CreateCourse() {
   };
 
   return (
-    <div>
+    <div className="min-h-screen dark:bg-gray-950">
       <div className="flex flex-col justify-center items-center mt-10">
         <h2 className="text-4xl text-primary font-medium">Create Course</h2>
         <div className="flex mt-10">
@@ -105,17 +105,17 @@ function CreateCourse() {
             <div className="flex items-center" key={item.id}>
               <div className="flex flex-col items-center w-[50px] md:w-[100px]">
                 <div
-                  className={`bg-gray-200 p-3 rounded-full text-white ${
+                  className={`bg-gray-200 dark:bg-gray-700 p-3 rounded-full text-white ${
                     activeIndex >= index && "bg-primary"
                   }`}
                 >
                   {item.icon}
                 </div>
-                <h2 className="hidden md:block md:text-sm">{item.name}</h2>
+                <h2 className="hidden md:block md:text-sm dark:text-gray-300">{item.name}</h2>
               </div>
               {index !== StepperOptions.length - 1 && (
                 <div
-                  className={`h-1 w-[50px] md:w-[100px] rounded-full lg:w-[170px] bg-gray-300 ${
+                  className={`h-1 w-[50px] md:w-[100px] rounded-full lg:w-[170px] bg-gray-300 dark:bg-gray-600 ${
                     activeIndex - 1 >= index && "bg-purple-600"
                   }`}
                 ></div>

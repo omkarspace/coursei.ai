@@ -30,3 +30,24 @@ export const Chapters = pgTable("chapters", {
   content: json("content").notNull(),
   videoId: varchar("videoId").notNull(),
 });
+
+export const Quizzes = pgTable("quizzes", {
+  id: serial("id").primaryKey(),
+  courseId: varchar("courseId").notNull(),
+  chapterId: integer("chapterId").notNull(),
+  questions: json("questions").notNull(),
+});
+
+export const Flashcards = pgTable("flashcards", {
+  id: serial("id").primaryKey(),
+  courseId: varchar("courseId").notNull(),
+  chapterId: integer("chapterId").notNull(),
+  cards: json("cards").notNull(),
+});
+
+export const StudyNotes = pgTable("study_notes", {
+  id: serial("id").primaryKey(),
+  courseId: varchar("courseId").notNull(),
+  chapterId: integer("chapterId").notNull(),
+  notes: json("notes").notNull(),
+});

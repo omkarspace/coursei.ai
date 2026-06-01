@@ -1,7 +1,5 @@
 const {
   GoogleGenerativeAI,
-  HarmCategory,
-  HarmBlockThreshold,
 } = require("@google/generative-ai");
 
 const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
@@ -34,7 +32,7 @@ export const GenerateCourseLayout_AI = model.startChat({
       role: "model",
       parts: [
         {
-          text: '```json\n{\n  "course": {\n    "name": "Python Programming Fundamentals",\n    "description": "This course provides a comprehensive introduction to Python programming for beginners. You\'ll learn the fundamental concepts of programming, including data types, variables, operators, control flow, and functions. By the end of this course, you will be able to write basic Python programs and solve simple programming problems.",\n    "chapters": [\n      {\n        "name": "Introduction to Python",\n        "about": "This chapter introduces the Python programming language, its history, and its applications. You\'ll also learn how to set up your development environment and write your first Python program.",\n        "duration": "1 hour"\n      },\n      {\n        "name": "Data Types and Variables",\n        "about": "This chapter explores the different data types in Python, including numbers, strings, booleans, and lists. You\'ll learn how to declare and assign variables, and how to perform basic operations on them.",\n        "duration": "1 hour"\n      },\n      {\n        "name": "Operators and Expressions",\n        "about": "This chapter introduces the various operators in Python, such as arithmetic, comparison, and logical operators. You\'ll learn how to use these operators to create complex expressions and evaluate them.",\n        "duration": "1 hour"\n      },\n      {\n        "name": "Control Flow Statements",\n        "about": "This chapter covers the core control flow statements in Python, including conditional statements (if-else) and loops (for, while). You\'ll learn how to control the flow of execution in your programs.",\n        "duration": "1 hour"\n      },\n      {\n        "name": "Functions and Modules",\n        "about": "This chapter introduces the concept of functions in Python. You\'ll learn how to define, call, and use functions to modularize your code and improve readability.",\n        "duration": "1 hour"\n      }\n    ],\n    "category": "Programming",\n    "topic": "Python",\n    "level": "Basic",\n    "duration": "5 hours",\n    "noOfChapters": 5\n  }\n}\n```',
+          text: '```json\n{\n  "course": {\n    "name": "Python Programming Fundamentals",\n    "description": "This course provides a comprehensive introduction to Python programming for beginners.",\n    "chapters": [\n      {\n        "name": "Introduction to Python",\n        "about": "This chapter introduces the Python programming language.",\n        "duration": "1 hour"\n      },\n      {\n        "name": "Data Types and Variables",\n        "about": "This chapter explores the different data types in Python.",\n        "duration": "1 hour"\n      }\n    ]\n  }\n}\n```',
         },
       ],
     },
@@ -56,12 +54,75 @@ export const GenerateChapterContent_AI = model.startChat({
       role: "model",
       parts: [
         {
-          text: '```json\n[\n  {\n    "title": "Introduction to Go",\n    "explanation": "Go, often referred to as Golang, is a statically typed, compiled programming language designed at Google by Robert Griesemer, Rob Pike, and Ken Thompson. It is known for its simplicity, efficiency, and concurrency features. Go was created to address the challenges faced by large software development teams working on complex projects, focusing on readability, maintainability, and performance.",\n    "code": ""\n  },\n  {\n    "title": "Key Features of Go",\n    "explanation": "Go is characterized by a set of key features that make it a compelling choice for a wide range of applications:",\n    "code": ""\n  },\n  {\n    "title": "Simplicity and Readability",\n    "explanation": "Go\'s syntax is deliberately minimalistic, making it easy to learn and read. It emphasizes clarity and avoids unnecessary complexity.",\n    "code": ""\n  },\n  {\n    "title": "Static Typing",\n    "explanation": "Go is statically typed, meaning data types are checked at compile time, helping catch errors early in the development process. This improves code quality and reliability.",\n    "code": ""\n  },\n  {\n    "title": "Concurrency",\n    "explanation": "Go excels in handling concurrency through its lightweight goroutines and channels. This allows developers to write code that can efficiently utilize multiple cores and handle many concurrent tasks.",\n    "code": ""\n  },\n  {\n    "title": "Garbage Collection",\n    "explanation": "Go incorporates automatic garbage collection, relieving developers from the burden of manual memory management. This simplifies memory handling and prevents common memory leaks.",\n    "code": ""\n  },\n  {\n    "title": "Built-in Support for Networking",\n    "explanation": "Go provides powerful and easy-to-use libraries for networking, making it well-suited for developing network-intensive applications.",\n    "code": ""\n  },\n  {\n    "title": "Cross-Platform Compatibility",\n    "explanation": "Go compiles to native machine code, enabling it to run on a wide range of platforms without requiring platform-specific modifications.",\n    "code": ""\n  },\n  {\n    "title": "Standard Library",\n    "explanation": "Go comes with a comprehensive standard library that offers a rich set of functionalities for various tasks, reducing the need for external dependencies.",\n    "code": ""\n  },\n  {\n    "title": "Example Go Program",\n    "explanation": "This basic example demonstrates a simple "Hello, World!" program in Go:",\n    "code": "<precode>package main\n\nimport \\"fmt\\"\n\nfunc main() {\n  fmt.Println(\\"Hello, World!\\")\n}\n</precode>"\n  },\n  {\n    "title": "Compiling and Running Go Programs",\n    "explanation": "After writing a Go program, you need to compile and run it. Go provides a command-line tool called `go` for this purpose.",\n    "code": ""\n  },\n  {\n    "title": "Getting Started with Go",\n    "explanation": "To begin using Go, you need to install it on your system. The official Go website (https://golang.org/) provides detailed installation instructions for various operating systems.",\n    "code": ""\n  }\n]\n```',
+          text: '```json\n[\n  {\n    "title": "Introduction to Go",\n    "explanation": "Go is a statically typed, compiled programming language designed at Google.",\n    "code": ""\n  }\n]\n```',
         },
       ],
     },
   ],
 });
 
-// const result = await chatSession.sendMessage("INSERT_INPUT_HERE");
-// console.log(result.response.text());
+export const GenerateQuiz_AI = model.startChat({
+  generationConfig,
+  history: [
+    {
+      role: "user",
+      parts: [
+        {
+          text: "Generate a quiz with 5 multiple choice questions based on the following chapter content. Return in JSON format with field as questions array containing question, options (array of 4 choices), correctAnswer (index 0-3), and explanation. Chapter: Variables in Python, Content: Variables are containers for storing data values.",
+        },
+      ],
+    },
+    {
+      role: "model",
+      parts: [
+        {
+          text: '```json\n{\n  "questions": [\n    {\n      "question": "What is a variable in Python?",\n      "options": ["A function", "A container for storing data", "A loop", "A condition"],\n      "correctAnswer": 1,\n      "explanation": "Variables are containers for storing data values in Python."\n    }\n  ]\n}\n```',
+        },
+      ],
+    },
+  ],
+});
+
+export const GenerateFlashcards_AI = model.startChat({
+  generationConfig,
+  history: [
+    {
+      role: "user",
+      parts: [
+        {
+          text: "Generate 10 flashcards based on the following chapter content. Return in JSON format with field as cards array containing front (question/term) and back (answer/definition). Chapter: Python Basics, Content: Learn about variables, data types, and basic operations.",
+        },
+      ],
+    },
+    {
+      role: "model",
+      parts: [
+        {
+          text: '```json\n{\n  "cards": [\n    {\n      "front": "What is a variable?",\n      "back": "A named container that stores a value in memory."\n    },\n    {\n      "front": "What is an integer?",\n      "back": "A whole number without decimal points (e.g., 5, -3, 0)."\n    }\n  ]\n}\n```',
+        },
+      ],
+    },
+  ],
+});
+
+export const GenerateStudyNotes_AI = model.startChat({
+  generationConfig,
+  history: [
+    {
+      role: "user",
+      parts: [
+        {
+          text: "Generate concise study notes for the following chapter. Return in JSON format with fields: summary (2-3 paragraph overview), keyPoints (array of 5-7 main takeaways), and importantTerms (array of objects with term and definition). Chapter: Introduction to Python, Content: Python is a high-level programming language known for its simplicity.",
+        },
+      ],
+    },
+    {
+      role: "model",
+      parts: [
+        {
+          text: '```json\n{\n  "summary": "Python is a high-level, interpreted programming language created by Guido van Rossum. It emphasizes code readability and supports multiple programming paradigms.",\n  "keyPoints": ["Python is interpreted, not compiled", "It uses indentation for code blocks", "Python supports multiple paradigms"],\n  "importantTerms": [\n    {"term": "Interpreter", "definition": "A program that executes code line by line"},\n    {"term": "High-level language", "definition": "A language that is human-readable and abstracts away hardware details"}\n  ]\n}\n```',
+        },
+      ],
+    },
+  ],
+});

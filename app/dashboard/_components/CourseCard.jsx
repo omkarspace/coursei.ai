@@ -19,7 +19,7 @@ function CourseCard({ course, refreshData, displayUser = false }) {
   };
 
   return (
-    <div className="shadow-sm rounded-lg border p-4 cursor-pointer mt-4 bg-gray-50 hover:border-gray-400 transition-all duration-200">
+    <div className="shadow-sm rounded-lg border p-4 cursor-pointer mt-4 bg-gray-50 dark:bg-gray-900 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200">
       <Link href={"/course/" + course?.courseId}>
         <Image
           src={course?.courseBanner}
@@ -30,7 +30,7 @@ function CourseCard({ course, refreshData, displayUser = false }) {
         />
       </Link>
       <div className="p-2">
-        <h2 className="font-medium text-lg flex justify-between items-center">
+        <h2 className="font-medium text-lg flex justify-between items-center dark:text-white">
           {course?.courseOutput?.course?.name}
           {!displayUser && (
             <DropDownOption handleOnDelete={() => handleOnDelete()}>
@@ -40,11 +40,11 @@ function CourseCard({ course, refreshData, displayUser = false }) {
         </h2>
         <p className="text-sm text-gray-400 my-1">{course?.category}</p>
         <div className="flex items-center justify-between">
-          <h2 className="flex gap-2 items-center p-1 bg-purple-50 text-primary text-xs sm:text-sm md:text-base rounded-sm">
+          <h2 className="flex gap-2 items-center p-1 bg-purple-50 dark:bg-purple-900/30 text-primary text-xs sm:text-sm md:text-base rounded-sm">
             <HiOutlineBookOpen aria-hidden="true" />
             {course?.courseOutput?.course?.chapters?.length || 0} Chapters
           </h2>
-          <h2 className="text-xs sm:text-sm md:text-base bg-purple-50 text-primary p-1 rounded-sm">
+          <h2 className="text-xs sm:text-sm md:text-base bg-purple-50 dark:bg-purple-900/30 text-primary p-1 rounded-sm">
             {course?.level}
           </h2>
         </div>
@@ -58,7 +58,7 @@ function CourseCard({ course, refreshData, displayUser = false }) {
               className="rounded-full"
               alt={`${course?.userName}'s profile`}
             />
-            <h2 className="text-sm">{course?.userName}</h2>
+            <h2 className="text-sm dark:text-gray-300">{course?.userName}</h2>
           </div>
         )}
       </div>

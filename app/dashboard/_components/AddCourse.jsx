@@ -12,12 +12,12 @@ function AddCourse() {
   return (
     <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 md:p-6 space-y-4 md:space-y-0">
       <div className="flex flex-col">
-        <h2 className="text-2xl md:text-3xl text-[#5F2A95]">
+        <h2 className="text-2xl md:text-3xl text-[#5F2A95] dark:text-purple-400">
           Hello,
           <span className="font-bold"> {user?.fullName} </span>
         </h2>
-        <p className="text-sm text-gray-500">
-        Create a new AI-powered course and share it with friends.
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Create a new AI-powered course and share it with friends.
         </p>
       </div>
       <div className="self-stretch md:self-auto">

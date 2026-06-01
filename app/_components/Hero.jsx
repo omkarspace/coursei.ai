@@ -92,9 +92,35 @@ export default function Hero() {
               <div className="w-3 h-3 rounded-full bg-red-400" />
               <div className="w-3 h-3 rounded-full bg-yellow-400" />
               <div className="w-3 h-3 rounded-full bg-green-400" />
+              <span className="ml-3 text-xs text-gray-400">coursei.ai</span>
             </div>
-            <div className="p-8 bg-gradient-to-br from-purple-50 to-indigo-50 min-h-[300px] flex items-center justify-center">
-              <p className="text-gray-400 text-sm">Product demo animation coming soon</p>
+            <div className="p-6 bg-gradient-to-br from-gray-50 to-white min-h-[300px]">
+              {/* Mock dashboard */}
+              <div className="flex gap-4">
+                {/* Sidebar */}
+                <div className="w-48 space-y-3 hidden md:block">
+                  <div className="h-8 bg-purple-100 rounded-lg w-full" />
+                  <div className="h-6 bg-gray-100 rounded-lg w-3/4" />
+                  <div className="h-6 bg-gray-100 rounded-lg w-5/6" />
+                  <div className="h-6 bg-gray-100 rounded-lg w-2/3" />
+                  <div className="h-6 bg-gray-100 rounded-lg w-4/5" />
+                </div>
+                {/* Main content */}
+                <div className="flex-1 space-y-4">
+                  <div className="h-10 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-xl w-48" />
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="h-24 bg-white border border-gray-100 rounded-xl shadow-sm" />
+                    <div className="h-24 bg-white border border-gray-100 rounded-xl shadow-sm" />
+                    <div className="h-24 bg-white border border-gray-100 rounded-xl shadow-sm" />
+                  </div>
+                  <div className="h-32 bg-white border border-gray-100 rounded-xl shadow-sm p-4">
+                    <div className="h-4 bg-gray-100 rounded w-1/3 mb-3" />
+                    <div className="h-3 bg-gray-50 rounded w-full mb-2" />
+                    <div className="h-3 bg-gray-50 rounded w-5/6 mb-2" />
+                    <div className="h-3 bg-gray-50 rounded w-2/3" />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </motion.div>

@@ -1,0 +1,49 @@
+# Coursei.ai
+
+> The open-source learning platform powered by AI. Create courses, quizzes, flashcards, and study notes in minutes.
+
+Coursei.ai is a free, open-source learning management system (LMS) that uses AI to generate educational content. Built with Next.js 15, React, Tailwind CSS, and Google Gemini AI.
+
+## Features
+
+- AI Course Generator: Create full course structures with Gemini in seconds
+- AI Quiz Generator: Auto-generate multiple-choice and short-answer questions
+- AI Flashcards: Leitner-system spaced repetition cards for retention
+- AI Study Notes: Summaries, key points, and term definitions
+- AI Study Buddy: Context-aware chatbot for each course
+- Course Forking: Customize public courses like GitHub repos
+- Community Marketplace: Browse, filter, and upvote shared courses
+- Export Options: PDF, Markdown, SCORM/xAPI packages
+- Dark Mode: Full dark mode with system preference detection
+- Mobile First: Responsive design across all devices
+
+## Tech Stack
+
+- Framework: Next.js 15 (App Router)
+- UI: React 18, Tailwind CSS, shadcn/ui
+- Auth: Clerk
+- AI: Google Gemini 2.0 Flash
+- Database: Neon PostgreSQL + Drizzle ORM
+- Storage: Cloudinary
+- Deployment: Vercel
+
+## Getting Started
+
+1. Clone: git clone https://github.com/omkarspace/coursei.ai.git
+2. Install: npm install
+3. Setup: cp .env.example .env
+4. Database: npm run db:push
+5. Run: npm run dev
+
+## Links
+
+- GitHub: https://github.com/omkarspace/coursei.ai
+- Live Demo: https://coursei.ai
+- Contributing: https://github.com/omkarspace/coursei.ai/blob/main/CONTRIBUTING.md
+- License: MIT
+
+## Contact
+
+- Twitter: https://x.com/omkareact
+- LinkedIn: https://www.linkedin.com/in/omkarspace
+- GitHub Issues: https://github.com/omkarspace/coursei.ai/issues

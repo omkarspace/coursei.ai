@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { CourseList, Chapters } from "@/configs/schema";
+import { CourseList, Chapters, Quizzes, Flashcards, StudyNotes } from "@/configs/schema";
 import { eq, and } from "drizzle-orm";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 
@@ -164,4 +164,73 @@ export async function updateCourseNameAndDescription(courseId, name, description
         eq(CourseList.createdBy, email)
       )
     );
+}
+
+// Quiz actions
+export async function getQuiz(courseId, chapterId) {
+  await getUserEmail();
+  const result = await db
+    .select()
+    .from(Quizzes)
+    .where(and(eq(Quizzes.courseId, courseId), eq(Quizzes.chapterId, chapterId)));
+  return result[0] || null;
+}
+
+export async function saveQuiz(courseId, chapterId, questions) {
+  await getUserEmail();
+  const existing = await getQuiz(courseId, chapterId);
+  if (existing) {
+    await db
+      .update(Quizzes)
+      .set({ questions })
+      .where(eq(Quizzes.id, existing.id));
+  } else {
+    await db.insert(Quizzes).values({ courseId, chapterId, questions });
+  }
+}
+
+// Flashcards actions
+export async function getFlashcards(courseId, chapterId) {
+  await getUserEmail();
+  const result = await db
+    .select()
+    .from(Flashcards)
+    .where(and(eq(Flashcards.courseId, courseId), eq(Flashcards.chapterId, chapterId)));
+  return result[0] || null;
+}
+
+export async function saveFlashcards(courseId, chapterId, cards) {
+  await getUserEmail();
+  const existing = await getFlashcards(courseId, chapterId);
+  if (existing) {
+    await db
+      .update(Flashcards)
+      .set({ cards })
+      .where(eq(Flashcards.id, existing.id));
+  } else {
+    await db.insert(Flashcards).values({ courseId, chapterId, cards });
+  }
+}
+
+// Study Notes actions
+export async function getStudyNotes(courseId, chapterId) {
+  await getUserEmail();
+  const result = await db
+    .select()
+    .from(StudyNotes)
+    .where(and(eq(StudyNotes.courseId, courseId), eq(StudyNotes.chapterId, chapterId)));
+  return result[0] || null;
+}
+
+export async function saveStudyNotes(courseId, chapterId, notes) {
+  await getUserEmail();
+  const existing = await getStudyNotes(courseId, chapterId);
+  if (existing) {
+    await db
+      .update(StudyNotes)
+      .set({ notes })
+      .where(eq(StudyNotes.id, existing.id));
+  } else {
+    await db.insert(StudyNotes).values({ courseId, chapterId, notes });
+  }
 }

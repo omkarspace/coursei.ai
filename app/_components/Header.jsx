@@ -5,7 +5,7 @@ import Link from 'next/link'
 function header() {
   return (
     <div className='flex justify-between p-5 shadow-md'>
-        <Image src={'/logo.svg'} width={100} height={100} />
+        <Image src={'/logo.svg'} width={100} height={100} alt="Coursei.ai logo" />
         <Link href={'/dashboard'}>
         <Button>Get started</Button>
         </Link>
