@@ -9,6 +9,7 @@ import FAQ from "./_components/FAQ";
 import Footer from "./_components/Footer";
 
 export const metadata = {
+  metadataBase: new URL("https://coursei.ai"),
   title: "Coursei.ai | AI-Powered Open-Source Learning Platform",
   description:
     "Create courses, quizzes, flashcards, and study notes in minutes with AI. Fork, customize, and share with the community. Free and open source.",
