@@ -1,196 +1,119 @@
 import Link from "next/link";
 
-const FooterItem = ({ text, link }) => {
-  return (
-    <li>
-      <Link
-        href={link}
-        className="duration-200 hover:text-blue-600 dark:hover:text-blue-500"
-      >
-        {text}
-      </Link>
-    </li>
-  );
+const footerLinks = {
+  Product: [
+    { text: "Features", href: "/#features" },
+    { text: "Pricing", href: "/#pricing" },
+    { text: "Documentation", href: "https://github.com/omkarspace/coursei.ai" },
+  ],
+  Community: [
+    { text: "GitHub", href: "https://github.com/omkarspace/coursei.ai" },
+    { text: "Contributing", href: "https://github.com/omkarspace/coursei.ai" },
+    { text: "Discussions", href: "https://github.com/omkarspace/coursei.ai" },
+  ],
+  Legal: [
+    { text: "Privacy", href: "#" },
+    { text: "Terms", href: "#" },
+    { text: "License (MIT)", href: "https://github.com/omkarspace/coursei.ai/blob/main/LICENSE" },
+  ],
 };
 
-const FooterBlockItem = ({ title, items }) => {
-  return (
-    <div className="space-y-5">
-      <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-        {title}
-      </h2>
-      <ul className="space-y-3">
-        {items.map((item) => (
-          <FooterItem key={item.id} {...item} />
-        ))}
-      </ul>
-    </div>
-  );
-};
-
-const footerBlocks = [
+const socialLinks = [
   {
-    id: 1,
-    title: "Navigation",
-    items: [
-      { id: 1, text: "Home", link: "/" },
-      { id: 2, text: "Dashboard", link: "/dashboard" },
-      { id: 3, text: "Explore", link: "/dashboard/explore" },
-    ],
+    name: "GitHub",
+    href: "https://github.com/omkarspace/coursei.ai",
+    icon: (
+      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+        <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+      </svg>
+    ),
   },
   {
-    id: 2,
-    title: "Product",
-    items: [
-      { id: 1, text: "Features", link: "/#features" },
-      { id: 2, text: "Pricing", link: "/#pricing" },
-      { id: 3, text: "Documentation", link: "https://github.com/omkarspace/coursei.ai" },
-    ],
+    name: "X (Twitter)",
+    href: "https://x.com/omkareact",
+    icon: (
+      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+      </svg>
+    ),
+  },
+  {
+    name: "LinkedIn",
+    href: "https://www.linkedin.com/in/omkarspace",
+    icon: (
+      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </svg>
+    ),
   },
 ];
 
-const FooterBlock = () => {
+export default function Footer() {
   return (
-    <footer className="pt-16 md:pt-20 bg-gray-100 dark:bg-gray-900" role="contentinfo">
-      <div className="max-w-7xl mx-auto px-5 sm:px-10 md:px-12 lg:px-5">
-        <div className="w-full text-gray-700 dark:text-gray-300 grid grid-cols-2 lg:grid-cols-4 gap-8 pb-4 border-b border-b-gray-200 dark:border-b-gray-800">
-          <div className="flex">
-            <Link href="/" className="font-semibold text-lg text-[#5F2A95]">
+    <footer className="bg-gray-50 border-t border-gray-100" role="contentinfo">
+      <div className="mx-auto max-w-7xl px-5 sm:px-10 md:px-12 lg:px-5 py-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {/* Brand */}
+          <div className="col-span-2 md:col-span-1">
+            <Link href="/" className="font-bold text-xl text-gray-900">
               Coursei.ai
             </Link>
-          </div>
-          <div className="flex items-center space-x-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-5 h-5"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
-              />
-            </svg>
-            <span>Pune, India</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-6 h-6"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M16.5 12a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm0 0c0 1.657 1.007 3 2.25 3S21 13.657 21 12a9 9 0 10-2.636 6.364M16.5 12V8.25"
-              />
-            </svg>
-            <span>@omkarspace</span>
-          </div>
-        </div>
-        <nav className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-10 gap-8 py-10 text-gray-700 dark:text-gray-300" aria-label="Footer navigation">
-          {footerBlocks.map((footerBlock) => (
-            <FooterBlockItem key={footerBlock.id} {...footerBlock} />
-          ))}
-          <div className="space-y-5 col-span-2 md:col-span-3 lg:col-span-1">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-              Stay Updated
-            </h2>
-            <p className="max-w-xl">
-              Get notified about new courses and features.
+            <p className="mt-4 text-sm text-gray-600 leading-relaxed">
+              The open-source learning platform powered by AI. Create courses, quizzes, flashcards, and study notes in minutes.
             </p>
-            <form className="grid w-full relative max-w-xl">
-              <div className="flex flex-col gap-3 w-full relative">
-                <label htmlFor="footer-email" className="sr-only">
-                  Email address
-                </label>
-                <input
-                  id="footer-email"
-                  type="email"
-                  className="w-full outline-none px-3 py-3 rounded-md bg-gray-200 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
-                  placeholder="mail@gmail.com"
-                />
-                <button
-                  type="submit"
-                  className="w-full py-3 sm:py-0 sm:w-max sm:absolute sm:right-1 sm:inset-y-1 px-4 text-sm flex sm:items-center justify-center outline-none bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            <div className="flex gap-4 mt-6">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                  aria-label={link.name}
                 >
-                  Subscribe
-                </button>
-              </div>
-            </form>
+                  {link.icon}
+                </a>
+              ))}
+            </div>
           </div>
-        </nav>
-        <div className="w-full flex flex-col md:flex-row gap-4 items-center sm:justify-between py-3 border-t border-gray-200 dark:border-t-gray-800 text-gray-700 dark:text-gray-300">
-          <div className="flex text-center sm:text-left sm:min-w-max">
-            <p>Coursei {new Date().getFullYear()}</p>
-          </div>
-          <div className="flex justify-center sm:justify-end w-full gap-6">
-            <a
-              href="https://www.linkedin.com/in/omkarspace"
-              aria-label="LinkedIn"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                className="w-5 h-5"
-                viewBox="0 0 16 16"
-                aria-hidden="true"
-              >
-                <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z" />
-              </svg>
-            </a>
-            <a
-              href="https://x.com/omkareact"
-              aria-label="X (Twitter)"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                className="w-5 h-5"
-                viewBox="0 0 16 16"
-                aria-hidden="true"
-              >
-                <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" />
-              </svg>
-            </a>
-            <a
-              href="https://github.com/omkarspace/"
-              aria-label="GitHub"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                className="w-5 h-5"
-                viewBox="0 0 16 16"
-                aria-hidden="true"
-              >
-                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
-              </svg>
-            </a>
-          </div>
+
+          {/* Link Columns */}
+          {Object.entries(footerLinks).map(([category, links]) => (
+            <div key={category}>
+              <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
+                {category}
+              </h3>
+              <ul className="space-y-3">
+                {links.map((link) => (
+                  <li key={link.text}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                      target={link.href.startsWith("http") ? "_blank" : undefined}
+                      rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    >
+                      {link.text}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="mt-12 pt-8 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-gray-500">
+            &copy; {new Date().getFullYear()} Coursei.ai. All rights reserved.
+          </p>
+          <p className="text-sm text-gray-500">
+            Built with{" "}
+            <span className="text-purple-600 font-medium">Next.js</span>,{" "}
+            <span className="text-purple-600 font-medium">Tailwind CSS</span>,{" "}
+            <span className="text-purple-600 font-medium">Gemini AI</span>
+          </p>
         </div>
       </div>
     </footer>
   );
-};
-
-export default FooterBlock;
+}
