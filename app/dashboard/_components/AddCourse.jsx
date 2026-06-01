@@ -21,7 +21,7 @@ function AddCourse() {
         </p>
       </div>
       <div className="self-stretch md:self-auto">
-        <Link href={userCourseList >= 5 ? "/dashboard/upgrade" : "/create-course"}>
+        <Link href={(userCourseList?.length || 0) >= 5 ? "/dashboard/upgrade" : "/create-course"}>
           <Button className="w-full md:w-auto bg-[#5F2A95]">+ Create AI Course</Button>
         </Link>
       </div>

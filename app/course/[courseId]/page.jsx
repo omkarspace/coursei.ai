@@ -1,11 +1,9 @@
-"use client"
+"use client";
 import ChapterList from "@/app/create-course/[courseId]/_components/ChapterList";
 import CourseBasicInfo from "@/app/create-course/[courseId]/_components/CourseBasicInfo";
 import CourseDetails from "@/app/create-course/[courseId]/_components/CourseDetails";
 import Header from "@/app/dashboard/_components/Header";
-import { db } from "@/configs/db";
-import { CourseList } from "@/configs/schema";
-import { eq } from "drizzle-orm";
+import { getPublishedCourseById } from "@/app/actions/course";
 import React, { useEffect, useState } from "react";
 
 function Course({ params }) {
@@ -16,12 +14,8 @@ function Course({ params }) {
   }, [params]);
 
   const GetCourse = async () => {
-    const result = await db
-      .select()
-      .from(CourseList)
-      .where(eq(CourseList?.courseId, params?.courseId));
-    setCourse(result[0])
-    console.log(result);
+    const result = await getPublishedCourseById(params?.courseId);
+    setCourse(result);
   };
 
   return (

@@ -1,118 +1,113 @@
+# Coursei.ai
 
+AI-powered course generation platform. Create, customize, and share educational courses using artificial intelligence.
 
-## 📋 Table of Contents
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Getting Started](#-getting-started)
-- [Environment Variables](#-environment-variables)
-- [Running the App](#-running-the-app)
-- [Project Structure](#-project-structure)
-- [Screenshots](#-screenshots)
-- [Contributing](#-contributing)
-- [License](#-license)
+## Features
 
----
+- **AI Course Generation**: Generate course outlines and chapter content using Google Gemini AI
+- **Customizable Modules**: Adjust course categories, topics, difficulty levels, and chapter count
+- **Responsive Design**: Seamless experience across desktop, tablet, and mobile devices
+- **User Authentication**: Secure sign-in/sign-up with Clerk
+- **Course Management**: Create, edit, delete, and publish courses
+- **Public Course Viewing**: Share courses via unique URLs
+- **Image Uploads**: Custom course banners via Firebase Storage
 
-## ✨ Features
-- **AI-Powered Content Generation**: Uses the Gemini API to dynamically generate course content.
-- **Customizable Modules**: Adjust course modules, topics, and content to suit different learning paths.
-- **Responsive Design**: Built with Tailwind CSS for a seamless experience on any device.
-- **Full Stack**: Integrates front-end, back-end, and database layers using Drizzle ORM and Next.js API routes.
-- **Deployable on Vercel**: Optimized for deployment on Vercel with Next.js serverless functions.
+## Tech Stack
 
-## 🛠️ Tech Stack
-- **Frontend**: Next.js, React, Tailwind CSS
-- **Backend**: Next.js API Routes, Gemini API (for AI functionality)
-- **Database**: Drizzle ORM (with SQL or SQLite as per preference)
-- **Deployment**: Vercel (optional)
+- **Frontend**: Next.js 15, React 18, Tailwind CSS
+- **Authentication**: Clerk
+- **AI**: Google Gemini API
+- **Database**: Neon PostgreSQL with Drizzle ORM
+- **Storage**: Firebase Storage
+- **UI Components**: shadcn/ui, Radix UI
 
----
+## Getting Started
 
-## 🚀 Getting Started
-Follow these steps to set up the project locally.
+### Prerequisites
 
-1. **Clone the repository:**
+- Node.js 18+ (recommended: 20+)
+- npm or yarn
+- Accounts for: Clerk, Google AI Studio, Neon, Firebase (optional)
+
+### Installation
+
+1. Clone the repository:
    ```bash
    git clone https://github.com/omkarspace/coursei.ai.git
-   cd yourproject
+   cd coursei.ai
    ```
 
-2. **Install dependencies:**
-   ```bash
-   yarn install
-   ```
-   or
+2. Install dependencies:
    ```bash
    npm install
    ```
 
-3. **Set up environment variables:**
-   Create a `.env` file in the root directory and add the necessary environment variables as per your configuration. Ensure you include any API keys or database connection strings required by the application.
+3. Set up environment variables:
+   ```bash
+   cp .env.example .env
+   ```
 
-## 🌐 Environment Variables
-Create a `.env` file in the root directory and add the necessary environment variables as per your configuration. Ensure you include any API keys or database connection strings required by the application.
+4. Fill in your API keys in `.env` (see [Environment Variables](#environment-variables))
 
-## 🏃 Running the App
-To start the development server, run:
-```bash
-yarn dev
+5. Push database schema:
+   ```bash
+   npm run db:push
+   ```
+
+6. Start development server:
+   ```bash
+   npm run dev
+   ```
+
+7. Open [http://localhost:3000](http://localhost:3000)
+
+## Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Yes | Clerk publishable key |
+| `CLERK_SECRET_KEY` | Yes | Clerk secret key |
+| `NEXT_PUBLIC_GEMINI_API_KEY` | Yes | Google Gemini API key |
+| `DATABASE_URL` | Yes | Neon PostgreSQL connection string |
+| `NEXT_PUBLIC_HOST_NAME` | Yes | App URL (e.g., `http://localhost:3000`) |
+| `NEXT_PUBLIC_FIREBASE_API_KEY` | No | Firebase API key (for image uploads) |
+| `NEXT_PUBLIC_YOUTUBE_API_KEY` | No | YouTube API key (for video search) |
+
+## Project Structure
+
 ```
-or
-```bash
-npm run dev
+coursei.ai/
+├── app/
+│   ├── (auth)/              # Authentication pages
+│   ├── actions/             # Server Actions (database mutations)
+│   ├── create-course/       # Course creation wizard
+│   ├── course/              # Public course viewing
+│   ├── dashboard/           # User dashboard
+│   ├── _components/         # Shared components
+│   ├── _context/            # React contexts
+│   └── _shared/             # Shared utilities
+├── components/ui/           # shadcn/ui components
+├── configs/                 # Configuration files
+│   ├── schema.jsx           # Database schema
+│   ├── AiModel.jsx          # Gemini AI setup
+│   └── firebaseConfig.jsx   # Firebase config
+├── lib/                     # Utility functions
+└── public/                  # Static assets
 ```
 
-## 🗂️ Project Structure
+## Available Scripts
 
-```
-/project-root
-│── /pages
-│   ├── index.js          # Main entry point for the application
-│   ├── _app.js           # Custom App component for initializing pages
-│   ├── api               # API routes for server-side logic
-│── /components
-│   ├── Header.js         # Header component
-│   ├── Footer.js         # Footer component
-│   ├── Layout.js         # Layout component for wrapping pages
-│── /styles
-│   ├── globals.css       # Global styles
-│   ├── Home.module.css   # Styles specific to the Home page
-│── /public
-│   ├── images            # Static images
-│   ├── favicon.ico       # Favicon for the application
-│── /api
-│   ├── hello.js          # Example API route
-│── .env                  # Environment variables
-│── package.json          # Project metadata and dependencies
-│── README.md             # Project documentation
-```
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run db:push` - Push database schema
+- `npm run db:studio` - Open Drizzle Studio
 
-### Explanation:
-- **/pages**: Contains the main pages of your application, including the entry point (`index.js`) and custom application setup (`_app.js`). The `api` directory within `pages` is used for server-side API routes.
-- **/components**: Houses reusable UI components like `Header`, `Footer`, and `Layout`.
-- **/styles**: Contains global and module-specific CSS files for styling the application.
-- **/public**: Used for static assets like images and the favicon.
-- **/api**: Contains server-side logic for handling API requests.
-- **.env**: Stores environment variables needed for configuration.
-- **package.json**: Lists project dependencies and scripts.
-- **README.md**: Provides documentation and instructions for the project.
+## Contributing
 
-This structure is designed to be modular and scalable, making it easier to maintain and extend the application.
-```
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details on the process for submitting pull requests.
 
-## 📸 Screenshots
-Include screenshots of the application here.
+## License
 
-## 🤝 Contributing
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/YourFeature`).
-3. Commit your changes (`git commit -m 'Add some feature'`).
-4. Push to the branch (`git push origin feature/YourFeature`).
-5. Open a pull request.
-
-## 📄 License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
-
-Make sure to replace placeholders like `yourusername`, `yourproject`, and any other project-specific details with actual information relevant to your project.
-```
