@@ -2,6 +2,7 @@
 import React from "react";
 import YouTube from "react-youtube";
 import ReactMarkdown from "react-markdown";
+import ContentVerification from "@/app/_components/ContentVerification";
 
 function ChapterContent({ chapter, content }) {
   return (
@@ -75,6 +76,11 @@ function ChapterContent({ chapter, content }) {
           </div>
         )}
       </div>
+
+      <ContentVerification
+        chapterName={chapter?.name}
+        contentSummary={content?.content?.map((c) => c.explanation).join(" ").substring(0, 500) || ""}
+      />
     </div>
   );
 }

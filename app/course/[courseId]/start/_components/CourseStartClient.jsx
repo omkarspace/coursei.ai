@@ -22,6 +22,7 @@ const StudyNotes = dynamic(() => import("@/app/_components/StudyNotes"), {
 });
 
 import AudioPlayer from "@/app/_components/AudioPlayer";
+import WikipediaSidebar from "@/app/_components/WikipediaSidebar";
 
 export default function CourseStartClient({ course, initialChapterContent }) {
   const [selectedChapter, setSelectedChapter] = useState(
@@ -244,41 +245,51 @@ export default function CourseStartClient({ course, initialChapterContent }) {
           )}
 
           {/* Tab Content */}
-          {loadingChapter ? (
-            <div className="flex justify-center items-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          <div className="flex gap-6">
+            <div className="flex-1 min-w-0">
+              {loadingChapter ? (
+                <div className="flex justify-center items-center py-12">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                </div>
+              ) : activeTab === "content" ? (
+                <ChapterContent chapter={selectedChapter} content={chapterContent} />
+              ) : activeTab === "quiz" && selectedChapter ? (
+                <QuizGenerator
+                  courseId={course?.courseId}
+                  chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
+                  chapterName={selectedChapter?.name}
+                  chapterContent={chapterContent}
+                />
+              ) : activeTab === "flashcards" && selectedChapter ? (
+                <Flashcards
+                  courseId={course?.courseId}
+                  chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
+                  chapterName={selectedChapter?.name}
+                  chapterContent={chapterContent}
+                />
+              ) : activeTab === "notes" && selectedChapter ? (
+                <StudyNotes
+                  courseId={course?.courseId}
+                  chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
+                  chapterName={selectedChapter?.name}
+                  chapterContent={chapterContent}
+                />
+              ) : activeTab === "audio" && selectedChapter ? (
+                <AudioPlayer
+                  courseId={course?.courseId}
+                  chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
+                  chapterContent={chapterContent?.content || []}
+                  chapterName={selectedChapter?.name}
+                />
+              ) : null}
             </div>
-          ) : activeTab === "content" ? (
-            <ChapterContent chapter={selectedChapter} content={chapterContent} />
-          ) : activeTab === "quiz" && selectedChapter ? (
-            <QuizGenerator
-              courseId={course?.courseId}
-              chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
-              chapterName={selectedChapter?.name}
-              chapterContent={chapterContent}
-            />
-          ) : activeTab === "flashcards" && selectedChapter ? (
-            <Flashcards
-              courseId={course?.courseId}
-              chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
-              chapterName={selectedChapter?.name}
-              chapterContent={chapterContent}
-            />
-          ) : activeTab === "notes" && selectedChapter ? (
-            <StudyNotes
-              courseId={course?.courseId}
-              chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
-              chapterName={selectedChapter?.name}
-              chapterContent={chapterContent}
-            />
-          ) : activeTab === "audio" && selectedChapter ? (
-            <AudioPlayer
-              courseId={course?.courseId}
-              chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
-              chapterContent={chapterContent?.content || []}
-              chapterName={selectedChapter?.name}
-            />
-          ) : null}
+            <div className="hidden lg:block w-80 shrink-0">
+              <WikipediaSidebar
+                chapterName={selectedChapter?.name}
+                courseName={course?.courseOutput?.course?.name}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
