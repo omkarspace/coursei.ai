@@ -10,13 +10,11 @@ function DashboardLayout({ children }) {
     <UserCourseListContext.Provider
       value={{ UserCourseList, setUserCourseInput }}
     >
-      <div>
-        <div className="md: w-64 hidden md:block">
-          <SideBar />
-        </div>
-        <div className="md:ml-64 ">
+      <div className="min-h-screen dark:bg-gray-950">
+        <SideBar />
+        <div className="md:ml-64">
           <Header />
-          <div className="p-10">{children}</div>
+          <div className="p-4 md:p-10">{children}</div>
         </div>
       </div>
     </UserCourseListContext.Provider>

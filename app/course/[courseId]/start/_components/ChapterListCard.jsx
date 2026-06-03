@@ -1,16 +1,24 @@
 import React from "react";
-import { HiOutlineClock } from "react-icons/hi2";
+import { HiOutlineClock, HiCheck } from "react-icons/hi2";
 
-function ChapterListCard({ chapter, index }) {
+function ChapterListCard({ chapter, index, isCompleted = false }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-5 p-4 items-center border-b">
       <div className="flex justify-center sm:justify-start">
-        <h2 className="p-1 bg-primary w-8 h-8 text-white text-center rounded-full">
-          {index + 1}
-        </h2>
+        {isCompleted ? (
+          <h2 className="p-1 bg-green-500 w-8 h-8 text-white text-center rounded-full flex items-center justify-center">
+            <HiCheck className="w-5 h-5" />
+          </h2>
+        ) : (
+          <h2 className="p-1 bg-primary w-8 h-8 text-white text-center rounded-full">
+            {index + 1}
+          </h2>
+        )}
       </div>
       <div className="col-span-4 sm:col-span-4">
-        <h2 className="font-medium text-sm sm:text-base">{chapter?.name}</h2>
+        <h2 className={`font-medium text-sm sm:text-base ${isCompleted ? "text-green-600 dark:text-green-400" : ""}`}>
+          {chapter?.name}
+        </h2>
         <h2 className="flex items-center gap-2 text-xs sm:text-sm text-primary">
           <HiOutlineClock />
           {chapter?.duration}

@@ -50,15 +50,15 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-50 border-t border-gray-100" role="contentinfo">
+    <footer className="bg-gray-50 dark:bg-gray-950 border-t border-gray-100 dark:border-gray-800" role="contentinfo">
       <div className="mx-auto max-w-7xl px-5 sm:px-10 md:px-12 lg:px-5 py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="font-bold text-xl text-gray-900">
+            <Link href="/" className="font-bold text-xl text-gray-900 dark:text-white">
               Coursei.ai
             </Link>
-            <p className="mt-4 text-sm text-gray-600 leading-relaxed">
+            <p className="mt-4 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
               The open-source learning platform powered by AI. Create courses, quizzes, flashcards, and study notes in minutes.
             </p>
             <div className="flex gap-4 mt-6">
@@ -68,7 +68,7 @@ export default function Footer() {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                  className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                   aria-label={link.name}
                 >
                   {link.icon}
@@ -80,7 +80,7 @@ export default function Footer() {
           {/* Link Columns */}
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
-              <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4">
                 {category}
               </h3>
               <ul className="space-y-3">
@@ -88,7 +88,7 @@ export default function Footer() {
                   <li key={link.text}>
                     <Link
                       href={link.href}
-                      className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                      className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
                       target={link.href.startsWith("http") ? "_blank" : undefined}
                       rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
                     >
@@ -102,15 +102,15 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-gray-500">
+        <div className="mt-12 pt-8 border-t border-gray-100 dark:border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             &copy; {new Date().getFullYear()} Coursei.ai. All rights reserved.
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             Built with{" "}
-            <span className="text-purple-600 font-medium">Next.js</span>,{" "}
-            <span className="text-purple-600 font-medium">Tailwind CSS</span>,{" "}
-            <span className="text-purple-600 font-medium">Gemini AI</span>
+            <span className="text-purple-600 dark:text-purple-400 font-medium">Next.js</span>,{" "}
+            <span className="text-purple-600 dark:text-purple-400 font-medium">Tailwind CSS</span>,{" "}
+            <span className="text-purple-600 dark:text-purple-400 font-medium">Gemini AI</span>
           </p>
         </div>
       </div>

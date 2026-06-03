@@ -33,15 +33,15 @@ const communityItems = [
 
 export default function Community() {
   return (
-    <SectionWrapper id="community" className="bg-gray-50">
+    <SectionWrapper id="community" className="bg-gray-50 dark:bg-gray-900">
       <div className="text-center mb-16">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
           Join the{" "}
           <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
             Open Source Community
           </span>
         </h2>
-        <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
+        <p className="text-gray-600 dark:text-gray-400 mt-4 max-w-2xl mx-auto">
           Help us build the future of open-source education. Every contribution matters.
         </p>
       </div>
@@ -54,18 +54,18 @@ export default function Community() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.15 }}
-            className="p-8 rounded-2xl bg-white border border-gray-100 hover:border-gray-200 hover:shadow-xl transition-all text-center group"
+            className="p-8 rounded-2xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 hover:border-gray-200 dark:hover:border-gray-600 hover:shadow-xl transition-all text-center group"
           >
             <div className="w-14 h-14 mx-auto rounded-xl bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <item.icon className="w-7 h-7 text-white" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-3">{item.title}</h3>
-            <p className="text-gray-600 mb-6 leading-relaxed">{item.description}</p>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">{item.title}</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">{item.description}</p>
             <a
               href={item.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-purple-600 font-medium hover:text-purple-700 transition-colors"
+              className="inline-flex items-center gap-2 text-purple-600 dark:text-purple-400 font-medium hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
             >
               {item.linkText}
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">

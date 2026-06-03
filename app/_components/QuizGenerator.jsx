@@ -87,7 +87,8 @@ function QuizGenerator({ courseId, chapterId, chapterName, chapterContent }) {
         <button
           onClick={generateQuiz}
           disabled={loading}
-          className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 disabled:opacity-50"
+          aria-label="Generate quiz"
+          className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         >
           {loading ? "Generating Quiz..." : "Generate Quiz"}
         </button>
@@ -115,7 +116,8 @@ function QuizGenerator({ courseId, chapterId, chapterName, chapterContent }) {
           </p>
           <button
             onClick={resetQuiz}
-            className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90"
+            aria-label="Retake quiz"
+            className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           >
             Retake Quiz
           </button>
@@ -187,7 +189,8 @@ function QuizGenerator({ courseId, chapterId, chapterName, chapterContent }) {
       {showResult && (
         <button
           onClick={nextQuestion}
-          className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90"
+          aria-label={currentQuestion < quiz.length - 1 ? "Next question" : "See results"}
+          className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         >
           {currentQuestion < quiz.length - 1 ? "Next Question" : "See Results"}
         </button>

@@ -1,28 +1,21 @@
 "use client";
-import { db } from "@/configs/db";
-import { Chapters, CourseList } from "@/configs/schema";
 import { useUser } from "@clerk/nextjs";
-import { and, eq } from "drizzle-orm";
 import React, { useEffect, useState } from "react";
 import CourseBasicInfo from "./_components/CourseBasicInfo";
 import CourseDetails from "./_components/CourseDetails";
 import ChapterList from "./_components/ChapterList";
 import { Button } from "@/components/ui/button";
-import { GenerateChapterContent_AI } from "@/configs/AiModel";
-import LoadingDialog from "../_components/LoadingDialog";
-import service from "@/configs/service";
+import { GenerationProgress } from "./_components/GenerationProgress";
 import { useRouter } from "next/navigation";
 import {
   getCourseById,
-  publishCourse,
-  createChapter,
-  getCourseChapters,
+  updateCourseStatus,
 } from "@/app/actions/course";
 
 function CourseLayout({ params }) {
   const { user } = useUser();
   const [course, setCourse] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -34,54 +27,56 @@ function CourseLayout({ params }) {
     setCourse(result);
   };
 
-  const GenerateChapterContent = async () => {
-    setLoading(true);
-    const chapters = course?.courseOutput?.course?.chapters || [];
+  const GenerateCourseContent = async () => {
+    setIsGenerating(true);
 
     try {
-      for (const [index, chapter] of chapters.entries()) {
-        if (index >= 3) break;
+      // Update status to generating
+      await updateCourseStatus(
+        course.courseId,
+        "generating_outline",
+        0,
+        "Starting course generation..."
+      );
 
-        const PROMPT = `Explain the concept in Detail on Topic: ${course?.name}, Chapter: ${chapter?.name}, in JSON Format with a list of arrays including title, explanation, and code example (use <precode> format for code if applicable).`;
+      const chapters = course?.courseOutput?.course?.chapters || [];
 
-        const result = await GenerateChapterContent_AI.sendMessage(PROMPT);
-        const responseText = await result?.response?.text();
+      // Send event to Inngest for background processing
+      await fetch("/api/inngest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: "course.generate",
+          data: {
+            courseId: course.courseId,
+            topic: course.name,
+            chapters: chapters,
+          },
+        }),
+      });
 
-        let content;
-        try {
-          content = JSON.parse(responseText || "{}");
-        } catch (error) {
-          content = {};
-        }
-
-        let videoId = "";
-        if (course.includeVideo === "Yes") {
-          try {
-            const videoResponse = await service.getVideos(
-              `${course?.name}:${chapter?.name}`
-            );
-            videoId = videoResponse[0]?.id?.videoId || "";
-          } catch (error) {
-            console.error("Error fetching video ID:", error);
-          }
-        }
-
-        await createChapter({
-          chapterId: index,
-          courseId: course?.courseId,
-          content: content,
-          videoId: videoId,
-        });
-      }
-
-      await publishCourse(course?.courseId);
-      router.replace(`/create-course/${course?.courseId}/finish`);
+      // Refresh course data
+      await GetCourse();
     } catch (error) {
-      console.error("Error generating chapter content:", error);
-    } finally {
-      setLoading(false);
+      console.error("Error starting course generation:", error);
+      await updateCourseStatus(
+        course.courseId,
+        "failed",
+        0,
+        undefined,
+        error instanceof Error ? error.message : "Unknown error"
+      );
     }
   };
+
+  const handleGenerationComplete = () => {
+    setIsGenerating(false);
+    router.replace(`/create-course/${course?.courseId}/finish`);
+  };
+
+  const isGeneratingStatus =
+    course?.status === "generating_outline" ||
+    course?.status === "generating_chapters";
 
   return (
     <div className="mt-10 px-6 sm:px-10 md:px-20 lg:px-32 xl:px-44">
@@ -89,17 +84,37 @@ function CourseLayout({ params }) {
         Course Layout
       </h2>
 
-      <LoadingDialog loading={loading} />
       <CourseBasicInfo course={course} refreshData={() => GetCourse()} />
       <CourseDetails course={course} />
       <ChapterList course={course} refreshData={() => GetCourse()} />
 
-      <Button
-        onClick={GenerateChapterContent}
-        className="my-6 sm:my-8 lg:my-10 w-full sm:w-auto"
-      >
-        Generate Course Content
-      </Button>
+      {/* Generation Progress */}
+      {(isGenerating || isGeneratingStatus) && (
+        <GenerationProgress
+          courseId={course?.courseId}
+          onComplete={handleGenerationComplete}
+        />
+      )}
+
+      {/* Generate Button - only show when not generating and course is in draft */}
+      {!isGenerating && !isGeneratingStatus && course?.status !== "complete" && (
+        <Button
+          onClick={GenerateCourseContent}
+          className="my-6 sm:my-8 lg:my-10 w-full sm:w-auto"
+        >
+          Generate Course Content
+        </Button>
+      )}
+
+      {/* View Course Button - show when complete */}
+      {course?.status === "complete" && (
+        <Button
+          onClick={() => router.replace(`/create-course/${course?.courseId}/finish`)}
+          className="my-6 sm:my-8 lg:my-10 w-full sm:w-auto"
+        >
+          View Course
+        </Button>
+      )}
     </div>
   );
 }

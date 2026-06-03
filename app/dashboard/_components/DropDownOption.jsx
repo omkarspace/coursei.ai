@@ -4,6 +4,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { HiOutlineTrash } from "react-icons/hi2";
@@ -17,8 +18,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import PublishButton from "./PublishButton";
 
-function DropDownOption({ children, handleOnDelete }) {
+function DropDownOption({ children, handleOnDelete, course, refreshData }) {
   const [openAlert, setOpenAlert] = useState(false);
 
   return (
@@ -33,6 +35,8 @@ function DropDownOption({ children, handleOnDelete }) {
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
+          <PublishButton course={course} refreshData={refreshData} />
+          <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => setOpenAlert(true)}
             className="text-red-600 focus:text-red-600"

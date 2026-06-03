@@ -71,7 +71,8 @@ function StudyNotes({ courseId, chapterId, chapterName, chapterContent }) {
         <button
           onClick={generateStudyNotes}
           disabled={loading}
-          className="ml-auto px-3 py-1 text-sm border dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-white flex items-center gap-1"
+          aria-label="Regenerate study notes"
+          className="ml-auto px-3 py-1 text-sm border dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-white flex items-center gap-1 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50"
         >
           <HiArrowPath className="h-3 w-3" />
           Regenerate

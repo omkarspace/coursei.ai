@@ -88,7 +88,16 @@ function Flashcards({ courseId, chapterId, chapterName, chapterContent }) {
       <div className="flex justify-center mb-6">
         <div
           onClick={() => setFlipped(!flipped)}
-          className="w-full max-w-md h-48 cursor-pointer perspective-1000"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              setFlipped(!flipped);
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label={flipped ? "Flip card to front" : "Flip card to back"}
+          className="w-full max-w-md h-48 cursor-pointer perspective-1000 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-xl"
         >
           <div
             className={`relative w-full h-full transition-transform duration-500 transform-style-3d ${
@@ -116,20 +125,23 @@ function Flashcards({ courseId, chapterId, chapterName, chapterContent }) {
       <div className="flex justify-center gap-4">
         <button
           onClick={prevCard}
-          className="px-4 py-2 border dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-white"
+          aria-label="Previous flashcard"
+          className="px-4 py-2 border dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         >
           Previous
         </button>
         <button
           onClick={nextCard}
-          className="px-4 py-2 border dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-white"
+          aria-label="Next flashcard"
+          className="px-4 py-2 border dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         >
           Next
         </button>
         <button
           onClick={generateFlashcards}
           disabled={loading}
-          className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 flex items-center gap-2"
+          aria-label="Regenerate flashcards"
+          className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50"
         >
           <HiArrowPath className="h-4 w-4" />
           Regenerate

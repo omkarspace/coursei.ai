@@ -15,6 +15,7 @@ import LoadingDialog from "./_components/LoadingDialog";
 import uuid4 from "uuid4";
 import { useRouter } from "next/navigation";
 import { createCourse } from "../actions/course";
+import { toast } from "sonner";
 
 function CreateCourse() {
   const StepperOptions = [
@@ -26,6 +27,7 @@ function CreateCourse() {
   const { userCourseInput, setUserCourseInput } = useContext(UserInputContext);
   const [loading, setLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [error, setError] = useState(null);
   const router = useRouter();
 
   const checkStatus = () => {
@@ -55,6 +57,8 @@ function CreateCourse() {
 
   const GenerateCourseLayout = async () => {
     setLoading(true);
+    setError(null);
+    
     const BASIC_PROMPT =
       "Generate A Course Tutorial on Following Detail With field as Course Name, Description, Along with Chapter Name, about, Duration: ";
     const USER_INPUT_PROMPT =
@@ -70,15 +74,36 @@ function CreateCourse() {
       userCourseInput?.noOfChapter +
       " , in JSON format";
     const FINAL_PROMPT = BASIC_PROMPT + USER_INPUT_PROMPT;
-    const result = await GenerateCourseLayout_AI.sendMessage(FINAL_PROMPT);
-    const courseLayout = JSON.parse(result.response?.text());
-    setLoading(false);
-    SaveCourseLayoutInDb(courseLayout);
+    
+    try {
+      const result = await GenerateCourseLayout_AI.sendMessage(FINAL_PROMPT);
+      const responseText = result.response?.text();
+      
+      if (!responseText) {
+        throw new Error("No response from AI. Please try again.");
+      }
+      
+      let courseLayout;
+      try {
+        courseLayout = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error("JSON parse error:", parseError);
+        throw new Error("Invalid response format. Please try again.");
+      }
+      
+      await SaveCourseLayoutInDb(courseLayout);
+    } catch (err) {
+      console.error("Course generation error:", err);
+      const errorMessage = (err && err.message) ? err.message : "Failed to generate course. Please try again.";
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const SaveCourseLayoutInDb = async (courseLayout) => {
     const id = uuid4();
-    setLoading(true);
     try {
       await createCourse({
         courseId: id,
@@ -88,11 +113,11 @@ function CreateCourse() {
         courseOutput: courseLayout,
         includeVideo: userCourseInput?.displayVideo || "Yes",
       });
+      router.replace("/create-course/" + id);
     } catch (error) {
       console.error("Error saving course layout:", error);
-    } finally {
-      setLoading(false);
-      router.replace("/create-course/" + id);
+      toast.error("Failed to save course. Please try again.");
+      throw error;
     }
   };
 
@@ -108,6 +133,7 @@ function CreateCourse() {
                   className={`bg-gray-200 dark:bg-gray-700 p-3 rounded-full text-white ${
                     activeIndex >= index && "bg-primary"
                   }`}
+                  aria-label={`Step ${index + 1}: ${item.name}`}
                 >
                   {item.icon}
                 </div>
@@ -124,6 +150,37 @@ function CreateCourse() {
           ))}
         </div>
       </div>
+      
+      {/* Error display */}
+      {error && (
+        <div className="mx-10 md:mx-20 lg:mx-44 mt-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+          <div className="flex items-center gap-3">
+            <svg
+              className="w-5 h-5 text-red-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+              />
+            </svg>
+            <p className="text-red-700 dark:text-red-400 text-sm">{error}</p>
+            <button
+              onClick={() => setError(null)}
+              className="ml-auto text-red-500 hover:text-red-700"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="px-10 md:px-20 lg:px-44 mt-10">
         {activeIndex === 0 ? (
           <SelectCategory />
@@ -151,10 +208,10 @@ function CreateCourse() {
           )}
           {activeIndex === 2 && (
             <Button
-              disabled={checkStatus()}
+              disabled={checkStatus() || loading}
               onClick={() => GenerateCourseLayout()}
             >
-              Generate Course Layout
+              {loading ? "Generating..." : "Generate Course Layout"}
             </Button>
           )}
         </div>

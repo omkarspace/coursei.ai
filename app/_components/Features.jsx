@@ -81,15 +81,15 @@ const item = {
 
 export default function Features() {
   return (
-    <SectionWrapper id="features" className="bg-white">
+    <SectionWrapper id="features" className="bg-white dark:bg-gray-900">
       <div className="text-center mb-16">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
           Everything You Need to Create{" "}
           <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
             Amazing Courses
           </span>
         </h2>
-        <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
+        <p className="text-gray-600 dark:text-gray-400 mt-4 max-w-2xl mx-auto">
           Our AI handles the heavy lifting so you can focus on what matters most — sharing your knowledge.
         </p>
       </div>
@@ -105,13 +105,13 @@ export default function Features() {
           <motion.div
             key={feature.title}
             variants={item}
-            className="group p-6 rounded-2xl border border-gray-100 hover:border-gray-200 hover:shadow-xl hover:shadow-gray-100/50 transition-all duration-300"
+            className="group p-6 rounded-2xl border border-gray-100 dark:border-gray-800 hover:border-gray-200 dark:hover:border-gray-700 hover:shadow-xl hover:shadow-gray-100/50 dark:hover:shadow-gray-900/50 transition-all duration-300 bg-white dark:bg-gray-800"
           >
             <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
               <feature.icon className="w-6 h-6 text-white" />
             </div>
-            <h3 className="font-semibold text-gray-900 mb-2">{feature.title}</h3>
-            <p className="text-sm text-gray-600 leading-relaxed">{feature.description}</p>
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{feature.title}</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{feature.description}</p>
           </motion.div>
         ))}
       </motion.div>
