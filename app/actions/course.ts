@@ -12,7 +12,7 @@ import {
 import { eq, and } from "drizzle-orm";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
-import { upsertCourseVector, deleteCourseVector } from "@/server/services/vector";
+import { upsertCourseVectorFull, deleteCourseVector } from "@/server/services/vector";
 import { getCachedCourse, setCachedCourse, invalidateCourseCache } from "@/server/services/cache";
 
 async function getUserEmail(): Promise<string> {
@@ -206,19 +206,32 @@ export async function publishCourse(courseId: string) {
       )
     );
 
-  // Index in vector search
+  // Index in vector search with chapter-enriched embeddings
   const courseOutput = course.courseOutput as any;
   try {
-    await upsertCourseVector(
+    const chapterData = (courseOutput.course.chapters || []).map(
+      (ch: any) => ({
+        name: ch.name,
+        about: ch.about || "",
+      })
+    );
+
+    await upsertCourseVectorFull(
       courseId,
       courseOutput.course.name,
       courseOutput.course.description,
       course.category,
-      course.level
+      course.level,
+      chapterData
     );
+
+    // Record when vector was last indexed
+    await db
+      .update(CourseList)
+      .set({ vectorIndexedAt: new Date() })
+      .where(eq(CourseList.courseId, courseId));
   } catch (error) {
     console.error("Failed to index course in vector search:", error);
-    // Don't fail the publish if vector indexing fails
   }
 
   revalidatePath("/dashboard");
