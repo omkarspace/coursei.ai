@@ -40,6 +40,7 @@
     "katex": "^0.17.0",
     "lucide-react": "^0.454.0",
     "mermaid": "^11.15.0",
+    "neo4j-driver": "^6.0.1",
     "next": "^15.5.18",
     "prismjs": "^1.30.0",
     "react": "^18.3.1",

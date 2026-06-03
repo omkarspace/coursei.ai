@@ -239,6 +239,11 @@ export async function publishCourse(courseId: string) {
   revalidatePath("/explore");
   revalidatePath(`/course/${courseId}`);
   await invalidateCourseCache(courseId);
+
+  // Build knowledge graph
+  await inngest.send("course.build_graph", {
+    data: { courseId },
+  });
 }
 
 export async function getCourseChapters(courseId: string) {
