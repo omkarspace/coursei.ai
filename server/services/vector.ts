@@ -83,6 +83,48 @@ export async function upsertCourseVector(
 }
 
 /**
+ * Upsert a course into the vector index with enriched chapter data
+ */
+export async function upsertCourseVectorFull(
+  courseId: string,
+  name: string,
+  description: string,
+  category: string,
+  level: string,
+  chapters: { name: string; about: string }[]
+): Promise<void> {
+  if (!isVectorEnabled()) {
+    console.log("Upstash Vector not configured, skipping indexing");
+    return;
+  }
+
+  // Combine course metadata with chapter names and descriptions for richer embedding
+  const chapterText = chapters
+    .map((ch) => `${ch.name}: ${ch.about}`)
+    .join(" ");
+  const text = `${name} ${description} ${category} ${level} ${chapterText}`;
+
+  const vector = generateSimpleEmbedding(text);
+
+  await vectorFetch("/upsert", {
+    method: "POST",
+    body: JSON.stringify({
+      id: `course:${courseId}`,
+      vector,
+      metadata: {
+        courseId,
+        name,
+        description: description.slice(0, 500),
+        category,
+        level,
+        chapters: chapters.map((ch) => ch.name).join(", "),
+        type: "course",
+      },
+    }),
+  });
+}
+
+/**
  * Delete a course from the vector index
  */
 export async function deleteCourseVector(courseId: string): Promise<void> {
