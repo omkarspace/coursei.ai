@@ -6,6 +6,7 @@ import CourseRating from "./_components/CourseRating";
 import CourseForkButton from "./_components/CourseForkButton";
 import ChapterList from "@/app/create-course/[courseId]/_components/ChapterList";
 import Header from "@/app/dashboard/_components/Header";
+import ConceptCanvasWrapper from "./_components/ConceptCanvasWrapper";
 
 export async function generateMetadata({ params }) {
   const { courseId } = await params;
@@ -71,6 +72,11 @@ export default async function Course({ params }) {
             <CourseRating courseId={courseId} />
           </Suspense>
           <ChapterList course={course} />
+
+          <div>
+            <h3 className="font-bold text-lg dark:text-white mb-4">Concept Map</h3>
+            <ConceptCanvasWrapper courseId={courseId} course={course} />
+          </div>
         </div>
       </div>
     </div>
