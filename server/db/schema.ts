@@ -80,6 +80,7 @@ export const CourseList = pgTable("CourseList", {
   generationError: text("generationError"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  vectorIndexedAt: timestamp("vectorIndexedAt"),
 });
 
 export const Chapters = pgTable("chapters", {

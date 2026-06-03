@@ -1,0 +1,1 @@
+ALTER TABLE "CourseList" ADD COLUMN "vectorIndexedAt" timestamp;
