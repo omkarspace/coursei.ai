@@ -70,13 +70,18 @@ export default function CourseStartClient({ course, initialChapterContent }) {
     const chapterIndex = course?.courseOutput?.course?.chapters.indexOf(selectedChapter);
     if (chapterIndex === undefined) return;
 
+    // Optimistic update: immediately reflect completion in UI
+    const previousChapters = [...completedChapters];
+    if (!completedChapters.includes(chapterIndex)) {
+      setCompletedChapters((prev) => [...prev, chapterIndex]);
+    }
     setMarkingComplete(true);
+
     try {
       await markChapterComplete(course.courseId, chapterIndex);
-      setCompletedChapters((prev) =>
-        prev.includes(chapterIndex) ? prev : [...prev, chapterIndex]
-      );
     } catch (error) {
+      // Rollback on failure
+      setCompletedChapters(previousChapters);
       console.error("Failed to mark chapter as complete:", error);
     } finally {
       setMarkingComplete(false);

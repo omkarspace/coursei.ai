@@ -7,7 +7,7 @@ import EditCourseBasicInfo from "./EditCourseBasicInfo";
 import { updateCourseBanner } from "@/app/actions/course";
 import Link from "next/link";
 import { toast } from "sonner";
-import AiBannerButton from "./AiBannerButton";
+import AiBannerButton from "../../_components/AiBannerButton";
 
 function CourseBasicInfo({ course, refreshData, edit = true }) {
   const [selectedFile, setSelectedFile] = useState();
