@@ -5,6 +5,18 @@ export const ChapterSchema = z.object({
   name: z.string().describe("The name of the chapter"),
   about: z.string().describe("A brief description of what the chapter covers"),
   duration: z.string().describe("Estimated time to complete the chapter"),
+  learningObjectives: z
+    .array(z.string())
+    .optional()
+    .describe("3-5 specific learning objectives for this chapter"),
+  difficulty: z
+    .enum(["beginner", "intermediate", "advanced"])
+    .optional()
+    .describe("Difficulty level of this chapter"),
+  prerequisites: z
+    .array(z.string())
+    .optional()
+    .describe("Chapter names that should be completed before this one"),
 });
 
 export const CourseLayoutSchema = z.object({
@@ -14,6 +26,10 @@ export const CourseLayoutSchema = z.object({
     noOfChapters: z.number().describe("Number of chapters in the course"),
     duration: z.string().describe("Total estimated duration of the course"),
     chapters: z.array(ChapterSchema).describe("List of chapters in the course"),
+    learningObjectives: z
+      .array(z.string())
+      .optional()
+      .describe("3-5 top-level learning objectives for the entire course"),
   }),
 });
 

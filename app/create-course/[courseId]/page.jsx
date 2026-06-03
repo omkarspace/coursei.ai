@@ -39,8 +39,6 @@ function CourseLayout({ params }) {
         "Starting course generation..."
       );
 
-      const chapters = course?.courseOutput?.course?.chapters || [];
-
       // Send event to Inngest for background processing
       await fetch("/api/inngest", {
         method: "POST",
@@ -49,8 +47,6 @@ function CourseLayout({ params }) {
           name: "course.generate",
           data: {
             courseId: course.courseId,
-            topic: course.name,
-            chapters: chapters,
           },
         }),
       });

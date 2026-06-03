@@ -5,6 +5,9 @@ import { eq } from "drizzle-orm";
 import { generateChapterContent } from "./generate";
 import { getVideos } from "@/server/services/youtube";
 import { generateChapterIllustration } from "@/server/services/fal";
+import { designCurriculum } from "./agents/curriculum-designer";
+import { checkFacts } from "./agents/fact-checker";
+import { reviewPedagogy } from "./agents/pedagogical-expert";
 
 export const generateCourse = inngest.createFunction(
   {
@@ -12,41 +15,111 @@ export const generateCourse = inngest.createFunction(
     triggers: [{ event: "course.generate" }],
   },
   async ({ event, step }) => {
-    const { courseId, topic, chapters, includeVideo } = event.data as {
-      courseId: string;
-      topic: string;
-      chapters: { name: string; about: string; duration: string }[];
-      includeVideo: string;
-    };
+    const { courseId } = event.data as { courseId: string };
+
+    // Fetch full course data from DB
+    const courseRows = await db
+      .select()
+      .from(CourseList)
+      .where(eq(CourseList.courseId, courseId));
+    const courseData = courseRows[0];
+    if (!courseData) throw new Error(`Course ${courseId} not found`);
+
+    const topic = courseData.name;
+    const category = courseData.category;
+    const level = courseData.level;
+    const duration = (courseData.courseOutput as any)?.course?.duration || "4 weeks";
+    const numChapters = (courseData.courseOutput as any)?.course?.chapters?.length || 6;
+    const includeVideo = courseData.includeVideo;
 
     // Step 1: Update status to generating
     await step.run("update-status-generating", () =>
       db
         .update(CourseList)
         .set({
-          status: "generating_chapters",
-          progress: 10,
-          currentStep: "Starting generation...",
+          status: "generating_outline",
+          progress: 5,
+          currentStep: "Designing curriculum...",
         })
         .where(eq(CourseList.courseId, courseId))
     );
 
-    // Step 2: Generate content for each chapter
-    for (let i = 0; i < chapters.length; i++) {
-      const chapter = chapters[i];
-      const progress = Math.round(10 + (i / chapters.length) * 80);
+    // Step 2: Curriculum Designer Agent
+    const curriculum = await step.run("curriculum-designer", async () => {
+      await db
+        .update(CourseList)
+        .set({ progress: 10, currentStep: "Curriculum Designer analyzing topic..." })
+        .where(eq(CourseList.courseId, courseId));
+
+      return designCurriculum(category, topic, level, duration, numChapters);
+    });
+
+    // Step 3: Fact Checker Agent
+    const factCheck = await step.run("fact-checker", async () => {
+      await db
+        .update(CourseList)
+        .set({ progress: 20, currentStep: "Fact Checker verifying accuracy..." })
+        .where(eq(CourseList.courseId, courseId));
+
+      return checkFacts(curriculum);
+    });
+
+    // Step 4: Pedagogical Expert Agent
+    const pedagogy = await step.run("pedagogical-expert", async () => {
+      await db
+        .update(CourseList)
+        .set({ progress: 30, currentStep: "Pedagogical Expert optimizing learning path..." })
+        .where(eq(CourseList.courseId, courseId));
+
+      return reviewPedagogy(
+        factCheck.adjustedChapters,
+        curriculum.course.name,
+        curriculum.course.description
+      );
+    });
+
+    // Step 5: Save course outline
+    const finalChapters = pedagogy.finalChapters;
+    const courseOutput = {
+      course: {
+        name: curriculum.course.name,
+        description: curriculum.course.description,
+        noOfChapters: finalChapters.length,
+        duration: curriculum.course.duration,
+        chapters: finalChapters.map((ch) => ({
+          name: ch.name,
+          about: ch.about,
+          duration: ch.duration,
+        })),
+      },
+    };
+
+    await step.run("save-course-outline", () =>
+      db
+        .update(CourseList)
+        .set({
+          courseOutput,
+          status: "generating_chapters",
+          progress: 35,
+          currentStep: "Generating chapter content...",
+        })
+        .where(eq(CourseList.courseId, courseId))
+    );
+
+    // Step 6: Generate content for each chapter
+    for (let i = 0; i < finalChapters.length; i++) {
+      const chapter = finalChapters[i];
+      const progress = Math.round(35 + (i / finalChapters.length) * 55);
 
       await step.run(`generate-chapter-${i}`, async () => {
-        // Update progress
         await db
           .update(CourseList)
           .set({
             progress,
-            currentStep: `Generating chapter ${i + 1} of ${chapters.length}: ${chapter.name}`,
+            currentStep: `Generating chapter ${i + 1} of ${finalChapters.length}: ${chapter.name}`,
           })
           .where(eq(CourseList.courseId, courseId));
 
-        // Generate chapter content using Vercel AI SDK
         let content;
         try {
           content = await generateChapterContent(topic, chapter.name);
@@ -61,7 +134,6 @@ export const generateCourse = inngest.createFunction(
           ];
         }
 
-        // Fetch YouTube video if enabled
         let videoId = "";
         if (includeVideo === "Yes") {
           try {
@@ -72,7 +144,6 @@ export const generateCourse = inngest.createFunction(
           }
         }
 
-        // Save chapter to database
         await db.insert(Chapters).values({
           courseId,
           chapterId: i,
@@ -80,7 +151,6 @@ export const generateCourse = inngest.createFunction(
           videoId,
         });
 
-        // Generate chapter illustration (non-blocking, fail silently)
         try {
           const illustrationUrl = await generateChapterIllustration(chapter.name, topic);
           if (illustrationUrl) {
@@ -92,7 +162,7 @@ export const generateCourse = inngest.createFunction(
       });
     }
 
-    // Step 3: Mark as complete (course remains unpublished until user publishes)
+    // Step 7: Mark as complete
     await step.run("update-status-complete", () =>
       db
         .update(CourseList)
@@ -104,6 +174,13 @@ export const generateCourse = inngest.createFunction(
         .where(eq(CourseList.courseId, courseId))
     );
 
-    return { courseId, status: "complete" };
+    return {
+      courseId,
+      status: "complete",
+      agentsUsed: ["curriculum-designer", "fact-checker", "pedagogical-expert"],
+      verified: factCheck.verified,
+      difficultyAdjustments: pedagogy.difficultyAdjustments.length,
+      quizTopicsGenerated: pedagogy.quizPrompts.length,
+    };
   }
 );
