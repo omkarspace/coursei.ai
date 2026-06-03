@@ -85,6 +85,14 @@ export default function CourseClient({ course }) {
             </div>
           </div>
           <CourseDetails course={course} />
+          <div className="text-sm text-gray-500 dark:text-gray-400">
+            {course?.createdAt && (
+              <span>Created {new Date(course.createdAt).toLocaleDateString()}</span>
+            )}
+            {course?.updatedAt && course.updatedAt !== course.createdAt && (
+              <span> · Updated {new Date(course.updatedAt).toLocaleDateString()}</span>
+            )}
+          </div>
           <ChapterList course={course} />
         </div>
       </div>

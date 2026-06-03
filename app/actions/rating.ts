@@ -5,6 +5,7 @@ import { CourseRatings } from "@/server/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { getCached, setCached, invalidateCache } from "@/server/services/cache";
 
 export async function getCourseRatings(courseId: string) {
   const ratings = await db
@@ -16,6 +17,10 @@ export async function getCourseRatings(courseId: string) {
 }
 
 export async function getCourseRatingSummary(courseId: string) {
+  const cacheKey = `rating:${courseId}`;
+  const cached = await getCached<{ average: number; count: number }>(cacheKey);
+  if (cached) return cached;
+
   const result = await db
     .select({
       average: sql<number>`COALESCE(AVG(${CourseRatings.rating}), 0)`,
@@ -23,10 +28,14 @@ export async function getCourseRatingSummary(courseId: string) {
     })
     .from(CourseRatings)
     .where(eq(CourseRatings.courseId, courseId));
-  return {
+
+  const summary = {
     average: Number(result[0]?.average) || 0,
     count: Number(result[0]?.count) || 0,
   };
+
+  await setCached(cacheKey, summary, 300);
+  return summary;
 }
 
 export async function getUserCourseRating(courseId: string) {
@@ -61,6 +70,7 @@ export async function submitRating(courseId: string, rating: number, review?: st
 
   revalidatePath(`/course/${courseId}`);
   revalidatePath("/dashboard/explore");
+  await invalidateCache(`rating:${courseId}`);
   return { success: true };
 }
 
@@ -73,5 +83,6 @@ export async function deleteRating(courseId: string) {
       and(eq(CourseRatings.courseId, courseId), eq(CourseRatings.userId, userId))
     );
   revalidatePath(`/course/${courseId}`);
+  await invalidateCache(`rating:${courseId}`);
   return { success: true };
 }

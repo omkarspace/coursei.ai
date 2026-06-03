@@ -13,6 +13,7 @@ import { eq, and } from "drizzle-orm";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { upsertCourseVector, deleteCourseVector } from "@/server/services/vector";
+import { getCachedCourse, setCachedCourse, invalidateCourseCache } from "@/server/services/cache";
 
 async function getUserEmail(): Promise<string> {
   const { userId } = await auth();
@@ -33,6 +34,9 @@ export async function getUserCourses() {
 }
 
 export async function getCourseById(courseId: string) {
+  const cached = await getCachedCourse(courseId);
+  if (cached) return cached;
+
   const email = await getUserEmail();
   const courses = await db
     .select()
@@ -43,7 +47,12 @@ export async function getCourseById(courseId: string) {
         eq(CourseList.createdBy, email)
       )
     );
-  return courses[0] || null;
+
+  const course = courses[0] || null;
+  if (course) {
+    await setCachedCourse(courseId, course);
+  }
+  return course;
 }
 
 export async function getPublishedCourseById(courseId: string) {
@@ -108,6 +117,7 @@ export async function updateCourse(
 
   revalidatePath("/dashboard");
   revalidatePath(`/course/${courseId}`);
+  await invalidateCourseCache(courseId);
   return result[0];
 }
 
@@ -142,6 +152,7 @@ export async function updateCourseBanner(courseId: string, bannerUrl: string) {
     );
 
   revalidatePath(`/course/${courseId}`);
+  await invalidateCourseCache(courseId);
 }
 
 export async function deleteCourse(courseId: string) {
@@ -164,6 +175,7 @@ export async function deleteCourse(courseId: string) {
   }
 
   revalidatePath("/dashboard");
+  await invalidateCourseCache(courseId);
   return result[0];
 }
 
@@ -212,6 +224,7 @@ export async function publishCourse(courseId: string) {
   revalidatePath("/dashboard");
   revalidatePath("/explore");
   revalidatePath(`/course/${courseId}`);
+  await invalidateCourseCache(courseId);
 }
 
 export async function getCourseChapters(courseId: string) {

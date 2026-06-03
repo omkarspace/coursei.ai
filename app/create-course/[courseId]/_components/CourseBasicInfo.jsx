@@ -74,6 +74,14 @@ function CourseBasicInfo({ course, refreshData, edit = true }) {
             <HiOutlinePuzzlePiece />
             {course?.category}
           </h2>
+          {course?.createdAt && (
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
+              Created {new Date(course.createdAt).toLocaleDateString()}
+              {course?.updatedAt && course.updatedAt !== course.createdAt && (
+                <> · Updated {new Date(course.updatedAt).toLocaleDateString()}</>
+              )}
+            </p>
+          )}
           {!edit && (
             <Link href={"/course/" + course?.courseId + "/start"}>
               <Button className="w-full mt-5">Start</Button>

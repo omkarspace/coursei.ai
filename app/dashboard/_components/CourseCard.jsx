@@ -102,6 +102,27 @@ function CourseCard({ course, refreshData, displayUser = false }) {
             </div>
           )}
 
+          {(course?.status === "generating_outline" || course?.status === "generating_chapters") && (
+            <div className="mt-2">
+              <div className="flex justify-between text-xs text-gray-500 mb-1">
+                <span>{course?.currentStep || "Generating..."}</span>
+                <span>{course?.progress || 0}%</span>
+              </div>
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                <div
+                  className="bg-primary h-1.5 rounded-full transition-all duration-300"
+                  style={{ width: `${course?.progress || 0}%` }}
+                />
+              </div>
+            </div>
+          )}
+
+          {course?.createdAt && (
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
+              Created {new Date(course.createdAt).toLocaleDateString()}
+            </p>
+          )}
+
           {displayUser && course?.userName && (
             <div className="flex gap-2 items-center mt-2">
               <Image
