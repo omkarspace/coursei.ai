@@ -94,6 +94,7 @@ export const StudyNotesSchema = z.object({
     .describe("2-3 paragraph overview of the chapter content"),
   keyPoints: z
     .array(z.string())
+    .min(1)
     .describe("5-7 main takeaways from the chapter"),
   importantTerms: z
     .array(ImportantTermSchema)
