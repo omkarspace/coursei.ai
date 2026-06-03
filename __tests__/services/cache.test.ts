@@ -10,6 +10,10 @@ describe("cacheKeys", () => {
     expect(cacheKeys.courseContent("course_123")).toBe("course:course_123:content");
   });
 
+  it("generates correct course chapters key", () => {
+    expect(cacheKeys.courseChapters("course_123")).toBe("course:course_123:chapters");
+  });
+
   it("generates correct marketplace key with category", () => {
     expect(cacheKeys.marketplaceList(0, "programming")).toBe(
       "marketplace:programming:0"
@@ -26,10 +30,11 @@ describe("cacheKeys", () => {
 });
 
 describe("cacheTTL", () => {
-  it("has reasonable TTL values", () => {
-    expect(cacheTTL.courseMeta).toBeGreaterThan(0);
-    expect(cacheTTL.courseContent).toBeGreaterThan(cacheTTL.courseMeta);
-    expect(cacheTTL.marketplace).toBeGreaterThan(0);
-    expect(cacheTTL.search).toBeGreaterThan(0);
+  it("has correct TTL values", () => {
+    expect(cacheTTL.courseMeta).toBe(3600);
+    expect(cacheTTL.courseContent).toBe(21600);
+    expect(cacheTTL.courseChapters).toBe(3600);
+    expect(cacheTTL.marketplace).toBe(300);
+    expect(cacheTTL.search).toBe(600);
   });
 });
