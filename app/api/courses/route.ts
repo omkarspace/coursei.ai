@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/server/db";
 import { CourseList, Chapters } from "@/server/db/schema";
 import { eq, desc } from "drizzle-orm";
+import { cacheGet, cacheSet, cacheKeys, cacheTTL } from "@/server/services/cache";
 
 export async function GET(request: Request) {
   try {
@@ -9,9 +10,14 @@ export async function GET(request: Request) {
     const limit = Math.min(parseInt(searchParams.get("limit") || "20", 10), 100);
     const offset = parseInt(searchParams.get("offset") || "0", 10);
     const category = searchParams.get("category");
-    const level = searchParams.get("level");
 
-    let query = db
+    const cacheKey = cacheKeys.marketplaceList(offset / limit + 1, category);
+    const cached = await cacheGet(cacheKey);
+    if (cached) {
+      return NextResponse.json(cached);
+    }
+
+    const query = db
       .select({
         courseId: CourseList.courseId,
         name: CourseList.name,
@@ -29,7 +35,6 @@ export async function GET(request: Request) {
 
     const courses = await query;
 
-    // Get chapter counts
     const coursesWithChapters = await Promise.all(
       courses.map(async (course) => {
         const chapters = await db
@@ -44,14 +49,18 @@ export async function GET(request: Request) {
       })
     );
 
-    return NextResponse.json({
+    const response = {
       courses: coursesWithChapters,
       pagination: {
         limit,
         offset,
         hasMore: courses.length === limit,
       },
-    });
+    };
+
+    await cacheSet(cacheKey, response, cacheTTL.marketplace);
+
+    return NextResponse.json(response);
   } catch (error) {
     console.error("Error fetching courses:", error);
     return NextResponse.json(

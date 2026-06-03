@@ -1,7 +1,11 @@
 import { Suspense } from "react";
 import { getPublishedCourseById } from "@/app/actions/course";
 import { notFound } from "next/navigation";
-import CourseClient from "./_components/CourseClient";
+import CourseShell from "./_components/CourseShell";
+import CourseRating from "./_components/CourseRating";
+import CourseForkButton from "./_components/CourseForkButton";
+import ChapterList from "@/app/create-course/[courseId]/_components/ChapterList";
+import Header from "@/app/dashboard/_components/Header";
 
 export async function generateMetadata({ params }) {
   const { courseId } = await params;
@@ -24,36 +28,51 @@ export async function generateMetadata({ params }) {
   };
 }
 
-async function CourseData({ courseId }) {
-  const course = await getPublishedCourseById(courseId);
-  if (!course) notFound();
-  return <CourseClient course={course} />;
-}
-
-function CourseSkeleton() {
+function RatingSkeleton() {
   return (
-    <div className="min-h-screen dark:bg-gray-950">
-      <div className="px-4 sm:px-6 md:px-10 lg:px-20 xl:px-44 py-6 lg:py-10">
-        <div className="space-y-8">
-          <div className="h-48 bg-gray-200 dark:bg-gray-800 rounded-xl animate-pulse" />
-          <div className="h-32 bg-gray-200 dark:bg-gray-800 rounded-xl animate-pulse" />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-24 bg-gray-200 dark:bg-gray-800 rounded-lg animate-pulse" />
-            ))}
-          </div>
-        </div>
+    <div className="flex items-center gap-4">
+      <div className="flex items-center gap-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <div key={star} className="w-5 h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+        ))}
+        <div className="w-24 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse ml-1" />
       </div>
     </div>
   );
 }
 
+function ForkButtonSkeleton() {
+  return (
+    <div className="h-9 w-32 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
+  );
+}
+
 export default async function Course({ params }) {
   const { courseId } = await params;
+  const course = await getPublishedCourseById(courseId);
+  if (!course) notFound();
 
   return (
-    <Suspense fallback={<CourseSkeleton />}>
-      <CourseData courseId={courseId} />
-    </Suspense>
+    <div className="min-h-screen dark:bg-gray-950">
+      <Header />
+      <div className="px-4 sm:px-6 md:px-10 lg:px-20 xl:px-44 py-6 lg:py-10">
+        <div className="space-y-8">
+          <div className="flex justify-between items-start">
+            <div className="flex-1">
+              <CourseShell course={course} />
+            </div>
+            <div className="ml-4 mt-5">
+              <Suspense fallback={<ForkButtonSkeleton />}>
+                <CourseForkButton courseId={courseId} />
+              </Suspense>
+            </div>
+          </div>
+          <Suspense fallback={<RatingSkeleton />}>
+            <CourseRating courseId={courseId} />
+          </Suspense>
+          <ChapterList course={course} />
+        </div>
+      </div>
+    </div>
   );
 }
