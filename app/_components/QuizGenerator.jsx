@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { HiOutlineAcademicCap, HiCheckCircle, HiXCircle } from "react-icons/hi2";
-import { GenerateQuiz_AI } from "@/configs/AiModel";
+import { generateQuizAction } from "@/app/actions/ai";
 import { saveQuiz, getQuiz } from "@/app/actions/course";
 import { toast } from "sonner";
 
@@ -32,10 +32,7 @@ function QuizGenerator({ courseId, chapterId, chapterName, chapterContent }) {
         ?.map((c) => c.explanation)
         .join("\n") || chapterName;
 
-      const PROMPT = `Generate a quiz with 5 multiple choice questions based on the following chapter content. Return in JSON format with field as questions array containing question, options (array of 4 choices), correctAnswer (index 0-3), and explanation. Chapter: ${chapterName}, Content: ${contentText.substring(0, 2000)}`;
-
-      const result = await GenerateQuiz_AI.sendMessage(PROMPT);
-      const response = JSON.parse(result.response.text());
+      const response = await generateQuizAction(chapterName, contentText.substring(0, 2000));
       setQuiz(response.questions);
       await saveQuiz(courseId, chapterId, response.questions);
       toast.success("Quiz generated successfully!");

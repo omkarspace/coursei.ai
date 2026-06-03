@@ -7,6 +7,7 @@ import EditCourseBasicInfo from "./EditCourseBasicInfo";
 import { updateCourseBanner } from "@/app/actions/course";
 import Link from "next/link";
 import { toast } from "sonner";
+import AiBannerButton from "./AiBannerButton";
 
 function CourseBasicInfo({ course, refreshData, edit = true }) {
   const [selectedFile, setSelectedFile] = useState();
@@ -103,6 +104,16 @@ function CourseBasicInfo({ course, refreshData, edit = true }) {
             onChange={onFileSelected}
             aria-label="Upload course banner"
           />
+          {edit && course?.courseId && course?.courseOutput?.course?.name && (
+            <div className="mt-2">
+              <AiBannerButton
+                courseId={course.courseId}
+                courseName={course.courseOutput.course.name}
+                category={course.category}
+                onBannerGenerated={() => refreshData?.(true)}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -10,7 +10,7 @@ import SelectCategory from "./_components/SelectCategory";
 import TopicDescription from "./_components/TopicDescription";
 import SelectOption from "./_components/SelectOption";
 import { UserInputContext } from "../_context/UserInputContext";
-import { GenerateCourseLayout_AI } from "@/configs/AiModel";
+import { generateCourseLayoutAction } from "@/app/actions/ai";
 import LoadingDialog from "./_components/LoadingDialog";
 import uuid4 from "uuid4";
 import { useRouter } from "next/navigation";
@@ -59,38 +59,15 @@ function CreateCourse() {
     setLoading(true);
     setError(null);
     
-    const BASIC_PROMPT =
-      "Generate A Course Tutorial on Following Detail With field as Course Name, Description, Along with Chapter Name, about, Duration: ";
-    const USER_INPUT_PROMPT =
-      "Category: " +
-      userCourseInput?.category +
-      ", Topic: " +
-      userCourseInput?.topic +
-      ", Level: " +
-      userCourseInput?.level +
-      ", Duration: " +
-      userCourseInput?.duration +
-      ", NoOf Chapters: " +
-      userCourseInput?.noOfChapter +
-      " , in JSON format";
-    const FINAL_PROMPT = BASIC_PROMPT + USER_INPUT_PROMPT;
-    
     try {
-      const result = await GenerateCourseLayout_AI.sendMessage(FINAL_PROMPT);
-      const responseText = result.response?.text();
-      
-      if (!responseText) {
-        throw new Error("No response from AI. Please try again.");
-      }
-      
-      let courseLayout;
-      try {
-        courseLayout = JSON.parse(responseText);
-      } catch (parseError) {
-        console.error("JSON parse error:", parseError);
-        throw new Error("Invalid response format. Please try again.");
-      }
-      
+      const courseLayout = await generateCourseLayoutAction(
+        userCourseInput?.category,
+        userCourseInput?.topic,
+        userCourseInput?.level,
+        userCourseInput?.duration,
+        userCourseInput?.noOfChapter || 5
+      );
+
       await SaveCourseLayoutInDb(courseLayout);
     } catch (err) {
       console.error("Course generation error:", err);

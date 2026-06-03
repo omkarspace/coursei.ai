@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { HiOutlineRectangleStack, HiArrowPath } from "react-icons/hi2";
-import { GenerateFlashcards_AI } from "@/configs/AiModel";
+import { generateFlashcardsAction } from "@/app/actions/ai";
 import { saveFlashcards, getFlashcards } from "@/app/actions/course";
 import { toast } from "sonner";
 
@@ -29,10 +29,7 @@ function Flashcards({ courseId, chapterId, chapterName, chapterContent }) {
         ?.map((c) => c.explanation)
         .join("\n") || chapterName;
 
-      const PROMPT = `Generate 10 flashcards based on the following chapter content. Return in JSON format with field as cards array containing front (question/term) and back (answer/definition). Chapter: ${chapterName}, Content: ${contentText.substring(0, 2000)}`;
-
-      const result = await GenerateFlashcards_AI.sendMessage(PROMPT);
-      const response = JSON.parse(result.response.text());
+      const response = await generateFlashcardsAction(chapterName, contentText.substring(0, 2000));
       setCards(response.cards);
       await saveFlashcards(courseId, chapterId, response.cards);
       toast.success("Flashcards generated successfully!");

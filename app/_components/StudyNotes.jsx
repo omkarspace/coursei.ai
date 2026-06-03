@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { HiOutlineDocumentText, HiArrowPath } from "react-icons/hi2";
-import { GenerateStudyNotes_AI } from "@/configs/AiModel";
+import { generateStudyNotesAction } from "@/app/actions/ai";
 import { saveStudyNotes, getStudyNotes } from "@/app/actions/course";
 import { toast } from "sonner";
 
@@ -27,10 +27,7 @@ function StudyNotes({ courseId, chapterId, chapterName, chapterContent }) {
         ?.map((c) => c.explanation)
         .join("\n") || chapterName;
 
-      const PROMPT = `Generate concise study notes for the following chapter. Return in JSON format with fields: summary (2-3 paragraph overview), keyPoints (array of 5-7 main takeaways), and importantTerms (array of objects with term and definition). Chapter: ${chapterName}, Content: ${contentText.substring(0, 2000)}`;
-
-      const result = await GenerateStudyNotes_AI.sendMessage(PROMPT);
-      const response = JSON.parse(result.response.text());
+      const response = await generateStudyNotesAction(chapterName, contentText.substring(0, 2000));
       setNotes(response);
       await saveStudyNotes(courseId, chapterId, response);
       toast.success("Study notes generated successfully!");

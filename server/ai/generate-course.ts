@@ -4,6 +4,7 @@ import { CourseList, Chapters } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import { generateChapterContent } from "./generate";
 import { getVideos } from "@/server/services/youtube";
+import { generateChapterIllustration } from "@/server/services/fal";
 
 export const generateCourse = inngest.createFunction(
   {
@@ -78,6 +79,16 @@ export const generateCourse = inngest.createFunction(
           content,
           videoId,
         });
+
+        // Generate chapter illustration (non-blocking, fail silently)
+        try {
+          const illustrationUrl = await generateChapterIllustration(chapter.name, topic);
+          if (illustrationUrl) {
+            console.log(`Generated illustration for chapter ${chapter.name}`);
+          }
+        } catch (error) {
+          console.error(`Failed to generate illustration for chapter ${chapter.name}:`, error);
+        }
       });
     }
 
