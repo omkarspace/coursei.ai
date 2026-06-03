@@ -14,6 +14,7 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { upsertCourseVectorFull, deleteCourseVector } from "@/server/services/vector";
 import { getCachedCourse, setCachedCourse, invalidateCourseCache } from "@/server/services/cache";
+import { inngest } from "@/server/services/inngest";
 
 async function getUserEmail(): Promise<string> {
   const { userId } = await auth();
@@ -294,6 +295,18 @@ export async function updateCourseNameAndDescription(
 
   revalidatePath(`/course/${courseId}`);
   revalidatePath("/dashboard");
+
+  // Re-index vector search if course is published
+  const updatedCourse = await db
+    .select({ publish: CourseList.publish })
+    .from(CourseList)
+    .where(eq(CourseList.courseId, courseId));
+
+  if (updatedCourse[0]?.publish) {
+    await inngest.send("course.reindex_vectors", {
+      data: { courseId },
+    });
+  }
 }
 
 // Quiz actions
