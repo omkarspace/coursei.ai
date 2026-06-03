@@ -21,6 +21,8 @@ const StudyNotes = dynamic(() => import("@/app/_components/StudyNotes"), {
   ssr: false,
 });
 
+import AudioPlayer from "@/app/_components/AudioPlayer";
+
 export default function CourseStartClient({ course, initialChapterContent }) {
   const [selectedChapter, setSelectedChapter] = useState(
     course?.courseOutput?.course?.chapters?.[0]
@@ -85,6 +87,7 @@ export default function CourseStartClient({ course, initialChapterContent }) {
     { id: "quiz", label: "Quiz" },
     { id: "flashcards", label: "Flashcards" },
     { id: "notes", label: "Study Notes" },
+    { id: "audio", label: "Audio" },
   ];
 
   return (
@@ -267,6 +270,13 @@ export default function CourseStartClient({ course, initialChapterContent }) {
               chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
               chapterName={selectedChapter?.name}
               chapterContent={chapterContent}
+            />
+          ) : activeTab === "audio" && selectedChapter ? (
+            <AudioPlayer
+              courseId={course?.courseId}
+              chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
+              chapterContent={chapterContent?.content || []}
+              chapterName={selectedChapter?.name}
             />
           ) : null}
         </div>

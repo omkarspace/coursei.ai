@@ -16,6 +16,7 @@ import uuid4 from "uuid4";
 import { useRouter } from "next/navigation";
 import { createCourse } from "../actions/course";
 import { toast } from "sonner";
+import TranscriptionInput from "@/app/_components/TranscriptionInput";
 
 function CreateCourse() {
   const StepperOptions = [
@@ -29,6 +30,7 @@ function CreateCourse() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [error, setError] = useState(null);
   const router = useRouter();
+  const [creationMode, setCreationMode] = useState("manual");
 
   const checkStatus = () => {
     if (userCourseInput?.length === 0) return true;
@@ -159,41 +161,79 @@ function CreateCourse() {
       )}
 
       <div className="px-10 md:px-20 lg:px-44 mt-10">
-        {activeIndex === 0 ? (
-          <SelectCategory />
-        ) : activeIndex === 1 ? (
-          <TopicDescription />
-        ) : (
-          <SelectOption />
+        {/* Mode Selector */}
+        <div className="flex gap-2 mb-6">
+          <button
+            onClick={() => setCreationMode("manual")}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              creationMode === "manual"
+                ? "bg-primary text-white"
+                : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+            }`}
+          >
+            Manual Creation
+          </button>
+          <button
+            onClick={() => setCreationMode("transcription")}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              creationMode === "transcription"
+                ? "bg-primary text-white"
+                : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+            }`}
+          >
+            From Audio/Video
+          </button>
+        </div>
+
+        {creationMode === "manual" && (
+          <>
+            {activeIndex === 0 ? (
+              <SelectCategory />
+            ) : activeIndex === 1 ? (
+              <TopicDescription />
+            ) : (
+              <SelectOption />
+            )}
+
+            <div className="flex justify-between mt-10">
+              <Button
+                disabled={activeIndex === 0}
+                variant="outline"
+                onClick={() => setActiveIndex(activeIndex - 1)}
+              >
+                Previous
+              </Button>
+              {activeIndex < 2 && (
+                <Button
+                  disabled={checkStatus()}
+                  onClick={() => setActiveIndex(activeIndex + 1)}
+                >
+                  Next
+                </Button>
+              )}
+              {activeIndex === 2 && (
+                <Button
+                  disabled={checkStatus() || loading}
+                  onClick={() => GenerateCourseLayout()}
+                >
+                  {loading ? "Generating..." : "Generate Course Layout"}
+                </Button>
+              )}
+            </div>
+          </>
         )}
 
-        <div className="flex justify-between mt-10">
-          <Button
-            disabled={activeIndex === 0}
-            variant="outline"
-            onClick={() => setActiveIndex(activeIndex - 1)}
-          >
-            Previous
-          </Button>
-          {activeIndex < 2 && (
-            <Button
-              disabled={checkStatus()}
-              onClick={() => setActiveIndex(activeIndex + 1)}
-            >
-              Next
-            </Button>
-          )}
-          {activeIndex === 2 && (
-            <Button
-              disabled={checkStatus() || loading}
-              onClick={() => GenerateCourseLayout()}
-            >
-              {loading ? "Generating..." : "Generate Course Layout"}
-            </Button>
-          )}
-        </div>
+        {creationMode === "transcription" && (
+          <TranscriptionInput onTranscriptionComplete={(data) => {
+            setUserCourseInput(prev => ({
+              ...prev,
+              topic: data.chapters?.[0]?.headline || "Transcribed Course",
+            }));
+          }} />
+        )}
+
+        <LoadingDialog loading={loading} />
       </div>
-      <LoadingDialog loading={loading} />
     </div>
   );
 }
