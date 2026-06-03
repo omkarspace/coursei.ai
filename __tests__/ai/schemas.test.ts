@@ -86,6 +86,15 @@ describe("FlashcardsSchema", () => {
     };
     expect(FlashcardsSchema.parse(valid)).toEqual(valid);
   });
+
+  it("rejects flashcard missing back field", () => {
+    const invalid = {
+      cards: [
+        { front: "What is JS?" },
+      ],
+    };
+    expect(() => FlashcardsSchema.parse(invalid)).toThrow();
+  });
 });
 
 describe("StudyNotesSchema", () => {
