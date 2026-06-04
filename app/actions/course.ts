@@ -9,7 +9,7 @@ import {
   StudyNotesTable,
   UserProgress,
 } from '@/server/db/schema';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, sql } from 'drizzle-orm';
 import { auth, clerkClient } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
 import { upsertCourseVectorFull, deleteCourseVector } from '@/server/services/vector';
@@ -37,6 +37,52 @@ export async function getUserCourses() {
   const email = await getUserEmail();
   const courses = await db.select().from(CourseList).where(eq(CourseList.createdBy, email));
   return courses;
+}
+
+export async function getUserCoursesWithProgress() {
+  const email = await getUserEmail();
+  
+  // Get all user courses
+  const courses = await db.select().from(CourseList).where(eq(CourseList.createdBy, email));
+  
+  // Get progress data for all courses in one query
+  const allProgress = await db
+    .select({
+      courseId: UserProgress.courseId,
+      completedChapters: sql<number>`COUNT(*) FILTER (WHERE ${UserProgress.completed} = true)`,
+      lastAccessedAt: sql<Date>`MAX(${UserProgress.lastAccessedAt})`,
+    })
+    .from(UserProgress)
+    .where(
+      eq(UserProgress.userId, (await auth()).userId!)
+    )
+    .groupBy(UserProgress.courseId);
+  
+  // Create a map for quick lookup
+  const progressMap = new Map(
+    allProgress.map(p => [p.courseId, {
+      completedChapters: Number(p.completedChapters),
+      lastAccessedAt: p.lastAccessedAt,
+    }])
+  );
+  
+  // Merge course data with progress
+  return courses.map(course => {
+    const progress = progressMap.get(course.courseId);
+    const totalChapters = (course.courseOutput as CourseOutput)?.course?.chapters?.length || 0;
+    const completedChapters = progress?.completedChapters || 0;
+    const learningProgress = totalChapters > 0 
+      ? Math.round((completedChapters / totalChapters) * 100) 
+      : 0;
+    
+    return {
+      ...course,
+      learningProgress,
+      completedChapters,
+      totalChapters,
+      lastAccessedAt: progress?.lastAccessedAt || null,
+    };
+  });
 }
 
 export async function getCourseById(courseId: string) {
