@@ -15,6 +15,14 @@ import { revalidatePath } from 'next/cache';
 import { upsertCourseVectorFull, deleteCourseVector } from '@/server/services/vector';
 import { getCachedCourse, setCachedCourse, invalidateCourseCache } from '@/server/services/cache';
 import { inngest } from '@/server/services/inngest';
+import type {
+  CourseOutput,
+  Chapter,
+  ChapterContent,
+  QuizQuestion,
+  Flashcard,
+  StudyNotes,
+} from '@/server/db/schema';
 
 async function getUserEmail(): Promise<string> {
   const { userId } = await auth();
@@ -68,7 +76,7 @@ export async function createCourse(courseData: {
   category: string;
   level: string;
   includeVideo: string;
-  courseOutput: any;
+  courseOutput: CourseOutput;
 }) {
   const email = await getUserEmail();
   const user = await (await clerkClient()).users.getUser((await auth()).userId!);
@@ -170,9 +178,9 @@ export async function publishCourse(courseId: string) {
     .where(and(eq(CourseList.courseId, courseId), eq(CourseList.createdBy, email)));
 
   // Index in vector search with chapter-enriched embeddings
-  const courseOutput = course.courseOutput as any;
+  const courseOutput = course.courseOutput as CourseOutput;
   try {
-    const chapterData = (courseOutput.course.chapters || []).map((ch: any) => ({
+    const chapterData = (courseOutput.course.chapters || []).map((ch: Chapter) => ({
       name: ch.name,
       about: ch.about || '',
     }));
@@ -219,7 +227,7 @@ export async function getCourseChapters(courseId: string) {
 export async function createChapter(chapterData: {
   courseId: string;
   chapterId: number;
-  content: any;
+  content: ChapterContent[];
   videoId?: string;
 }) {
   await getUserEmail();
@@ -240,7 +248,7 @@ export async function updateCourseNameAndDescription(
 
   if (!courses[0]) throw new Error('Course not found');
 
-  const courseOutput = courses[0].courseOutput as any;
+  const courseOutput = courses[0].courseOutput as CourseOutput;
   courseOutput.course.name = name;
   courseOutput.course.description = description;
 
@@ -276,7 +284,7 @@ export async function getQuiz(courseId: string, chapterId: number) {
   return result[0] || null;
 }
 
-export async function saveQuiz(courseId: string, chapterId: number, questions: any[]) {
+export async function saveQuiz(courseId: string, chapterId: number, questions: QuizQuestion[]) {
   await getUserEmail();
   const existing = await getQuiz(courseId, chapterId);
   if (existing) {
@@ -297,7 +305,7 @@ export async function getFlashcards(courseId: string, chapterId: number) {
   return result[0] || null;
 }
 
-export async function saveFlashcards(courseId: string, chapterId: number, cards: any[]) {
+export async function saveFlashcards(courseId: string, chapterId: number, cards: Flashcard[]) {
   await getUserEmail();
   const existing = await getFlashcards(courseId, chapterId);
   if (existing) {
@@ -318,7 +326,7 @@ export async function getStudyNotes(courseId: string, chapterId: number) {
   return result[0] || null;
 }
 
-export async function saveStudyNotes(courseId: string, chapterId: number, notes: any) {
+export async function saveStudyNotes(courseId: string, chapterId: number, notes: StudyNotes) {
   await getUserEmail();
   const existing = await getStudyNotes(courseId, chapterId);
   if (existing) {
@@ -389,7 +397,7 @@ export async function forkCourse(sourceCourseId: string) {
   const newCourseId = `course_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
   // Copy course data
-  const courseOutput = sourceCourse.courseOutput as any;
+  const courseOutput = sourceCourse.courseOutput as CourseOutput;
   const newCourseOutput = {
     ...courseOutput,
     course: {
