@@ -187,3 +187,6 @@ export function isServiceEnabled(service: string): boolean {
       return false;
   }
 }
+
+// Validate on module load (side effect import)
+validateEnv();
