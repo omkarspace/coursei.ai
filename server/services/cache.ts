@@ -1,14 +1,15 @@
+import { isServiceEnabled } from '@/lib/env';
 import { Redis } from '@upstash/redis';
 
-const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
-const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+const UPSTASH_REDIS_REST_URL = process.env.UPSTASH_REDIS_REST_URL;
+const UPSTASH_REDIS_REST_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
 
 let redis: Redis | null = null;
 
 function getRedis(): Redis | null {
-  if (!redisUrl || !redisToken) return null;
+  if (!isServiceEnabled('redis')) return null;
   if (!redis) {
-    redis = new Redis({ url: redisUrl, token: redisToken });
+    redis = new Redis({ url: UPSTASH_REDIS_REST_URL!, token: UPSTASH_REDIS_REST_TOKEN! });
   }
   return redis;
 }

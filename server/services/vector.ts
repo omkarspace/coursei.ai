@@ -3,6 +3,8 @@
  * Uses REST API directly (no SDK dependency)
  */
 
+import { isServiceEnabled } from '@/lib/env';
+
 const UPSTASH_VECTOR_URL = process.env.UPSTASH_VECTOR_REST_URL;
 const UPSTASH_VECTOR_TOKEN = process.env.UPSTASH_VECTOR_REST_TOKEN;
 
@@ -19,7 +21,7 @@ interface SearchResult {
 }
 
 function isVectorEnabled(): boolean {
-  return !!(UPSTASH_VECTOR_URL && UPSTASH_VECTOR_TOKEN);
+  return isServiceEnabled('vector');
 }
 
 async function vectorFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
