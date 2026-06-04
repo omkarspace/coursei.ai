@@ -178,17 +178,17 @@ function generateSimpleEmbedding(text: string): number[] {
   for (let i = 0; i < normalizedText.length; i++) {
     const charCode = normalizedText.charCodeAt(i);
     const position = i % dimensions;
-    vector[position] += charCode / 1000;
+    vector[position] = (vector[position] ?? 0) + charCode / 1000;
 
     const hashPosition = (position * 31 + charCode) % dimensions;
-    vector[hashPosition] += Math.sin(charCode * 0.1) * 0.5;
+    vector[hashPosition] = (vector[hashPosition] ?? 0) + Math.sin(charCode * 0.1) * 0.5;
   }
 
   // Normalize the vector
   const magnitude = Math.sqrt(vector.reduce((sum, val) => sum + val * val, 0));
   if (magnitude > 0) {
     for (let i = 0; i < dimensions; i++) {
-      vector[i] /= magnitude;
+      vector[i] = (vector[i] ?? 0) / magnitude;
     }
   }
 

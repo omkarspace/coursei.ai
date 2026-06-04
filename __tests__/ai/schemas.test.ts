@@ -132,6 +132,8 @@ describe("ChapterContentSchema", () => {
   it("defaults code to empty string", () => {
     const input = [{ title: "S1", explanation: "Text" }];
     const result = ChapterContentSchema.parse(input);
-    expect(result[0].code).toBe("");
+    const first = result[0];
+    expect(first).toBeDefined();
+    expect(first!.code).toBe("");
   });
 });

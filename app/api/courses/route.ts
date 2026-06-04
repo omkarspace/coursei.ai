@@ -9,7 +9,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const limit = Math.min(parseInt(searchParams.get("limit") || "20", 10), 100);
     const offset = parseInt(searchParams.get("offset") || "0", 10);
-    const category = searchParams.get("category");
+    const category = searchParams.get("category") ?? undefined;
 
     const cacheKey = cacheKeys.marketplaceList(offset / limit + 1, category);
     const cached = await cacheGet(cacheKey);

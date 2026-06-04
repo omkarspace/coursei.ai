@@ -174,7 +174,7 @@ export async function buildCourseGraph(
         `MATCH (a:Concept {id: $sourceId}), (b:Concept {id: $targetId})
          MERGE (a)-[r:${relType}]->(b)
          SET r.strength = $strength`,
-        { sourceId: rel.sourceId, targetId: rel.targetId, strength: rel.strength }
+        { sourceId: rel.source, targetId: rel.target, strength: rel.strength }
       );
     }
   } finally {

@@ -103,7 +103,7 @@ export async function GET(request: Request) {
       const results = await searchCourses(query, Math.min(limit, 20));
       const courseIds = results
         .map((r) => (r.metadata as Record<string, string>)?.courseId)
-        .filter(Boolean);
+        .filter((id): id is string => Boolean(id));
 
       if (courseIds.length === 0) {
         return NextResponse.json({ results: [], source: "vector" });

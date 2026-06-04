@@ -108,7 +108,7 @@ export const generateCourse = inngest.createFunction(
 
     // Step 6: Generate content for each chapter
     for (let i = 0; i < finalChapters.length; i++) {
-      const chapter = finalChapters[i];
+      const chapter = finalChapters[i]!;
       const progress = Math.round(35 + (i / finalChapters.length) * 55);
 
       await step.run(`generate-chapter-${i}`, async () => {

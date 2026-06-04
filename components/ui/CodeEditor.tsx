@@ -39,8 +39,8 @@ export function CodeEditor({
   useEffect(() => {
     if (!isEditing) {
       try {
-        const grammar = Prism.languages[language] || Prism.languages.javascript;
-        const highlighted = Prism.highlight(code, grammar, language);
+        const grammar = Prism.languages[language] ?? Prism.languages.javascript ?? {};
+        const highlighted = Prism.highlight(code, grammar as Prism.Grammar, language);
         setHighlightedCode(highlighted);
       } catch {
         setHighlightedCode(code);

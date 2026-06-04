@@ -241,7 +241,8 @@ export async function publishCourse(courseId: string) {
   await invalidateCourseCache(courseId);
 
   // Build knowledge graph
-  await inngest.send("course.build_graph", {
+  await inngest.send({
+    name: "course.build_graph",
     data: { courseId },
   });
 }
@@ -308,7 +309,8 @@ export async function updateCourseNameAndDescription(
     .where(eq(CourseList.courseId, courseId));
 
   if (updatedCourse[0]?.publish) {
-    await inngest.send("course.reindex_vectors", {
+    await inngest.send({
+      name: "course.reindex_vectors",
       data: { courseId },
     });
   }
