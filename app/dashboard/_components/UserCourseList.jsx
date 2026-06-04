@@ -1,5 +1,5 @@
 'use client';
-import { getUserCourses } from '@/app/actions/course';
+import { getUserCoursesWithProgress } from '@/app/actions/course';
 import { UserCourseListContext } from '@/app/_context/UserCourseListContext';
 import React, { useContext, useEffect, useState } from 'react';
 import CourseCard from './CourseCard';
@@ -19,7 +19,7 @@ function UserCourseList() {
     try {
       setLoading(true);
       setError(null);
-      const courses = await getUserCourses();
+      const courses = await getUserCoursesWithProgress();
       setCourseList(courses);
       setUserCourseInput(courses);
     } catch (err) {
