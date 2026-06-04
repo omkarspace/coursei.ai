@@ -114,6 +114,29 @@ function CourseCard({ course, refreshData, displayUser = false }) {
             </div>
           )}
 
+          {/* Learning Progress - only show for complete courses with progress */}
+          {course?.status === 'complete' && course?.learningProgress !== undefined && (
+            <div className="mt-2">
+              <div className="flex justify-between text-xs text-gray-500 mb-1">
+                <span>Learning Progress</span>
+                <span>{course.completedChapters}/{course.totalChapters} chapters ({course.learningProgress}%)</span>
+              </div>
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                <div
+                  className="bg-green-500 h-1.5 rounded-full transition-all duration-300"
+                  style={{ width: `${course.learningProgress}%` }}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Last Accessed - show if available */}
+          {course?.lastAccessedAt && (
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+              Last accessed {new Date(course.lastAccessedAt).toLocaleDateString()}
+            </p>
+          )}
+
           {(course?.status === 'generating_outline' ||
             course?.status === 'generating_chapters') && (
             <div className="mt-2">
