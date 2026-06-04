@@ -1,3 +1,4 @@
+import '@/lib/env'; // Validate env vars at startup - throws if required vars missing
 import { Inter, Poppins } from 'next/font/google';
 import './globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
