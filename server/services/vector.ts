@@ -24,14 +24,14 @@ function isVectorEnabled(): boolean {
 
 async function vectorFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
   if (!UPSTASH_VECTOR_URL || !UPSTASH_VECTOR_TOKEN) {
-    throw new Error("Upstash Vector not configured");
+    throw new Error('Upstash Vector not configured');
   }
 
   const response = await fetch(`${UPSTASH_VECTOR_URL}${path}`, {
     ...options,
     headers: {
       Authorization: `Bearer ${UPSTASH_VECTOR_TOKEN}`,
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       ...options.headers,
     },
   });
@@ -55,7 +55,7 @@ export async function upsertCourseVector(
   level: string
 ): Promise<void> {
   if (!isVectorEnabled()) {
-    console.log("Upstash Vector not configured, skipping indexing");
+    console.log('Upstash Vector not configured, skipping indexing');
     return;
   }
 
@@ -65,8 +65,8 @@ export async function upsertCourseVector(
   // In production, use a proper embedding model (e.g., OpenAI, Cohere)
   const vector = generateSimpleEmbedding(text);
 
-  await vectorFetch("/upsert", {
-    method: "POST",
+  await vectorFetch('/upsert', {
+    method: 'POST',
     body: JSON.stringify({
       id: `course:${courseId}`,
       vector,
@@ -76,7 +76,7 @@ export async function upsertCourseVector(
         description: description.slice(0, 500),
         category,
         level,
-        type: "course",
+        type: 'course',
       },
     }),
   });
@@ -94,20 +94,18 @@ export async function upsertCourseVectorFull(
   chapters: { name: string; about: string }[]
 ): Promise<void> {
   if (!isVectorEnabled()) {
-    console.log("Upstash Vector not configured, skipping indexing");
+    console.log('Upstash Vector not configured, skipping indexing');
     return;
   }
 
   // Combine course metadata with chapter names and descriptions for richer embedding
-  const chapterText = chapters
-    .map((ch) => `${ch.name}: ${ch.about}`)
-    .join(" ");
+  const chapterText = chapters.map((ch) => `${ch.name}: ${ch.about}`).join(' ');
   const text = `${name} ${description} ${category} ${level} ${chapterText}`;
 
   const vector = generateSimpleEmbedding(text);
 
-  await vectorFetch("/upsert", {
-    method: "POST",
+  await vectorFetch('/upsert', {
+    method: 'POST',
     body: JSON.stringify({
       id: `course:${courseId}`,
       vector,
@@ -117,8 +115,8 @@ export async function upsertCourseVectorFull(
         description: description.slice(0, 500),
         category,
         level,
-        chapters: chapters.map((ch) => ch.name).join(", "),
-        type: "course",
+        chapters: chapters.map((ch) => ch.name).join(', '),
+        type: 'course',
       },
     }),
   });
@@ -132,32 +130,29 @@ export async function deleteCourseVector(courseId: string): Promise<void> {
 
   try {
     await vectorFetch(`/delete/id/course:${courseId}`, {
-      method: "DELETE",
+      method: 'DELETE',
     });
   } catch (error) {
-    console.error("Error deleting course vector:", error);
+    console.error('Error deleting course vector:', error);
   }
 }
 
 /**
  * Semantic search for courses
  */
-export async function searchCourses(
-  query: string,
-  topK = 10
-): Promise<SearchResult[]> {
+export async function searchCourses(query: string, topK = 10): Promise<SearchResult[]> {
   if (!isVectorEnabled()) {
     return [];
   }
 
   const vector = generateSimpleEmbedding(query);
 
-  const result = await vectorFetch<{ results: SearchResult[] }>("/query", {
-    method: "POST",
+  const result = await vectorFetch<{ results: SearchResult[] }>('/query', {
+    method: 'POST',
     body: JSON.stringify({
       vector,
       topK,
-      filter: { type: "course" },
+      filter: { type: 'course' },
       includeMetadata: true,
     }),
   });

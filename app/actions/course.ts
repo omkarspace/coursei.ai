@@ -1,6 +1,6 @@
-"use server";
+'use server';
 
-import { db } from "@/server/db";
+import { db } from '@/server/db';
 import {
   CourseList,
   Chapters,
@@ -8,29 +8,26 @@ import {
   Flashcards,
   StudyNotesTable,
   UserProgress,
-} from "@/server/db/schema";
-import { eq, and } from "drizzle-orm";
-import { auth, clerkClient } from "@clerk/nextjs/server";
-import { revalidatePath } from "next/cache";
-import { upsertCourseVectorFull, deleteCourseVector } from "@/server/services/vector";
-import { getCachedCourse, setCachedCourse, invalidateCourseCache } from "@/server/services/cache";
-import { inngest } from "@/server/services/inngest";
+} from '@/server/db/schema';
+import { eq, and } from 'drizzle-orm';
+import { auth, clerkClient } from '@clerk/nextjs/server';
+import { revalidatePath } from 'next/cache';
+import { upsertCourseVectorFull, deleteCourseVector } from '@/server/services/vector';
+import { getCachedCourse, setCachedCourse, invalidateCourseCache } from '@/server/services/cache';
+import { inngest } from '@/server/services/inngest';
 
 async function getUserEmail(): Promise<string> {
   const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) throw new Error('Unauthorized');
   const user = await (await clerkClient()).users.getUser(userId);
   const email = user.emailAddresses[0]?.emailAddress;
-  if (!email) throw new Error("No email found");
+  if (!email) throw new Error('No email found');
   return email;
 }
 
 export async function getUserCourses() {
   const email = await getUserEmail();
-  const courses = await db
-    .select()
-    .from(CourseList)
-    .where(eq(CourseList.createdBy, email));
+  const courses = await db.select().from(CourseList).where(eq(CourseList.createdBy, email));
   return courses;
 }
 
@@ -42,12 +39,7 @@ export async function getCourseById(courseId: string) {
   const courses = await db
     .select()
     .from(CourseList)
-    .where(
-      and(
-        eq(CourseList.courseId, courseId),
-        eq(CourseList.createdBy, email)
-      )
-    );
+    .where(and(eq(CourseList.courseId, courseId), eq(CourseList.createdBy, email)));
 
   const course = courses[0] || null;
   if (course) {
@@ -57,10 +49,7 @@ export async function getCourseById(courseId: string) {
 }
 
 export async function getPublishedCourseById(courseId: string) {
-  const courses = await db
-    .select()
-    .from(CourseList)
-    .where(eq(CourseList.courseId, courseId));
+  const courses = await db.select().from(CourseList).where(eq(CourseList.courseId, courseId));
   return courses[0] || null;
 }
 
@@ -82,9 +71,7 @@ export async function createCourse(courseData: {
   courseOutput: any;
 }) {
   const email = await getUserEmail();
-  const user = await (await clerkClient()).users.getUser(
-    (await auth()).userId!
-  );
+  const user = await (await clerkClient()).users.getUser((await auth()).userId!);
 
   const result = await db
     .insert(CourseList)
@@ -96,7 +83,7 @@ export async function createCourse(courseData: {
     })
     .returning({ id: CourseList.id, courseId: CourseList.courseId });
 
-  revalidatePath("/dashboard");
+  revalidatePath('/dashboard');
   return result[0];
 }
 
@@ -108,15 +95,10 @@ export async function updateCourse(
   const result = await db
     .update(CourseList)
     .set(updates)
-    .where(
-      and(
-        eq(CourseList.courseId, courseId),
-        eq(CourseList.createdBy, email)
-      )
-    )
+    .where(and(eq(CourseList.courseId, courseId), eq(CourseList.createdBy, email)))
     .returning({ id: CourseList.id });
 
-  revalidatePath("/dashboard");
+  revalidatePath('/dashboard');
   revalidatePath(`/course/${courseId}`);
   await invalidateCourseCache(courseId);
   return result[0];
@@ -124,7 +106,7 @@ export async function updateCourse(
 
 export async function updateCourseStatus(
   courseId: string,
-  status: "draft" | "generating_outline" | "generating_chapters" | "complete" | "failed",
+  status: 'draft' | 'generating_outline' | 'generating_chapters' | 'complete' | 'failed',
   progress: number,
   currentStep?: string,
   error?: string
@@ -145,12 +127,7 @@ export async function updateCourseBanner(courseId: string, bannerUrl: string) {
   await db
     .update(CourseList)
     .set({ courseBanner: bannerUrl })
-    .where(
-      and(
-        eq(CourseList.courseId, courseId),
-        eq(CourseList.createdBy, email)
-      )
-    );
+    .where(and(eq(CourseList.courseId, courseId), eq(CourseList.createdBy, email)));
 
   revalidatePath(`/course/${courseId}`);
   await invalidateCourseCache(courseId);
@@ -160,62 +137,45 @@ export async function deleteCourse(courseId: string) {
   const email = await getUserEmail();
   const result = await db
     .delete(CourseList)
-    .where(
-      and(
-        eq(CourseList.courseId, courseId),
-        eq(CourseList.createdBy, email)
-      )
-    )
+    .where(and(eq(CourseList.courseId, courseId), eq(CourseList.createdBy, email)))
     .returning({ id: CourseList.id });
 
   // Remove from vector search
   try {
     await deleteCourseVector(courseId);
   } catch (error) {
-    console.error("Failed to remove course from vector search:", error);
+    console.error('Failed to remove course from vector search:', error);
   }
 
-  revalidatePath("/dashboard");
+  revalidatePath('/dashboard');
   await invalidateCourseCache(courseId);
   return result[0];
 }
 
 export async function publishCourse(courseId: string) {
   const email = await getUserEmail();
-  
+
   // Get course data before publishing
   const courses = await db
     .select()
     .from(CourseList)
-    .where(
-      and(
-        eq(CourseList.courseId, courseId),
-        eq(CourseList.createdBy, email)
-      )
-    );
-  
+    .where(and(eq(CourseList.courseId, courseId), eq(CourseList.createdBy, email)));
+
   const course = courses[0];
-  if (!course) throw new Error("Course not found");
+  if (!course) throw new Error('Course not found');
 
   await db
     .update(CourseList)
     .set({ publish: true })
-    .where(
-      and(
-        eq(CourseList.courseId, courseId),
-        eq(CourseList.createdBy, email)
-      )
-    );
+    .where(and(eq(CourseList.courseId, courseId), eq(CourseList.createdBy, email)));
 
   // Index in vector search with chapter-enriched embeddings
   const courseOutput = course.courseOutput as any;
   try {
-    const chapterData = (courseOutput.course.chapters || []).map(
-      (ch: any) => ({
-        name: ch.name,
-        about: ch.about || "",
-      })
-    );
+    const chapterData = (courseOutput.course.chapters || []).map((ch: any) => ({
+      name: ch.name,
+      about: ch.about || '',
+    }));
 
     await upsertCourseVectorFull(
       courseId,
@@ -232,17 +192,17 @@ export async function publishCourse(courseId: string) {
       .set({ vectorIndexedAt: new Date() })
       .where(eq(CourseList.courseId, courseId));
   } catch (error) {
-    console.error("Failed to index course in vector search:", error);
+    console.error('Failed to index course in vector search:', error);
   }
 
-  revalidatePath("/dashboard");
-  revalidatePath("/explore");
+  revalidatePath('/dashboard');
+  revalidatePath('/explore');
   revalidatePath(`/course/${courseId}`);
   await invalidateCourseCache(courseId);
 
   // Build knowledge graph
   await inngest.send({
-    name: "course.build_graph",
+    name: 'course.build_graph',
     data: { courseId },
   });
 }
@@ -276,14 +236,9 @@ export async function updateCourseNameAndDescription(
   const courses = await db
     .select()
     .from(CourseList)
-    .where(
-      and(
-        eq(CourseList.courseId, courseId),
-        eq(CourseList.createdBy, email)
-      )
-    );
+    .where(and(eq(CourseList.courseId, courseId), eq(CourseList.createdBy, email)));
 
-  if (!courses[0]) throw new Error("Course not found");
+  if (!courses[0]) throw new Error('Course not found');
 
   const courseOutput = courses[0].courseOutput as any;
   courseOutput.course.name = name;
@@ -292,15 +247,10 @@ export async function updateCourseNameAndDescription(
   await db
     .update(CourseList)
     .set({ courseOutput })
-    .where(
-      and(
-        eq(CourseList.courseId, courseId),
-        eq(CourseList.createdBy, email)
-      )
-    );
+    .where(and(eq(CourseList.courseId, courseId), eq(CourseList.createdBy, email)));
 
   revalidatePath(`/course/${courseId}`);
-  revalidatePath("/dashboard");
+  revalidatePath('/dashboard');
 
   // Re-index vector search if course is published
   const updatedCourse = await db
@@ -310,7 +260,7 @@ export async function updateCourseNameAndDescription(
 
   if (updatedCourse[0]?.publish) {
     await inngest.send({
-      name: "course.reindex_vectors",
+      name: 'course.reindex_vectors',
       data: { courseId },
     });
   }
@@ -322,24 +272,15 @@ export async function getQuiz(courseId: string, chapterId: number) {
   const result = await db
     .select()
     .from(Quizzes)
-    .where(
-      and(eq(Quizzes.courseId, courseId), eq(Quizzes.chapterId, chapterId))
-    );
+    .where(and(eq(Quizzes.courseId, courseId), eq(Quizzes.chapterId, chapterId)));
   return result[0] || null;
 }
 
-export async function saveQuiz(
-  courseId: string,
-  chapterId: number,
-  questions: any[]
-) {
+export async function saveQuiz(courseId: string, chapterId: number, questions: any[]) {
   await getUserEmail();
   const existing = await getQuiz(courseId, chapterId);
   if (existing) {
-    await db
-      .update(Quizzes)
-      .set({ questions })
-      .where(eq(Quizzes.id, existing.id));
+    await db.update(Quizzes).set({ questions }).where(eq(Quizzes.id, existing.id));
   } else {
     await db.insert(Quizzes).values({ courseId, chapterId, questions });
   }
@@ -352,27 +293,15 @@ export async function getFlashcards(courseId: string, chapterId: number) {
   const result = await db
     .select()
     .from(Flashcards)
-    .where(
-      and(
-        eq(Flashcards.courseId, courseId),
-        eq(Flashcards.chapterId, chapterId)
-      )
-    );
+    .where(and(eq(Flashcards.courseId, courseId), eq(Flashcards.chapterId, chapterId)));
   return result[0] || null;
 }
 
-export async function saveFlashcards(
-  courseId: string,
-  chapterId: number,
-  cards: any[]
-) {
+export async function saveFlashcards(courseId: string, chapterId: number, cards: any[]) {
   await getUserEmail();
   const existing = await getFlashcards(courseId, chapterId);
   if (existing) {
-    await db
-      .update(Flashcards)
-      .set({ cards })
-      .where(eq(Flashcards.id, existing.id));
+    await db.update(Flashcards).set({ cards }).where(eq(Flashcards.id, existing.id));
   } else {
     await db.insert(Flashcards).values({ courseId, chapterId, cards });
   }
@@ -385,27 +314,15 @@ export async function getStudyNotes(courseId: string, chapterId: number) {
   const result = await db
     .select()
     .from(StudyNotesTable)
-    .where(
-      and(
-        eq(StudyNotesTable.courseId, courseId),
-        eq(StudyNotesTable.chapterId, chapterId)
-      )
-    );
+    .where(and(eq(StudyNotesTable.courseId, courseId), eq(StudyNotesTable.chapterId, chapterId)));
   return result[0] || null;
 }
 
-export async function saveStudyNotes(
-  courseId: string,
-  chapterId: number,
-  notes: any
-) {
+export async function saveStudyNotes(courseId: string, chapterId: number, notes: any) {
   await getUserEmail();
   const existing = await getStudyNotes(courseId, chapterId);
   if (existing) {
-    await db
-      .update(StudyNotesTable)
-      .set({ notes })
-      .where(eq(StudyNotesTable.id, existing.id));
+    await db.update(StudyNotesTable).set({ notes }).where(eq(StudyNotesTable.id, existing.id));
   } else {
     await db.insert(StudyNotesTable).values({ courseId, chapterId, notes });
   }
@@ -415,23 +332,18 @@ export async function saveStudyNotes(
 // User Progress actions
 export async function getUserProgress(courseId: string) {
   const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) throw new Error('Unauthorized');
 
   const progress = await db
     .select()
     .from(UserProgress)
-    .where(
-      and(
-        eq(UserProgress.courseId, courseId),
-        eq(UserProgress.userId, userId)
-      )
-    );
+    .where(and(eq(UserProgress.courseId, courseId), eq(UserProgress.userId, userId)));
   return progress;
 }
 
 export async function markChapterComplete(courseId: string, chapterId: number) {
   const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) throw new Error('Unauthorized');
 
   const existing = await db
     .select()
@@ -462,9 +374,7 @@ export async function markChapterComplete(courseId: string, chapterId: number) {
 // Course forking
 export async function forkCourse(sourceCourseId: string) {
   const email = await getUserEmail();
-  const user = await (await clerkClient()).users.getUser(
-    (await auth()).userId!
-  );
+  const user = await (await clerkClient()).users.getUser((await auth()).userId!);
 
   // Get the source course
   const sourceCourses = await db
@@ -473,7 +383,7 @@ export async function forkCourse(sourceCourseId: string) {
     .where(eq(CourseList.courseId, sourceCourseId));
 
   const sourceCourse = sourceCourses[0];
-  if (!sourceCourse) throw new Error("Source course not found");
+  if (!sourceCourse) throw new Error('Source course not found');
 
   // Create a new course ID
   const newCourseId = `course_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -503,7 +413,7 @@ export async function forkCourse(sourceCourseId: string) {
       userProfileImage: user.imageUrl,
       courseBanner: sourceCourse.courseBanner,
       publish: false,
-      status: "complete",
+      status: 'complete',
     })
     .returning({ id: CourseList.id, courseId: CourseList.courseId });
 
@@ -522,7 +432,7 @@ export async function forkCourse(sourceCourseId: string) {
     });
   }
 
-  revalidatePath("/dashboard");
+  revalidatePath('/dashboard');
   return result[0];
 }
 
@@ -531,12 +441,7 @@ export async function getChapterContentAction(courseId: string, chapterId: numbe
   const result = await db
     .select()
     .from(Chapters)
-    .where(
-      and(
-        eq(Chapters.chapterId, chapterId),
-        eq(Chapters.courseId, courseId)
-      )
-    );
+    .where(and(eq(Chapters.chapterId, chapterId), eq(Chapters.courseId, courseId)));
   return result[0] || null;
 }
 
@@ -559,7 +464,10 @@ export async function getUserProgressAction(courseId: string) {
 }
 
 export async function getPublishedCoursesWithFilters(
-  page = 0, limit = 9, category?: string, level?: string
+  page = 0,
+  limit = 9,
+  category?: string,
+  level?: string
 ) {
   const allCourses = await db.select().from(CourseList).where(eq(CourseList.publish, true));
   let filtered = allCourses;

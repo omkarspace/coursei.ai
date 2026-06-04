@@ -1,25 +1,27 @@
-import { generateObject } from "ai";
-import { getModel } from "./models";
-import { z } from "zod";
-import type { ConceptNode, ConceptEdge } from "../services/knowledge-graph";
+import { generateObject } from 'ai';
+import { getModel } from './models';
+import { z } from 'zod';
+import type { ConceptNode, ConceptEdge } from '../services/knowledge-graph';
 
 const ExtractedConceptSchema = z.object({
-  name: z.string().describe("The concept name"),
-  description: z.string().describe("Brief description of the concept"),
+  name: z.string().describe('The concept name'),
+  description: z.string().describe('Brief description of the concept'),
   domain: z.string().describe("Subject domain (e.g., 'web-development', 'algorithms', 'database')"),
-  difficulty: z.string().describe("Difficulty level: beginner, intermediate, or advanced"),
+  difficulty: z.string().describe('Difficulty level: beginner, intermediate, or advanced'),
 });
 
 const ConceptRelationshipSchema = z.object({
-  source: z.string().describe("Source concept name"),
-  target: z.string().describe("Target concept name"),
-  relationship: z.string().describe("Relationship type: PREREQUISITE_OF, RELATES_TO, PART_OF, USES"),
-  strength: z.number().min(0).max(1).describe("Relationship strength from 0 to 1"),
+  source: z.string().describe('Source concept name'),
+  target: z.string().describe('Target concept name'),
+  relationship: z
+    .string()
+    .describe('Relationship type: PREREQUISITE_OF, RELATES_TO, PART_OF, USES'),
+  strength: z.number().min(0).max(1).describe('Relationship strength from 0 to 1'),
 });
 
 const ExtractionResultSchema = z.object({
-  concepts: z.array(ExtractedConceptSchema).describe("Extracted concepts from the content"),
-  relationships: z.array(ConceptRelationshipSchema).describe("Relationships between concepts"),
+  concepts: z.array(ExtractedConceptSchema).describe('Extracted concepts from the content'),
+  relationships: z.array(ConceptRelationshipSchema).describe('Relationships between concepts'),
 });
 
 /**
@@ -30,11 +32,11 @@ export async function extractConceptsFromContent(
   chapterName: string,
   chapterContent: { title: string; explanation: string }[]
 ): Promise<{ concepts: ConceptNode[]; relationships: ConceptEdge[] }> {
-  const model = getModel("gemini-2.0-flash");
+  const model = getModel('gemini-2.0-flash');
 
   const contentText = chapterContent
     .map((s) => `${s.title}: ${s.explanation.substring(0, 500)}`)
-    .join("\n\n");
+    .join('\n\n');
 
   const { object } = await generateObject({
     model,
@@ -60,7 +62,7 @@ Generate the extraction results in JSON format.`,
 
   // Generate IDs from names
   const concepts: ConceptNode[] = object.concepts.map((c) => ({
-    id: `concept:${courseName.toLowerCase().replace(/\s+/g, "-")}:${c.name.toLowerCase().replace(/\s+/g, "-")}`,
+    id: `concept:${courseName.toLowerCase().replace(/\s+/g, '-')}:${c.name.toLowerCase().replace(/\s+/g, '-')}`,
     name: c.name,
     description: c.description,
     domain: c.domain,

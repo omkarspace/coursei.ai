@@ -1,9 +1,9 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { HiOutlineRectangleStack, HiArrowPath } from "react-icons/hi2";
-import { generateFlashcardsAction } from "@/app/actions/ai";
-import { saveFlashcards, getFlashcards } from "@/app/actions/course";
-import { toast } from "sonner";
+'use client';
+import React, { useState, useEffect } from 'react';
+import { HiOutlineRectangleStack, HiArrowPath } from 'react-icons/hi2';
+import { generateFlashcardsAction } from '@/app/actions/ai';
+import { saveFlashcards, getFlashcards } from '@/app/actions/course';
+import { toast } from 'sonner';
 
 function Flashcards({ courseId, chapterId, chapterName, chapterContent }) {
   const [cards, setCards] = useState([]);
@@ -25,17 +25,16 @@ function Flashcards({ courseId, chapterId, chapterName, chapterContent }) {
   const generateFlashcards = async () => {
     setLoading(true);
     try {
-      const contentText = chapterContent?.content
-        ?.map((c) => c.explanation)
-        .join("\n") || chapterName;
+      const contentText =
+        chapterContent?.content?.map((c) => c.explanation).join('\n') || chapterName;
 
       const response = await generateFlashcardsAction(chapterName, contentText.substring(0, 2000));
       setCards(response.cards);
       await saveFlashcards(courseId, chapterId, response.cards);
-      toast.success("Flashcards generated successfully!");
+      toast.success('Flashcards generated successfully!');
     } catch (error) {
-      console.error("Error generating flashcards:", error);
-      toast.error("Failed to generate flashcards. Please try again.");
+      console.error('Error generating flashcards:', error);
+      toast.error('Failed to generate flashcards. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -66,7 +65,7 @@ function Flashcards({ courseId, chapterId, chapterName, chapterContent }) {
           disabled={loading}
           className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 disabled:opacity-50"
         >
-          {loading ? "Generating Flashcards..." : "Generate Flashcards"}
+          {loading ? 'Generating Flashcards...' : 'Generate Flashcards'}
         </button>
       </div>
     );
@@ -86,25 +85,23 @@ function Flashcards({ courseId, chapterId, chapterName, chapterContent }) {
         <div
           onClick={() => setFlipped(!flipped)}
           onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
+            if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault();
               setFlipped(!flipped);
             }
           }}
           role="button"
           tabIndex={0}
-          aria-label={flipped ? "Flip card to front" : "Flip card to back"}
+          aria-label={flipped ? 'Flip card to front' : 'Flip card to back'}
           className="w-full max-w-md h-48 cursor-pointer perspective-1000 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-xl"
         >
           <div
             className={`relative w-full h-full transition-transform duration-500 transform-style-3d ${
-              flipped ? "rotate-y-180" : ""
+              flipped ? 'rotate-y-180' : ''
             }`}
           >
             <div className="absolute inset-0 backface-hidden bg-gradient-to-br from-primary to-purple-600 rounded-xl flex items-center justify-center p-6 text-white">
-              <p className="text-center text-lg font-medium">
-                {cards[currentIndex]?.front}
-              </p>
+              <p className="text-center text-lg font-medium">{cards[currentIndex]?.front}</p>
             </div>
             <div className="absolute inset-0 backface-hidden rotate-y-180 bg-white dark:bg-gray-800 border-2 border-primary rounded-xl flex items-center justify-center p-6">
               <p className="text-center text-lg text-gray-700 dark:text-gray-200">

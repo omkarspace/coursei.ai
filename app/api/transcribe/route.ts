@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
-import { transcribeAndWait } from "@/server/services/transcription";
+import { NextRequest, NextResponse } from 'next/server';
+import { transcribeAndWait } from '@/server/services/transcription';
 
 export async function POST(req: NextRequest) {
   try {
     const { audioUrl } = await req.json();
 
     if (!audioUrl) {
-      return NextResponse.json({ error: "audioUrl is required" }, { status: 400 });
+      return NextResponse.json({ error: 'audioUrl is required' }, { status: 400 });
     }
 
     const result = await transcribeAndWait(audioUrl);
@@ -17,10 +17,7 @@ export async function POST(req: NextRequest) {
       status: result.status,
     });
   } catch (error) {
-    console.error("Transcription error:", error);
-    return NextResponse.json(
-      { error: "Transcription failed" },
-      { status: 500 }
-    );
+    console.error('Transcription error:', error);
+    return NextResponse.json({ error: 'Transcription failed' }, { status: 500 });
   }
 }

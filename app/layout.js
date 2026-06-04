@@ -1,11 +1,11 @@
 import { Inter, Poppins } from 'next/font/google';
-import "./globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
-import { Toaster } from "sonner";
+import './globals.css';
+import { ClerkProvider } from '@clerk/nextjs';
+import { Toaster } from 'sonner';
 
 const poppins = Poppins({
   weight: ['400', '500', '600'],
-  subsets: ['latin']
+  subsets: ['latin'],
 });
 
 const inter = Inter({
@@ -14,47 +14,45 @@ const inter = Inter({
 });
 
 export const metadata = {
-  metadataBase: new URL("https://coursei.ai"),
+  metadataBase: new URL('https://coursei.ai'),
   title: {
-    default: "Coursei.ai | AI-Powered Open-Source Learning Platform",
-    template: "%s | Coursei.ai",
+    default: 'Coursei.ai | AI-Powered Open-Source Learning Platform',
+    template: '%s | Coursei.ai',
   },
   description:
-    "Create courses, quizzes, flashcards, and study notes in minutes with AI. Fork, customize, and share with the community. Free and open source.",
+    'Create courses, quizzes, flashcards, and study notes in minutes with AI. Fork, customize, and share with the community. Free and open source.',
   keywords: [
-    "AI course generator",
-    "open source LMS",
-    "learning management system",
-    "AI quiz generator",
-    "AI flashcards",
-    "study notes generator",
+    'AI course generator',
+    'open source LMS',
+    'learning management system',
+    'AI quiz generator',
+    'AI flashcards',
+    'study notes generator',
   ],
-  authors: [{ name: "Omkar", url: "https://github.com/omkarspace" }],
-  creator: "Omkar",
+  authors: [{ name: 'Omkar', url: 'https://github.com/omkarspace' }],
+  creator: 'Omkar',
   openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://coursei.ai",
-    siteName: "Coursei.ai",
-    title: "Coursei.ai | AI-Powered Open-Source Learning Platform",
-    description:
-      "Create courses, quizzes, flashcards, and study notes in minutes with AI.",
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://coursei.ai',
+    siteName: 'Coursei.ai',
+    title: 'Coursei.ai | AI-Powered Open-Source Learning Platform',
+    description: 'Create courses, quizzes, flashcards, and study notes in minutes with AI.',
     images: [
       {
-        url: "/og.svg",
+        url: '/og.svg',
         width: 1200,
         height: 630,
-        alt: "Coursei.ai",
+        alt: 'Coursei.ai',
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Coursei.ai | AI-Powered Open-Source Learning Platform",
-    description:
-      "Create courses, quizzes, flashcards, and study notes in minutes with AI.",
-    images: ["/og.svg"],
-    creator: "@omkareact",
+    card: 'summary_large_image',
+    title: 'Coursei.ai | AI-Powered Open-Source Learning Platform',
+    description: 'Create courses, quizzes, flashcards, and study notes in minutes with AI.',
+    images: ['/og.svg'],
+    creator: '@omkareact',
   },
   robots: {
     index: true,
@@ -62,18 +60,18 @@ export const metadata = {
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
   alternates: {
-    canonical: "https://coursei.ai",
+    canonical: 'https://coursei.ai',
   },
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
+    icon: '/favicon.ico',
+    shortcut: '/favicon-16x16.png',
+    apple: '/apple-touch-icon.png',
   },
 };
 

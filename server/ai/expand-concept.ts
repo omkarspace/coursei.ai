@@ -1,18 +1,18 @@
-import { generateObject } from "ai";
-import { getModel } from "./models";
-import { z } from "zod";
+import { generateObject } from 'ai';
+import { getModel } from './models';
+import { z } from 'zod';
 
 const ExpandedConceptSchema = z.object({
   concepts: z
     .array(
       z.object({
-        name: z.string().describe("The concept name"),
-        domain: z.string().describe("Subject domain"),
-        difficulty: z.string().describe("Difficulty level"),
-        relationship: z.string().describe("Relationship to parent concept"),
+        name: z.string().describe('The concept name'),
+        domain: z.string().describe('Subject domain'),
+        difficulty: z.string().describe('Difficulty level'),
+        relationship: z.string().describe('Relationship to parent concept'),
       })
     )
-    .describe("Expanded sub-concepts"),
+    .describe('Expanded sub-concepts'),
 });
 
 /**
@@ -23,7 +23,7 @@ export async function expandConcept(
   parentConcept: string,
   courseCategory: string
 ): Promise<{ name: string; domain: string; difficulty: string; relationship: string }[]> {
-  const model = getModel("gemini-2.0-flash");
+  const model = getModel('gemini-2.0-flash');
 
   const { object } = await generateObject({
     model,

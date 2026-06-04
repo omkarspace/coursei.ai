@@ -1,5 +1,5 @@
-"use client";
-import React, { useCallback, useEffect, useState } from "react";
+'use client';
+import React, { useCallback, useEffect, useState } from 'react';
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -7,26 +7,26 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   MarkerType,
-} from "reactflow";
-import "reactflow/dist/style.css";
+} from 'reactflow';
+import 'reactflow/dist/style.css';
 
 const difficultyColors = {
-  beginner: "#22c55e",
-  intermediate: "#f59e0b",
-  advanced: "#ef4444",
+  beginner: '#22c55e',
+  intermediate: '#f59e0b',
+  advanced: '#ef4444',
 };
 
 function ConceptNode({ data }) {
   return (
     <div
       className="px-4 py-3 rounded-lg border-2 shadow-lg cursor-pointer hover:shadow-xl transition-shadow bg-white dark:bg-gray-800"
-      style={{ borderColor: difficultyColors[data.difficulty] || "#6b7280" }}
+      style={{ borderColor: difficultyColors[data.difficulty] || '#6b7280' }}
     >
       <div className="font-medium text-sm dark:text-white">{data.label}</div>
       <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{data.domain}</div>
       <div
         className="text-xs mt-1 font-medium"
-        style={{ color: difficultyColors[data.difficulty] || "#6b7280" }}
+        style={{ color: difficultyColors[data.difficulty] || '#6b7280' }}
       >
         {data.difficulty}
       </div>
@@ -52,12 +52,12 @@ export default function ConceptCanvas({ courseId, course }) {
     const chapters = course.courseOutput.course.chapters;
     const initialNodes = chapters.map((ch, i) => ({
       id: `chapter-${i}`,
-      type: "conceptNode",
+      type: 'conceptNode',
       position: { x: (i % 3) * 250, y: Math.floor(i / 3) * 150 },
       data: {
         label: ch.name,
         domain: course.category,
-        difficulty: "intermediate",
+        difficulty: 'intermediate',
         expandable: true,
         chapterIndex: i,
       },
@@ -68,11 +68,11 @@ export default function ConceptCanvas({ courseId, course }) {
       id: `edge-${i}-${i + 1}`,
       source: `chapter-${i}`,
       target: `chapter-${i + 1}`,
-      type: "smoothstep",
+      type: 'smoothstep',
       animated: true,
-      style: { stroke: "#6366f1", strokeWidth: 2 },
+      style: { stroke: '#6366f1', strokeWidth: 2 },
       markerEnd: { type: MarkerType.ArrowClosed },
-      label: "builds on",
+      label: 'builds on',
     }));
 
     setNodes(initialNodes);
@@ -87,8 +87,8 @@ export default function ConceptCanvas({ courseId, course }) {
 
       try {
         const response = await fetch(`/api/canvas/${courseId}/expand`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             conceptName: node.data.label,
             chapterIndex: node.data.chapterIndex,
@@ -100,7 +100,7 @@ export default function ConceptCanvas({ courseId, course }) {
           // Add new nodes
           const newNodes = data.concepts.map((c, i) => ({
             id: `expanded-${node.id}-${i}`,
-            type: "conceptNode",
+            type: 'conceptNode',
             position: {
               x: node.position.x + 250 + i * 50,
               y: node.position.y + (i % 2 === 0 ? -100 : 100),
@@ -108,7 +108,7 @@ export default function ConceptCanvas({ courseId, course }) {
             data: {
               label: c.name,
               domain: c.domain || course.category,
-              difficulty: c.difficulty || "intermediate",
+              difficulty: c.difficulty || 'intermediate',
               expandable: false,
             },
           }));
@@ -118,18 +118,18 @@ export default function ConceptCanvas({ courseId, course }) {
             id: `edge-${node.id}-expanded-${i}`,
             source: node.id,
             target: `expanded-${node.id}-${i}`,
-            type: "smoothstep",
+            type: 'smoothstep',
             animated: true,
-            style: { stroke: "#10b981", strokeWidth: 2 },
+            style: { stroke: '#10b981', strokeWidth: 2 },
             markerEnd: { type: MarkerType.ArrowClosed },
-            label: c.relationship || "contains",
+            label: c.relationship || 'contains',
           }));
 
           setNodes((nds) => [...nds, ...newNodes]);
           setEdges((eds) => [...eds, ...newEdges]);
         }
       } catch (error) {
-        console.error("Failed to expand concept:", error);
+        console.error('Failed to expand concept:', error);
       } finally {
         setExpanding(null);
       }

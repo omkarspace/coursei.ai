@@ -1,18 +1,18 @@
-import { generateObject } from "ai";
-import { getModel } from "../models";
-import { z } from "zod";
-import type { CurriculumDesign, FactCheckResult } from "./types";
+import { generateObject } from 'ai';
+import { getModel } from '../models';
+import { z } from 'zod';
+import type { CurriculumDesign, FactCheckResult } from './types';
 
 const CitationSchema = z.object({
-  claim: z.string().describe("The claim being verified"),
-  source: z.string().describe("Source used to verify (e.g., Wikipedia, official docs)"),
-  reliable: z.boolean().describe("Whether the source confirms the claim"),
+  claim: z.string().describe('The claim being verified'),
+  source: z.string().describe('Source used to verify (e.g., Wikipedia, official docs)'),
+  reliable: z.boolean().describe('Whether the source confirms the claim'),
 });
 
 const FactCheckResultSchema = z.object({
-  verified: z.boolean().describe("Overall verification status"),
-  citations: z.array(CitationSchema).describe("Citations for verified claims"),
-  flaggedIssues: z.array(z.string()).describe("Issues or inaccuracies found"),
+  verified: z.boolean().describe('Overall verification status'),
+  citations: z.array(CitationSchema).describe('Citations for verified claims'),
+  flaggedIssues: z.array(z.string()).describe('Issues or inaccuracies found'),
   adjustedChapters: z
     .array(
       z.object({
@@ -20,28 +20,26 @@ const FactCheckResultSchema = z.object({
         about: z.string(),
         duration: z.string(),
         learningObjectives: z.array(z.string()),
-        difficulty: z.enum(["beginner", "intermediate", "advanced"]),
+        difficulty: z.enum(['beginner', 'intermediate', 'advanced']),
         prerequisites: z.array(z.string()),
       })
     )
-    .describe("Chapters with any necessary corrections applied"),
+    .describe('Chapters with any necessary corrections applied'),
 });
 
 /**
  * Fact Checker Agent
  * Cross-references curriculum outline against reliable sources to verify accuracy.
  */
-export async function checkFacts(
-  curriculum: CurriculumDesign
-): Promise<FactCheckResult> {
-  const model = getModel("gemini-2.0-flash");
+export async function checkFacts(curriculum: CurriculumDesign): Promise<FactCheckResult> {
+  const model = getModel('gemini-2.0-flash');
 
   const chapterSummaries = curriculum.course.chapters
     .map(
       (ch, i) =>
-        `Chapter ${i + 1}: ${ch.name}\nDescription: ${ch.about}\nObjectives: ${ch.learningObjectives.join(", ")}`
+        `Chapter ${i + 1}: ${ch.name}\nDescription: ${ch.about}\nObjectives: ${ch.learningObjectives.join(', ')}`
     )
-    .join("\n\n");
+    .join('\n\n');
 
   const { object } = await generateObject({
     model,

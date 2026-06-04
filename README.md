@@ -28,6 +28,7 @@
 ## Features
 
 ### AI-Powered Tools
+
 - **AI Course Generator** — Generate full course structures with Gemini in seconds
 - **AI Quiz Generator** — Auto-generate multiple-choice and short-answer questions
 - **AI Flashcards** — Leitner-system spaced repetition cards for retention
@@ -35,6 +36,7 @@
 - **AI Study Buddy** — Context-aware chatbot for each course
 
 ### Platform
+
 - **Course Forking** — Customize public courses like GitHub repos
 - **Community Marketplace** — Browse, filter, and upvote shared courses
 - **Export Options** — PDF, Markdown, SCORM/xAPI packages
@@ -42,6 +44,7 @@
 - **Mobile First** — Responsive design across all devices
 
 ### Technical
+
 - **Server Actions** — Secure, authenticated database mutations
 - **Image Uploads** — Cloudinary-powered course banner uploads
 - **Real-time Updates** — Instant UI updates after mutations
@@ -49,15 +52,15 @@
 
 ## Tech Stack
 
-| Category | Technology |
-|----------|------------|
-| Framework | Next.js 15 (App Router) |
-| UI | React 18, Tailwind CSS, shadcn/ui |
-| Auth | Clerk |
-| AI | Google Gemini 2.0 Flash |
-| Database | Neon PostgreSQL + Drizzle ORM |
-| Storage | Cloudinary (unsigned uploads) |
-| Deployment | Vercel |
+| Category   | Technology                        |
+| ---------- | --------------------------------- |
+| Framework  | Next.js 15 (App Router)           |
+| UI         | React 18, Tailwind CSS, shadcn/ui |
+| Auth       | Clerk                             |
+| AI         | Google Gemini 2.0 Flash           |
+| Database   | Neon PostgreSQL + Drizzle ORM     |
+| Storage    | Cloudinary (unsigned uploads)     |
+| Deployment | Vercel                            |
 
 ## Getting Started
 
@@ -92,16 +95,16 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ### Environment Variables
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Yes | Clerk publishable key |
-| `CLERK_SECRET_KEY` | Yes | Clerk secret key |
-| `NEXT_PUBLIC_GEMINI_API_KEY` | Yes | Google Gemini API key |
-| `DATABASE_URL` | Yes | Neon PostgreSQL connection string |
-| `NEXT_PUBLIC_HOST_NAME` | Yes | App URL (e.g., `http://localhost:3000`) |
-| `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` | Yes | Cloudinary cloud name |
-| `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` | Yes | Cloudinary unsigned upload preset |
-| `NEXT_PUBLIC_YOUTUBE_API_KEY` | No | YouTube API key (for video search) |
+| Variable                               | Required | Description                             |
+| -------------------------------------- | -------- | --------------------------------------- |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`    | Yes      | Clerk publishable key                   |
+| `CLERK_SECRET_KEY`                     | Yes      | Clerk secret key                        |
+| `NEXT_PUBLIC_GEMINI_API_KEY`           | Yes      | Google Gemini API key                   |
+| `DATABASE_URL`                         | Yes      | Neon PostgreSQL connection string       |
+| `NEXT_PUBLIC_HOST_NAME`                | Yes      | App URL (e.g., `http://localhost:3000`) |
+| `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME`    | Yes      | Cloudinary cloud name                   |
+| `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` | Yes      | Cloudinary unsigned upload preset       |
+| `NEXT_PUBLIC_YOUTUBE_API_KEY`          | No       | YouTube API key (for video search)      |
 
 ## Project Structure
 
@@ -134,24 +137,24 @@ coursei.ai/
 
 ## Database Schema
 
-| Table | Description |
-|-------|-------------|
+| Table        | Description                         |
+| ------------ | ----------------------------------- |
 | `CourseList` | Course metadata, banners, ownership |
-| `Chapters` | Chapter content per course |
-| `Quizzes` | Generated quiz questions |
-| `Flashcards` | Generated flashcard decks |
-| `StudyNotes` | Generated study notes |
+| `Chapters`   | Chapter content per course          |
+| `Quizzes`    | Generated quiz questions            |
+| `Flashcards` | Generated flashcard decks           |
+| `StudyNotes` | Generated study notes               |
 
 ## Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run start` | Start production server |
-| `npm run lint` | Run ESLint |
-| `npm run db:push` | Push database schema |
-| `npm run db:studio` | Open Drizzle Studio |
+| Command             | Description              |
+| ------------------- | ------------------------ |
+| `npm run dev`       | Start development server |
+| `npm run build`     | Build for production     |
+| `npm run start`     | Start production server  |
+| `npm run lint`      | Run ESLint               |
+| `npm run db:push`   | Push database schema     |
+| `npm run db:studio` | Open Drizzle Studio      |
 
 ## Contributing
 

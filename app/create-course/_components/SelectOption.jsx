@@ -1,13 +1,13 @@
-import React, { useContext } from "react";
+import React, { useContext } from 'react';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { UserInputContext } from "@/app/_context/UserInputContext";
+} from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { UserInputContext } from '@/app/_context/UserInputContext';
 
 function SelectOption() {
   const { userCourseInput, setUserCourseInput } = useContext(UserInputContext);
@@ -27,7 +27,7 @@ function SelectOption() {
             Difficulty Level
           </label>
           <Select
-            onValueChange={(value) => handleInputChange("level", value)}
+            onValueChange={(value) => handleInputChange('level', value)}
             defaultValue={userCourseInput?.level}
           >
             <SelectTrigger className="h-14 text-lg dark:bg-gray-800 dark:border-gray-700">
@@ -45,7 +45,7 @@ function SelectOption() {
             Course Duration
           </label>
           <Select
-            onValueChange={(value) => handleInputChange("duration", value)}
+            onValueChange={(value) => handleInputChange('duration', value)}
             defaultValue={userCourseInput?.duration}
           >
             <SelectTrigger className="h-14 text-lg dark:bg-gray-800 dark:border-gray-700">
@@ -63,7 +63,7 @@ function SelectOption() {
             Add Video
           </label>
           <Select
-            onValueChange={(value) => handleInputChange("displayVideo", value)}
+            onValueChange={(value) => handleInputChange('displayVideo', value)}
             defaultValue={userCourseInput?.displayVideo}
           >
             <SelectTrigger className="h-14 text-lg dark:bg-gray-800 dark:border-gray-700">
@@ -85,9 +85,7 @@ function SelectOption() {
             max="10"
             className="h-14 text-lg dark:bg-gray-800 dark:border-gray-700"
             defaultValue={userCourseInput?.noOfChapter}
-            onChange={(event) =>
-              handleInputChange("noOfChapter", event.target.value)
-            }
+            onChange={(event) => handleInputChange('noOfChapter', event.target.value)}
           />
         </div>
       </div>

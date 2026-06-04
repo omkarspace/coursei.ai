@@ -1,8 +1,8 @@
-"use client";
-import React from "react";
-import YouTube from "react-youtube";
-import ReactMarkdown from "react-markdown";
-import ContentVerification from "@/app/_components/ContentVerification";
+'use client';
+import React from 'react';
+import YouTube from 'react-youtube';
+import ReactMarkdown from 'react-markdown';
+import ContentVerification from '@/app/_components/ContentVerification';
 
 function ChapterContent({ chapter, content }) {
   return (
@@ -19,8 +19,8 @@ function ChapterContent({ chapter, content }) {
             <YouTube
               videoId={content.videoId}
               opts={{
-                height: "100%",
-                width: "100%",
+                height: '100%',
+                width: '100%',
                 playerVars: { autoplay: 0 },
               }}
               className="absolute top-0 left-0 w-full h-full"
@@ -37,13 +37,11 @@ function ChapterContent({ chapter, content }) {
               key={index}
               className="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-gray-800 mb-6 p-6 hover:shadow-xl transition-all"
             >
-              <h3 className="font-medium text-xl text-gray-800 dark:text-white">
-                {item?.title}
-              </h3>
+              <h3 className="font-medium text-xl text-gray-800 dark:text-white">{item?.title}</h3>
               <ReactMarkdown className="prose dark:prose-invert max-w-full text-gray-700 dark:text-gray-300">
                 {item?.explanation}
               </ReactMarkdown>
-              
+
               {/* Code Snippet */}
               {item.code && (
                 <div className="mt-6 bg-gray-800 dark:bg-gray-950 text-white p-4 rounded-md relative overflow-auto">
@@ -79,7 +77,12 @@ function ChapterContent({ chapter, content }) {
 
       <ContentVerification
         chapterName={chapter?.name}
-        contentSummary={content?.content?.map((c) => c.explanation).join(" ").substring(0, 500) || ""}
+        contentSummary={
+          content?.content
+            ?.map((c) => c.explanation)
+            .join(' ')
+            .substring(0, 500) || ''
+        }
       />
     </div>
   );

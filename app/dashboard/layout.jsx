@@ -1,15 +1,13 @@
-"use client";
-import React, { useState } from "react";
-import SideBar from "./_components/SideBar";
-import Header from "./_components/Header";
-import { UserCourseListContext } from "../_context/UserCourseListContext";
+'use client';
+import React, { useState } from 'react';
+import SideBar from './_components/SideBar';
+import Header from './_components/Header';
+import { UserCourseListContext } from '../_context/UserCourseListContext';
 
 function DashboardLayout({ children }) {
   const [UserCourseList, setUserCourseInput] = useState([]);
   return (
-    <UserCourseListContext.Provider
-      value={{ UserCourseList, setUserCourseInput }}
-    >
+    <UserCourseListContext.Provider value={{ UserCourseList, setUserCourseInput }}>
       <div className="min-h-screen dark:bg-gray-950">
         <SideBar />
         <div className="md:ml-64">

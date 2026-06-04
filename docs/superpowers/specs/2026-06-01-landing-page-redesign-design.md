@@ -40,6 +40,7 @@ Logo | Features | How It Works | Community | GitHub | [Try Free]
 ### 2. Hero Section
 
 **Layout:**
+
 ```
 [Badge: "Open Source & Free"]
 
@@ -54,6 +55,7 @@ Fork, customize, and share with the community."]
 ```
 
 **Visual:**
+
 - Animated gradient background (subtle, not distracting)
 - Product demo: CSS animation showing course creation flow (static screenshots with transitions)
 - Stats below: Dynamic counters or placeholder text (update when real data available)
@@ -75,18 +77,19 @@ Fork, customize, and share with the community."]
 
 **Layout:** 2x4 bento grid (responsive)
 
-| Feature | Icon | Description |
-|---------|------|-------------|
-| AI Course Generator | Sparkles | Create full course structures with Gemini in seconds |
-| AI Quiz Generator | AcademicCap | Auto-generate multiple-choice and short-answer questions |
-| AI Flashcards | RectangleStack | Leitner-system spaced repetition cards for retention |
-| AI Study Notes | DocumentText | Summaries, key points, and term definitions |
-| AI Study Buddy | ChatBubbleLeftRight | Context-aware chatbot for each course |
-| Course Forking | CodeBracket | Customize public courses like GitHub repos |
-| Community Marketplace | Globe | Browse, filter, and upvote shared courses |
-| Export Options | ArrowDownTray | PDF, Markdown, SCORM/xAPI packages |
+| Feature               | Icon                | Description                                              |
+| --------------------- | ------------------- | -------------------------------------------------------- |
+| AI Course Generator   | Sparkles            | Create full course structures with Gemini in seconds     |
+| AI Quiz Generator     | AcademicCap         | Auto-generate multiple-choice and short-answer questions |
+| AI Flashcards         | RectangleStack      | Leitner-system spaced repetition cards for retention     |
+| AI Study Notes        | DocumentText        | Summaries, key points, and term definitions              |
+| AI Study Buddy        | ChatBubbleLeftRight | Context-aware chatbot for each course                    |
+| Course Forking        | CodeBracket         | Customize public courses like GitHub repos               |
+| Community Marketplace | Globe               | Browse, filter, and upvote shared courses                |
+| Export Options        | ArrowDownTray       | PDF, Markdown, SCORM/xAPI packages                       |
 
 **Style:**
+
 - Each card has gradient icon (matching current color scheme)
 - Hover effect: subtle scale + shadow
 - Cards have consistent padding and border radius
@@ -103,21 +106,25 @@ Choose Topic          AI Generates          Publish & Share
 ```
 
 **Step 1: Choose Topic**
+
 - Select a category (Programming, Business, Design, etc.)
 - Enter your course idea
 - Set duration and difficulty
 
 **Step 2: AI Generates**
+
 - Course structure with chapters
 - Quizzes and assessments
 - Flashcards and study notes
 
 **Step 3: Publish & Share**
+
 - Edit and customize
 - Fork from community courses
 - Export to PDF, Markdown, or LMS
 
 **Visual:**
+
 - Each step has a mock UI screenshot
 - Steps connected by dotted lines
 - Numbered circles (01, 02, 03) in gradient
@@ -129,12 +136,14 @@ Choose Topic          AI Generates          Publish & Share
 **Layout:** 2-column (text left, code/visual right)
 
 **Left column (text):**
+
 - AI Provider Abstraction — Swap Gemini for OpenAI, Anthropic, or Ollama
 - Progress Tracking — Analytics dashboard with Recharts
 - i18n Support — Multi-language with next-intl
 - Plugin System — Extend with custom features
 
 **Right column (visual):**
+
 - Code snippet showing AI provider abstraction
 - Or: Architecture diagram
 
@@ -146,13 +155,14 @@ Choose Topic          AI Generates          Publish & Share
 
 **Layout:** 3-column grid
 
-| Column 1 | Column 2 | Column 3 |
-|----------|----------|----------|
-| GitHub Contributors | Discord Server | Roadmap |
-| [Contributor avatars grid] | [Join Discord] | [View Roadmap] |
-| "40+ contributors" | "500+ members" | "Vote on features" |
+| Column 1                   | Column 2       | Column 3           |
+| -------------------------- | -------------- | ------------------ |
+| GitHub Contributors        | Discord Server | Roadmap            |
+| [Contributor avatars grid] | [Join Discord] | [View Roadmap]     |
+| "40+ contributors"         | "500+ members" | "Vote on features" |
 
 **Style:**
+
 - Each column is a card
 - Contributors: GitHub avatar grid (top 12)
 - Discord: Button with Discord icon
@@ -164,15 +174,15 @@ Choose Topic          AI Generates          Publish & Share
 
 **Layout:** 2-column (Free vs Pro)
 
-| Feature | Free & Open Source | Managed Hosting (Future) |
-|---------|-------------------|-------------------------|
-| Price | $0 forever | $X/month |
-| AI Course Generation | ✓ | ✓ |
-| Quizzes, Flashcards, Notes | ✓ | ✓ |
-| Community Courses | ✓ | ✓ |
-| Self-Hosting | ✓ | — |
-| Priority Support | — | ✓ |
-| Custom Domain | — | ✓ |
+| Feature                    | Free & Open Source | Managed Hosting (Future) |
+| -------------------------- | ------------------ | ------------------------ |
+| Price                      | $0 forever         | $X/month                 |
+| AI Course Generation       | ✓                  | ✓                        |
+| Quizzes, Flashcards, Notes | ✓                  | ✓                        |
+| Community Courses          | ✓                  | ✓                        |
+| Self-Hosting               | ✓                  | —                        |
+| Priority Support           | —                  | ✓                        |
+| Custom Domain              | —                  | ✓                        |
 
 **Note:** For now, emphasize "Free & Open Source" with self-hosting option. Managed hosting is a future tier.
 
@@ -185,6 +195,7 @@ Choose Topic          AI Generates          Publish & Share
 **Layout:** Accordion style
 
 **Questions:**
+
 1. What is Coursei.ai?
 2. Is it really free?
 3. How do I self-host?
@@ -220,22 +231,26 @@ Column 4: Legal (Privacy, Terms, License)
 ## Visual Style
 
 ### Colors
+
 - Primary: Purple gradient (#7C3AED → #6366F1)
 - Background: White (#FFFFFF) / Light gray (#F9FAFB)
 - Text: Gray-900 (#111827) for headings, Gray-600 (#4B5563) for body
 - Accents: Gradient from purple to indigo
 
 ### Typography
+
 - Headings: Inter or Geist (bold, tight tracking)
 - Body: Inter (regular, relaxed line-height)
 - Code: Geist Mono or JetBrains Mono
 
 ### Spacing
+
 - Section padding: 80px-120px vertical
 - Max width: 1200px centered
 - Card padding: 24px-32px
 
 ### Animations (Framer Motion)
+
 - Hero text fade-in on load
 - Feature cards stagger animation on scroll
 - Steps slide in from left/right
@@ -258,13 +273,7 @@ Column 4: Legal (Privacy, Terms, License)
 3. `app/_components/Footer.jsx` — Footer update
 4. `app/globals.css` — Add animation utilities
 
-**New Files:**
-5. `app/_components/Features.jsx` — Bento feature grid
-6. `app/_components/HowItWorks.jsx` — 3-step flow
-7. `app/_components/TechnicalArchitecture.jsx` — OSS contributor section
-8. `app/_components/Community.jsx` — Community section
-9. `app/_components/Pricing.jsx` — Pricing section
-10. `app/_components/FAQ.jsx` — Accordion FAQ
+**New Files:** 5. `app/_components/Features.jsx` — Bento feature grid 6. `app/_components/HowItWorks.jsx` — 3-step flow 7. `app/_components/TechnicalArchitecture.jsx` — OSS contributor section 8. `app/_components/Community.jsx` — Community section 9. `app/_components/Pricing.jsx` — Pricing section 10. `app/_components/FAQ.jsx` — Accordion FAQ
 
 ---
 

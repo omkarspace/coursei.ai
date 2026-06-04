@@ -1,9 +1,9 @@
-"use client";
-import { getUserCourses } from "@/app/actions/course";
-import { UserCourseListContext } from "@/app/_context/UserCourseListContext";
-import React, { useContext, useEffect, useState } from "react";
-import CourseCard from "./CourseCard";
-import Link from "next/link";
+'use client';
+import { getUserCourses } from '@/app/actions/course';
+import { UserCourseListContext } from '@/app/_context/UserCourseListContext';
+import React, { useContext, useEffect, useState } from 'react';
+import CourseCard from './CourseCard';
+import Link from 'next/link';
 
 function UserCourseList() {
   const [courseList, setCourseList] = useState([]);
@@ -23,8 +23,8 @@ function UserCourseList() {
       setCourseList(courses);
       setUserCourseInput(courses);
     } catch (err) {
-      console.error("Failed to fetch courses:", err);
-      setError("Failed to load courses. Please try again.");
+      console.error('Failed to fetch courses:', err);
+      setError('Failed to load courses. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -81,11 +81,7 @@ function UserCourseList() {
       {courseList.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {courseList.map((course, index) => (
-            <CourseCard
-              course={course}
-              key={index}
-              refreshData={refreshData}
-            />
+            <CourseCard course={course} key={index} refreshData={refreshData} />
           ))}
         </div>
       ) : (
@@ -103,9 +99,7 @@ function UserCourseList() {
               d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
             />
           </svg>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-            No courses yet
-          </h3>
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No courses yet</h3>
           <p className="text-gray-500 dark:text-gray-400 mb-4 max-w-md">
             Create your first AI-powered course to start learning. It only takes a few minutes!
           </p>
@@ -113,12 +107,7 @@ function UserCourseList() {
             href="/create-course"
             className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-md font-medium hover:bg-primary/90 transition-colors"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"

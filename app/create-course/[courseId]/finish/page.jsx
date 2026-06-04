@@ -1,11 +1,11 @@
-"use client";
-import { getCourseById } from "@/app/actions/course";
-import { useUser } from "@clerk/nextjs";
-import React, { useEffect, useState } from "react";
-import CourseBasicInfo from "../_components/CourseBasicInfo";
-import { HiOutlineClipboardDocumentCheck } from "react-icons/hi2";
-import { toast } from "sonner";
-import Link from "next/link";
+'use client';
+import { getCourseById } from '@/app/actions/course';
+import { useUser } from '@clerk/nextjs';
+import React, { useEffect, useState } from 'react';
+import CourseBasicInfo from '../_components/CourseBasicInfo';
+import { HiOutlineClipboardDocumentCheck } from 'react-icons/hi2';
+import { toast } from 'sonner';
+import Link from 'next/link';
 
 function FinishScreen({ params }) {
   const { courseId } = params;
@@ -26,8 +26,8 @@ function FinishScreen({ params }) {
       const result = await getCourseById(courseId);
       setCourse(result || null);
     } catch (error) {
-      console.error("Error fetching course:", error);
-      setError("Failed to load course. Please try again.");
+      console.error('Error fetching course:', error);
+      setError('Failed to load course. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -37,9 +37,9 @@ function FinishScreen({ params }) {
     const url = `${process.env.NEXT_PUBLIC_HOST_NAME}/course/${course?.courseId}`;
     try {
       await navigator.clipboard.writeText(url);
-      toast.success("URL copied to clipboard!");
+      toast.success('URL copied to clipboard!');
     } catch (err) {
-      toast.error("Failed to copy URL");
+      toast.error('Failed to copy URL');
     }
   };
 
@@ -72,7 +72,7 @@ function FinishScreen({ params }) {
             />
           </svg>
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-            {error || "Course not found"}
+            {error || 'Course not found'}
           </h3>
           <Link
             href="/dashboard"

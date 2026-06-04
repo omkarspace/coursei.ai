@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import Prism from "prismjs";
-import "prismjs/components/prism-javascript";
-import "prismjs/components/prism-typescript";
-import "prismjs/components/prism-jsx";
-import "prismjs/components/prism-tsx";
-import "prismjs/components/prism-python";
-import "prismjs/components/prism-bash";
-import "prismjs/components/prism-json";
-import "prismjs/components/prism-markdown";
-import "prismjs/components/prism-css";
-import "prismjs/components/prism-sql";
-import "prismjs/components/prism-yaml";
-import "prismjs/themes/prism-tomorrow.css";
+import { useEffect, useRef, useState } from 'react';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-typescript';
+import 'prismjs/components/prism-jsx';
+import 'prismjs/components/prism-tsx';
+import 'prismjs/components/prism-python';
+import 'prismjs/components/prism-bash';
+import 'prismjs/components/prism-json';
+import 'prismjs/components/prism-markdown';
+import 'prismjs/components/prism-css';
+import 'prismjs/components/prism-sql';
+import 'prismjs/components/prism-yaml';
+import 'prismjs/themes/prism-tomorrow.css';
 
 interface CodeEditorProps {
   code: string;
@@ -26,13 +26,13 @@ interface CodeEditorProps {
 
 export function CodeEditor({
   code,
-  language = "javascript",
+  language = 'javascript',
   readOnly = true,
   onChange,
-  className = "",
+  className = '',
   showLineNumbers = true,
 }: CodeEditorProps) {
-  const [highlightedCode, setHighlightedCode] = useState("");
+  const [highlightedCode, setHighlightedCode] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -66,26 +66,26 @@ export function CodeEditor({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Escape") {
+    if (e.key === 'Escape') {
       handleCancel();
     }
-    if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
+    if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
       handleSave();
     }
     // Handle tab key
-    if (e.key === "Tab") {
+    if (e.key === 'Tab') {
       e.preventDefault();
       const textarea = e.currentTarget;
       const start = textarea.selectionStart;
       const end = textarea.selectionEnd;
       const value = textarea.value;
-      textarea.value = value.substring(0, start) + "  " + value.substring(end);
+      textarea.value = value.substring(0, start) + '  ' + value.substring(end);
       textarea.selectionStart = textarea.selectionEnd = start + 2;
     }
   };
 
-  const lineCount = (isEditing ? code : code).split("\n").length;
+  const lineCount = (isEditing ? code : code).split('\n').length;
 
   return (
     <div className={`relative group ${className}`}>

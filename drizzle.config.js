@@ -1,5 +1,5 @@
-import dotenv from "dotenv"
-dotenv.config()
+import dotenv from 'dotenv';
+dotenv.config();
 
 /** @type {import("drizzle-kit").Config} */
 export default {

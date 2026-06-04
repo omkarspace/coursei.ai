@@ -1,15 +1,15 @@
-import { NextResponse } from "next/server";
-import { db } from "@/server/db";
-import { CourseList, Chapters } from "@/server/db/schema";
-import { eq, desc } from "drizzle-orm";
-import { cacheGet, cacheSet, cacheKeys, cacheTTL } from "@/server/services/cache";
+import { NextResponse } from 'next/server';
+import { db } from '@/server/db';
+import { CourseList, Chapters } from '@/server/db/schema';
+import { eq, desc } from 'drizzle-orm';
+import { cacheGet, cacheSet, cacheKeys, cacheTTL } from '@/server/services/cache';
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const limit = Math.min(parseInt(searchParams.get("limit") || "20", 10), 100);
-    const offset = parseInt(searchParams.get("offset") || "0", 10);
-    const category = searchParams.get("category") ?? undefined;
+    const limit = Math.min(parseInt(searchParams.get('limit') || '20', 10), 100);
+    const offset = parseInt(searchParams.get('offset') || '0', 10);
+    const category = searchParams.get('category') ?? undefined;
 
     const cacheKey = cacheKeys.marketplaceList(offset / limit + 1, category);
     const cached = await cacheGet(cacheKey);
@@ -62,10 +62,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error("Error fetching courses:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    console.error('Error fetching courses:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

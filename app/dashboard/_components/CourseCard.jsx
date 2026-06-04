@@ -1,12 +1,12 @@
-"use client";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { HiMiniEllipsisVertical, HiOutlineBookOpen } from "react-icons/hi2";
-import DropDownOption from "./DropDownOption";
-import { deleteCourse } from "@/app/actions/course";
-import { getCourseRatingSummary } from "@/app/actions/rating";
-import { toast } from "sonner";
-import Link from "next/link";
+'use client';
+import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
+import { HiMiniEllipsisVertical, HiOutlineBookOpen } from 'react-icons/hi2';
+import DropDownOption from './DropDownOption';
+import { deleteCourse } from '@/app/actions/course';
+import { getCourseRatingSummary } from '@/app/actions/rating';
+import { toast } from 'sonner';
+import Link from 'next/link';
 
 function CourseCard({ course, refreshData, displayUser = false }) {
   const handleOnDelete = async (e) => {
@@ -14,10 +14,10 @@ function CourseCard({ course, refreshData, displayUser = false }) {
     e.stopPropagation();
     try {
       await deleteCourse(course?.courseId);
-      toast.success("Course deleted successfully");
+      toast.success('Course deleted successfully');
       refreshData();
     } catch (error) {
-      toast.error("Failed to delete course");
+      toast.error('Failed to delete course');
     }
   };
 
@@ -30,7 +30,7 @@ function CourseCard({ course, refreshData, displayUser = false }) {
   }, [course?.courseId]);
 
   const getStatusBadge = () => {
-    if (!course?.status || course.status === "complete") {
+    if (!course?.status || course.status === 'complete') {
       return course?.publish ? (
         <span className="text-xs bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 px-2 py-0.5 rounded-full">
           Published
@@ -43,40 +43,52 @@ function CourseCard({ course, refreshData, displayUser = false }) {
     }
 
     const statusMap = {
-      draft: { label: "Draft", className: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400" },
-      generating_outline: { label: "Generating...", className: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400" },
-      generating_chapters: { label: "Generating...", className: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" },
-      failed: { label: "Failed", className: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400" },
+      draft: {
+        label: 'Draft',
+        className: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
+      },
+      generating_outline: {
+        label: 'Generating...',
+        className: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+      },
+      generating_chapters: {
+        label: 'Generating...',
+        className: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+      },
+      failed: {
+        label: 'Failed',
+        className: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+      },
     };
 
     const status = statusMap[course.status] || statusMap.draft;
     return (
-      <span className={`text-xs px-2 py-0.5 rounded-full ${status.className}`}>
-        {status.label}
-      </span>
+      <span className={`text-xs px-2 py-0.5 rounded-full ${status.className}`}>{status.label}</span>
     );
   };
 
   return (
-    <Link href={"/course/" + course?.courseId}>
+    <Link href={'/course/' + course?.courseId}>
       <div className="shadow-sm rounded-lg border p-4 cursor-pointer mt-4 bg-gray-50 dark:bg-gray-900 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200 hover:shadow-md">
         <div className="relative">
           <Image
-            src={course?.courseBanner || "/placeholderr.png"}
+            src={course?.courseBanner || '/placeholderr.png'}
             width={500}
             height={300}
             className="w-full h-[200px] sm:h-[250px] md:h-[300px] lg:h-[350px] object-cover rounded-lg"
-            alt={`Banner for ${course?.courseOutput?.course?.name || "course"}`}
+            alt={`Banner for ${course?.courseOutput?.course?.name || 'course'}`}
           />
-          <div className="absolute top-2 right-2">
-            {getStatusBadge()}
-          </div>
+          <div className="absolute top-2 right-2">{getStatusBadge()}</div>
         </div>
         <div className="p-2">
           <h2 className="font-medium text-lg flex justify-between items-center dark:text-white">
             <span className="truncate mr-2">{course?.courseOutput?.course?.name}</span>
             {!displayUser && (
-              <DropDownOption handleOnDelete={handleOnDelete} course={course} refreshData={refreshData}>
+              <DropDownOption
+                handleOnDelete={handleOnDelete}
+                course={course}
+                refreshData={refreshData}
+              >
                 <HiMiniEllipsisVertical aria-hidden="true" />
               </DropDownOption>
             )}
@@ -102,10 +114,11 @@ function CourseCard({ course, refreshData, displayUser = false }) {
             </div>
           )}
 
-          {(course?.status === "generating_outline" || course?.status === "generating_chapters") && (
+          {(course?.status === 'generating_outline' ||
+            course?.status === 'generating_chapters') && (
             <div className="mt-2">
               <div className="flex justify-between text-xs text-gray-500 mb-1">
-                <span>{course?.currentStep || "Generating..."}</span>
+                <span>{course?.currentStep || 'Generating...'}</span>
                 <span>{course?.progress || 0}%</span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
@@ -126,7 +139,7 @@ function CourseCard({ course, refreshData, displayUser = false }) {
           {displayUser && course?.userName && (
             <div className="flex gap-2 items-center mt-2">
               <Image
-                src={course?.userProfileImage || "/avatar.png"}
+                src={course?.userProfileImage || '/avatar.png'}
                 width={35}
                 height={35}
                 className="rounded-full"

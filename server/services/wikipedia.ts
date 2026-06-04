@@ -3,7 +3,7 @@
  * Fetches supplementary content for courses
  */
 
-const WIKIPEDIA_API_URL = "https://en.wikipedia.org/api/rest_v1";
+const WIKIPEDIA_API_URL = 'https://en.wikipedia.org/api/rest_v1';
 
 interface WikipediaSummary {
   title: string;
@@ -30,19 +30,14 @@ interface WikipediaSearchResult {
 /**
  * Get a summary for a Wikipedia article
  */
-export async function getWikipediaSummary(
-  topic: string
-): Promise<WikipediaSummary | null> {
+export async function getWikipediaSummary(topic: string): Promise<WikipediaSummary | null> {
   try {
     const encodedTopic = encodeURIComponent(topic);
-    const response = await fetch(
-      `${WIKIPEDIA_API_URL}/page/summary/${encodedTopic}`,
-      {
-        headers: {
-          "User-Agent": "CourseiAI/1.0 (https://coursei.ai; coursei@example.com)",
-        },
-      }
-    );
+    const response = await fetch(`${WIKIPEDIA_API_URL}/page/summary/${encodedTopic}`, {
+      headers: {
+        'User-Agent': 'CourseiAI/1.0 (https://coursei.ai; coursei@example.com)',
+      },
+    });
 
     if (!response.ok) {
       if (response.status === 404) {
@@ -53,7 +48,7 @@ export async function getWikipediaSummary(
 
     return response.json();
   } catch (error) {
-    console.error("Wikipedia summary error:", error);
+    console.error('Wikipedia summary error:', error);
     return null;
   }
 }
@@ -61,17 +56,14 @@ export async function getWikipediaSummary(
 /**
  * Search Wikipedia for articles matching a query
  */
-export async function searchWikipedia(
-  query: string,
-  limit = 5
-): Promise<WikipediaSearchResult[]> {
+export async function searchWikipedia(query: string, limit = 5): Promise<WikipediaSearchResult[]> {
   try {
     const encodedQuery = encodeURIComponent(query);
     const response = await fetch(
       `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodedQuery}&srlimit=${limit}&format=json&origin=*`,
       {
         headers: {
-          "User-Agent": "CourseiAI/1.0 (https://coursei.ai; coursei@example.com)",
+          'User-Agent': 'CourseiAI/1.0 (https://coursei.ai; coursei@example.com)',
         },
       }
     );
@@ -83,7 +75,7 @@ export async function searchWikipedia(
     const data = await response.json();
     return data.query?.search || [];
   } catch (error) {
-    console.error("Wikipedia search error:", error);
+    console.error('Wikipedia search error:', error);
     return [];
   }
 }
@@ -100,6 +92,6 @@ export async function getRelatedArticles(
   return searchResults.map((result) => ({
     title: result.title,
     url: `https://en.wikipedia.org/wiki/${encodeURIComponent(result.title)}`,
-    snippet: result.snippet.replace(/<\/?span[^>]*>/g, ""),
+    snippet: result.snippet.replace(/<\/?span[^>]*>/g, ''),
   }));
 }

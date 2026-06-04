@@ -1,21 +1,18 @@
-import { NextResponse } from "next/server";
-import { searchCourses, isVectorSearchEnabled } from "@/server/services/vector";
-import { searchGraph, isKnowledgeGraphEnabled } from "@/server/services/knowledge-graph";
-import { db } from "@/server/db";
-import { CourseList } from "@/server/db/schema";
-import { inArray } from "drizzle-orm";
+import { NextResponse } from 'next/server';
+import { searchCourses, isVectorSearchEnabled } from '@/server/services/vector';
+import { searchGraph, isKnowledgeGraphEnabled } from '@/server/services/knowledge-graph';
+import { db } from '@/server/db';
+import { CourseList } from '@/server/db/schema';
+import { inArray } from 'drizzle-orm';
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const query = searchParams.get("q");
-    const limit = parseInt(searchParams.get("limit") || "10", 10);
+    const query = searchParams.get('q');
+    const limit = parseInt(searchParams.get('limit') || '10', 10);
 
     if (!query || query.trim().length === 0) {
-      return NextResponse.json(
-        { error: "Query parameter 'q' is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Query parameter 'q' is required" }, { status: 400 });
     }
 
     // Try graph search first if available
@@ -28,7 +25,7 @@ export async function GET(request: Request) {
         if (isVectorSearchEnabled()) {
           const vectorHits = await searchCourses(query, limit);
           vectorResults = vectorHits.map((r) => ({
-            courseId: (r.metadata as Record<string, string>)?.courseId || "",
+            courseId: (r.metadata as Record<string, string>)?.courseId || '',
             score: r.score,
           }));
         }
@@ -44,7 +41,7 @@ export async function GET(request: Request) {
             merged.push({
               courseId: course.courseId,
               score: course.relevance * 0.6,
-              source: "graph",
+              source: 'graph',
             });
           }
         }
@@ -56,7 +53,7 @@ export async function GET(request: Request) {
             merged.push({
               courseId: vr.courseId,
               score: vr.score * 0.4,
-              source: "vector",
+              source: 'vector',
             });
           }
         }
@@ -77,7 +74,12 @@ export async function GET(request: Request) {
               publish: CourseList.publish,
             })
             .from(CourseList)
-            .where(inArray(CourseList.courseId, merged.map((m) => m.courseId)));
+            .where(
+              inArray(
+                CourseList.courseId,
+                merged.map((m) => m.courseId)
+              )
+            );
 
           const results = merged
             .map((m) => {
@@ -89,12 +91,12 @@ export async function GET(request: Request) {
 
           return NextResponse.json({
             results: results.slice(0, limit),
-            source: "hybrid",
+            source: 'hybrid',
             conceptsFound: graphResults.concepts.length,
           });
         }
       } catch (error) {
-        console.error("Graph search error, falling back to vector:", error);
+        console.error('Graph search error, falling back to vector:', error);
       }
     }
 
@@ -106,7 +108,7 @@ export async function GET(request: Request) {
         .filter((id): id is string => Boolean(id));
 
       if (courseIds.length === 0) {
-        return NextResponse.json({ results: [], source: "vector" });
+        return NextResponse.json({ results: [], source: 'vector' });
       }
 
       const courses = await db
@@ -128,11 +130,11 @@ export async function GET(request: Request) {
           const metadata = r.metadata as Record<string, string>;
           const course = courses.find((c) => c.courseId === metadata.courseId);
           if (!course || !course.publish) return null;
-          return { ...course, score: r.score, source: "vector" };
+          return { ...course, score: r.score, source: 'vector' };
         })
         .filter(Boolean);
 
-      return NextResponse.json({ results: mergedResults, source: "vector" });
+      return NextResponse.json({ results: mergedResults, source: 'vector' });
     }
 
     // Fallback: text search
@@ -154,16 +156,15 @@ export async function GET(request: Request) {
     const queryLower = query.toLowerCase();
     const filtered = courses.filter(
       (c) =>
-        c.name.toLowerCase().includes(queryLower) ||
-        c.category.toLowerCase().includes(queryLower)
+        c.name.toLowerCase().includes(queryLower) || c.category.toLowerCase().includes(queryLower)
     );
 
     return NextResponse.json({
       results: filtered.map((c) => ({ ...c, score: 1.0 })),
-      source: "text",
+      source: 'text',
     });
   } catch (error) {
-    console.error("Search error:", error);
-    return NextResponse.json({ error: "Search failed" }, { status: 500 });
+    console.error('Search error:', error);
+    return NextResponse.json({ error: 'Search failed' }, { status: 500 });
   }
 }

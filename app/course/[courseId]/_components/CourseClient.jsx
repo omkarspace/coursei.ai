@@ -1,16 +1,16 @@
-"use client";
-import ChapterList from "@/app/create-course/[courseId]/_components/ChapterList";
-import CourseBasicInfo from "@/app/create-course/[courseId]/_components/CourseBasicInfo";
-import CourseDetails from "@/app/create-course/[courseId]/_components/CourseDetails";
-import Header from "@/app/dashboard/_components/Header";
-import { forkCourse } from "@/app/actions/course";
-import { getCourseRatingSummary } from "@/app/actions/rating";
-import RatingDialog from "@/app/dashboard/_components/RatingDialog";
-import { HiStar, HiOutlineStar } from "react-icons/hi2";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+'use client';
+import ChapterList from '@/app/create-course/[courseId]/_components/ChapterList';
+import CourseBasicInfo from '@/app/create-course/[courseId]/_components/CourseBasicInfo';
+import CourseDetails from '@/app/create-course/[courseId]/_components/CourseDetails';
+import Header from '@/app/dashboard/_components/Header';
+import { forkCourse } from '@/app/actions/course';
+import { getCourseRatingSummary } from '@/app/actions/rating';
+import RatingDialog from '@/app/dashboard/_components/RatingDialog';
+import { HiStar, HiOutlineStar } from 'react-icons/hi2';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 export default function CourseClient({ course }) {
   const router = useRouter();
@@ -25,11 +25,11 @@ export default function CourseClient({ course }) {
     setIsForking(true);
     try {
       const result = await forkCourse(course.courseId);
-      toast.success("Course forked successfully!");
+      toast.success('Course forked successfully!');
       router.push(`/dashboard`);
     } catch (error) {
-      console.error("Fork failed:", error);
-      toast.error("Failed to fork course");
+      console.error('Fork failed:', error);
+      toast.error('Failed to fork course');
     } finally {
       setIsForking(false);
     }
@@ -49,12 +49,7 @@ export default function CourseClient({ course }) {
               disabled={isForking}
               className="ml-4 inline-flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-md text-sm font-medium hover:bg-secondary/80 transition-colors disabled:opacity-50"
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -62,25 +57,30 @@ export default function CourseClient({ course }) {
                   d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"
                 />
               </svg>
-              {isForking ? "Forking..." : "Fork Course"}
+              {isForking ? 'Forking...' : 'Fork Course'}
             </button>
             <div className="flex items-center gap-4 mt-4">
               <div className="flex items-center gap-1">
-                {[1,2,3,4,5].map((star) =>
+                {[1, 2, 3, 4, 5].map((star) =>
                   star <= Math.round(ratingSummary.average) ? (
                     <HiStar key={star} className="w-5 h-5 text-yellow-500" />
                   ) : (
-                    <HiOutlineStar key={star} className="w-5 h-5 text-gray-300 dark:text-gray-600" />
+                    <HiOutlineStar
+                      key={star}
+                      className="w-5 h-5 text-gray-300 dark:text-gray-600"
+                    />
                   )
                 )}
                 <span className="text-sm text-gray-500 dark:text-gray-400 ml-1">
                   {ratingSummary.average > 0
-                    ? `${ratingSummary.average.toFixed(1)} (${ratingSummary.count} rating${ratingSummary.count !== 1 ? "s" : ""})`
-                    : "No ratings yet"}
+                    ? `${ratingSummary.average.toFixed(1)} (${ratingSummary.count} rating${ratingSummary.count !== 1 ? 's' : ''})`
+                    : 'No ratings yet'}
                 </span>
               </div>
               <RatingDialog courseId={course.courseId}>
-                <Button variant="outline" size="sm">Rate this Course</Button>
+                <Button variant="outline" size="sm">
+                  Rate this Course
+                </Button>
               </RatingDialog>
             </div>
           </div>

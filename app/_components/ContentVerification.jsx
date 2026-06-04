@@ -1,8 +1,8 @@
-"use client";
-import React, { useState } from "react";
-import { verifyContent } from "@/app/actions/content";
-import { VerifiedBadge, SourceList } from "@/components/ui/VerifiedBadge";
-import { HiOutlineShieldCheck } from "react-icons/hi2";
+'use client';
+import React, { useState } from 'react';
+import { verifyContent } from '@/app/actions/content';
+import { VerifiedBadge, SourceList } from '@/components/ui/VerifiedBadge';
+import { HiOutlineShieldCheck } from 'react-icons/hi2';
 
 export default function ContentVerification({ chapterName, contentSummary }) {
   const [verification, setVerification] = useState(null);
@@ -15,7 +15,7 @@ export default function ContentVerification({ chapterName, contentSummary }) {
       const result = await verifyContent(`${chapterName} ${contentSummary}`);
       setVerification(result);
     } catch (error) {
-      console.error("Verification error:", error);
+      console.error('Verification error:', error);
     } finally {
       setLoading(false);
     }
@@ -33,7 +33,7 @@ export default function ContentVerification({ chapterName, contentSummary }) {
           disabled={loading}
           className="text-xs text-primary hover:text-primary/80 disabled:opacity-50"
         >
-          {loading ? "Verifying..." : verification ? "Re-verify" : "Verify Content"}
+          {loading ? 'Verifying...' : verification ? 'Re-verify' : 'Verify Content'}
         </button>
       </div>
 
@@ -55,11 +55,9 @@ export default function ContentVerification({ chapterName, contentSummary }) {
                     onClick={() => setExpanded(!expanded)}
                     className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                   >
-                    {expanded ? "Hide sources" : `View ${verification.sources.length} sources`}
+                    {expanded ? 'Hide sources' : `View ${verification.sources.length} sources`}
                   </button>
-                  {expanded && (
-                    <SourceList sources={verification.sources} className="mt-2" />
-                  )}
+                  {expanded && <SourceList sources={verification.sources} className="mt-2" />}
                 </div>
               )}
             </>

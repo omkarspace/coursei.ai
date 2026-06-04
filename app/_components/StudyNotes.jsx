@@ -1,9 +1,9 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { HiOutlineDocumentText, HiArrowPath } from "react-icons/hi2";
-import { generateStudyNotesAction } from "@/app/actions/ai";
-import { saveStudyNotes, getStudyNotes } from "@/app/actions/course";
-import { toast } from "sonner";
+'use client';
+import React, { useState, useEffect } from 'react';
+import { HiOutlineDocumentText, HiArrowPath } from 'react-icons/hi2';
+import { generateStudyNotesAction } from '@/app/actions/ai';
+import { saveStudyNotes, getStudyNotes } from '@/app/actions/course';
+import { toast } from 'sonner';
 
 function StudyNotes({ courseId, chapterId, chapterName, chapterContent }) {
   const [notes, setNotes] = useState(null);
@@ -23,17 +23,16 @@ function StudyNotes({ courseId, chapterId, chapterName, chapterContent }) {
   const generateStudyNotes = async () => {
     setLoading(true);
     try {
-      const contentText = chapterContent?.content
-        ?.map((c) => c.explanation)
-        .join("\n") || chapterName;
+      const contentText =
+        chapterContent?.content?.map((c) => c.explanation).join('\n') || chapterName;
 
       const response = await generateStudyNotesAction(chapterName, contentText.substring(0, 2000));
       setNotes(response);
       await saveStudyNotes(courseId, chapterId, response);
-      toast.success("Study notes generated successfully!");
+      toast.success('Study notes generated successfully!');
     } catch (error) {
-      console.error("Error generating study notes:", error);
-      toast.error("Failed to generate study notes. Please try again.");
+      console.error('Error generating study notes:', error);
+      toast.error('Failed to generate study notes. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -54,7 +53,7 @@ function StudyNotes({ courseId, chapterId, chapterName, chapterContent }) {
           disabled={loading}
           className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 disabled:opacity-50"
         >
-          {loading ? "Generating Notes..." : "Generate Study Notes"}
+          {loading ? 'Generating Notes...' : 'Generate Study Notes'}
         </button>
       </div>
     );
@@ -99,7 +98,9 @@ function StudyNotes({ courseId, chapterId, chapterName, chapterContent }) {
         </div>
 
         <div>
-          <h4 className="font-medium text-lg mb-3 text-gray-800 dark:text-gray-200">Important Terms</h4>
+          <h4 className="font-medium text-lg mb-3 text-gray-800 dark:text-gray-200">
+            Important Terms
+          </h4>
           <div className="grid gap-3 sm:grid-cols-2">
             {notes.importantTerms?.map((item, index) => (
               <div key={index} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">

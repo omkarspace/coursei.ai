@@ -1,4 +1,4 @@
-import { CourseStatus } from "@/server/db/schema";
+import { CourseStatus } from '@/server/db/schema';
 
 // Course types
 export interface CourseData {
@@ -76,7 +76,7 @@ export interface SearchResult {
 
 export interface SearchResponse {
   results: SearchResult[];
-  source: "vector" | "text" | "unknown";
+  source: 'vector' | 'text' | 'unknown';
 }
 
 export interface CourseStatusResponse {

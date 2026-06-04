@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import ReactMarkdown from "react-markdown";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import { MermaidDiagram } from "./MermaidDiagram";
-import { CodeEditor } from "./CodeEditor";
+import ReactMarkdown from 'react-markdown';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import { MermaidDiagram } from './MermaidDiagram';
+import { CodeEditor } from './CodeEditor';
 
 interface MarkdownRendererProps {
   content: string;
   className?: string;
 }
 
-export function MarkdownRenderer({ content, className = "" }: MarkdownRendererProps) {
+export function MarkdownRenderer({ content, className = '' }: MarkdownRendererProps) {
   return (
     <div className={`prose prose-gray dark:prose-invert max-w-none ${className}`}>
       <ReactMarkdown
@@ -20,12 +20,12 @@ export function MarkdownRenderer({ content, className = "" }: MarkdownRendererPr
         components={{
           // Custom code block renderer for Mermaid and code
           code({ node, className, children, ...props }) {
-            const match = /language-(\w+)/.exec(className || "");
-            const language = match ? match[1] : "";
-            const codeString = String(children).replace(/\n$/, "");
+            const match = /language-(\w+)/.exec(className || '');
+            const language = match ? match[1] : '';
+            const codeString = String(children).replace(/\n$/, '');
 
             // Mermaid diagrams
-            if (language === "mermaid") {
+            if (language === 'mermaid') {
               return <MermaidDiagram code={codeString} />;
             }
 
@@ -36,7 +36,7 @@ export function MarkdownRenderer({ content, className = "" }: MarkdownRendererPr
                   code={codeString}
                   language={language}
                   readOnly={true}
-                  showLineNumbers={codeString.split("\n").length > 3}
+                  showLineNumbers={codeString.split('\n').length > 3}
                 />
               );
             }
@@ -124,15 +124,9 @@ export function MarkdownRenderer({ content, className = "" }: MarkdownRendererPr
           img({ src, alt }) {
             return (
               <figure className="my-4">
-                <img
-                  src={src}
-                  alt={alt}
-                  className="rounded-lg shadow-md max-w-full"
-                />
+                <img src={src} alt={alt} className="rounded-lg shadow-md max-w-full" />
                 {alt && (
-                  <figcaption className="text-center text-sm text-gray-500 mt-2">
-                    {alt}
-                  </figcaption>
+                  <figcaption className="text-center text-sm text-gray-500 mt-2">{alt}</figcaption>
                 )}
               </figure>
             );

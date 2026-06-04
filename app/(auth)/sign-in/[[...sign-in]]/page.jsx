@@ -1,4 +1,4 @@
-import { SignIn } from "@clerk/nextjs";
+import { SignIn } from '@clerk/nextjs';
 
 export default function Page() {
   return (
@@ -55,7 +55,7 @@ export default function Page() {
               </a>
 
               <h1 className="mt-2 text-2xl text-center font-bold text-gray-900 dark:text-white sm:text-3xl md:text-4xl">
-              Welcome to Coursei
+                Welcome to Coursei
               </h1>
             </div>
 

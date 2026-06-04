@@ -1,7 +1,7 @@
-import Image from "next/image";
-import { HiOutlinePuzzlePiece } from "react-icons/hi2";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import Image from 'next/image';
+import { HiOutlinePuzzlePiece } from 'react-icons/hi2';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export default function CourseShell({ course }) {
   return (
@@ -26,13 +26,13 @@ export default function CourseShell({ course }) {
               )}
             </p>
           )}
-          <Link href={"/course/" + course?.courseId + "/start"}>
+          <Link href={'/course/' + course?.courseId + '/start'}>
             <Button className="w-full mt-5">Start</Button>
           </Link>
         </div>
         <div>
           <Image
-            src={course?.courseBanner || "/placeholderr.png"}
+            src={course?.courseBanner || '/placeholderr.png'}
             width={300}
             height={200}
             className="w-full rounded-xl h-[200px] md:h-[300px] object-cover"

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import katex from "katex";
-import "katex/dist/katex.min.css";
+import { useEffect, useRef } from 'react';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 
 interface MathFormulaProps {
   formula: string;
@@ -10,11 +10,7 @@ interface MathFormulaProps {
   className?: string;
 }
 
-export function MathFormula({
-  formula,
-  display = false,
-  className = "",
-}: MathFormulaProps) {
+export function MathFormula({ formula, display = false, className = '' }: MathFormulaProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -36,7 +32,7 @@ export function MathFormula({
   return (
     <div
       ref={ref}
-      className={`math-formula ${display ? "block text-center my-4" : "inline"} ${className}`}
+      className={`math-formula ${display ? 'block text-center my-4' : 'inline'} ${className}`}
     />
   );
 }

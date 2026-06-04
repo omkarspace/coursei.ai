@@ -1,4 +1,4 @@
-import { Redis } from "@upstash/redis";
+import { Redis } from '@upstash/redis';
 
 const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
 const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -90,18 +90,17 @@ export const cacheKeys = {
   courseMeta: (courseId: string) => `course:${courseId}:meta`,
   courseContent: (courseId: string) => `course:${courseId}:content`,
   courseChapters: (courseId: string) => `course:${courseId}:chapters`,
-  marketplaceList: (page: number, category?: string) =>
-    `marketplace:${category || "all"}:${page}`,
+  marketplaceList: (page: number, category?: string) => `marketplace:${category || 'all'}:${page}`,
   searchResults: (query: string) => `search:${query}`,
 };
 
 // ===== Cache TTLs (seconds) =====
 export const cacheTTL = {
-  courseMeta: 3600,       // 1 hour
-  courseContent: 21600,   // 6 hours
-  courseChapters: 3600,   // 1 hour
-  marketplace: 300,       // 5 minutes
-  search: 600,            // 10 minutes
+  courseMeta: 3600, // 1 hour
+  courseContent: 21600, // 6 hours
+  courseChapters: 3600, // 1 hour
+  marketplace: 300, // 5 minutes
+  search: 600, // 10 minutes
 };
 
 // ===== Generic API (used by rating.ts) =====

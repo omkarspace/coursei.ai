@@ -3,7 +3,7 @@
  * Verifies course content against web sources
  */
 
-const TAVILY_API_URL = "https://api.tavily.com/search";
+const TAVILY_API_URL = 'https://api.tavily.com/search';
 
 interface TavilyResult {
   title: string;
@@ -30,10 +30,7 @@ function isTavilyEnabled(): boolean {
 /**
  * Verify a claim or topic using Tavily search
  */
-export async function verifyWithTavily(
-  query: string,
-  maxResults = 5
-): Promise<VerificationResult> {
+export async function verifyWithTavily(query: string, maxResults = 5): Promise<VerificationResult> {
   if (!isTavilyEnabled()) {
     return {
       verified: false,
@@ -44,15 +41,15 @@ export async function verifyWithTavily(
 
   try {
     const response = await fetch(TAVILY_API_URL, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         api_key: process.env.TAVILY_API_KEY,
         query,
         max_results: maxResults,
-        search_depth: "basic",
+        search_depth: 'basic',
         include_answer: true,
       }),
     });
@@ -71,12 +68,13 @@ export async function verifyWithTavily(
     }));
 
     return {
-      verified: sources.length > 0 && sources.some((s: { confidence: number }) => s.confidence > 0.5),
+      verified:
+        sources.length > 0 && sources.some((s: { confidence: number }) => s.confidence > 0.5),
       sources,
       query,
     };
   } catch (error) {
-    console.error("Tavily verification error:", error);
+    console.error('Tavily verification error:', error);
     return {
       verified: false,
       sources: [],

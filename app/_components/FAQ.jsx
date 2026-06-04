@@ -1,33 +1,39 @@
-"use client";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { HiPlus, HiMinus } from "react-icons/hi2";
-import SectionWrapper from "./SectionWrapper";
+'use client';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { HiPlus, HiMinus } from 'react-icons/hi2';
+import SectionWrapper from './SectionWrapper';
 
 const faqs = [
   {
-    question: "What is Coursei.ai?",
-    answer: "Coursei.ai is an AI-powered open-source learning platform that creates courses, quizzes, flashcards, and study notes in minutes. Fork it, customize it, and share with the community.",
+    question: 'What is Coursei.ai?',
+    answer:
+      'Coursei.ai is an AI-powered open-source learning platform that creates courses, quizzes, flashcards, and study notes in minutes. Fork it, customize it, and share with the community.',
   },
   {
-    question: "Is it really free?",
-    answer: "Yes! The open-source version is completely free and self-hosted. You get unlimited courses, AI generation, and full source code access. We also offer a managed hosting option for $9/month.",
+    question: 'Is it really free?',
+    answer:
+      'Yes! The open-source version is completely free and self-hosted. You get unlimited courses, AI generation, and full source code access. We also offer a managed hosting option for $9/month.',
   },
   {
-    question: "How does the AI work?",
-    answer: "We use Google Gemini 2.0 Flash as our AI engine. It generates course structures, quizzes, flashcards, and study notes from your input. You need a free Gemini API key to use the AI features.",
+    question: 'How does the AI work?',
+    answer:
+      'We use Google Gemini 2.0 Flash as our AI engine. It generates course structures, quizzes, flashcards, and study notes from your input. You need a free Gemini API key to use the AI features.',
   },
   {
-    question: "Can I customize existing courses?",
-    answer: "Absolutely! Coursei supports forking — like GitHub repos. Fork any public course, modify the content, add your own quizzes and flashcards, then publish your version.",
+    question: 'Can I customize existing courses?',
+    answer:
+      'Absolutely! Coursei supports forking — like GitHub repos. Fork any public course, modify the content, add your own quizzes and flashcards, then publish your version.',
   },
   {
-    question: "What technologies does it use?",
-    answer: "Next.js 15, Tailwind CSS, Drizzle ORM, Neon PostgreSQL, Clerk authentication, Firebase storage, and Vercel for deployment. All modern, battle-tested technologies.",
+    question: 'What technologies does it use?',
+    answer:
+      'Next.js 15, Tailwind CSS, Drizzle ORM, Neon PostgreSQL, Clerk authentication, Firebase storage, and Vercel for deployment. All modern, battle-tested technologies.',
   },
   {
-    question: "How do I contribute?",
-    answer: "Visit our GitHub repository to submit PRs, report bugs, suggest features, or join discussions. Every contribution — from code to documentation — is welcome.",
+    question: 'How do I contribute?',
+    answer:
+      'Visit our GitHub repository to submit PRs, report bugs, suggest features, or join discussions. Every contribution — from code to documentation — is welcome.',
   },
 ];
 
@@ -49,13 +55,11 @@ function FAQItem({ faq, isOpen, onToggle }) {
         {isOpen && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
+            animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <div className="px-5 pb-5 text-gray-600 leading-relaxed">
-              {faq.answer}
-            </div>
+            <div className="px-5 pb-5 text-gray-600 leading-relaxed">{faq.answer}</div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -69,9 +73,7 @@ export default function FAQ() {
   return (
     <SectionWrapper id="faq" className="bg-gray-50">
       <div className="text-center mb-16">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
-          Frequently Asked Questions
-        </h2>
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">Frequently Asked Questions</h2>
         <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
           Everything you need to know about Coursei.ai
         </p>

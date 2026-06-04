@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React from "react";
-import { Badge } from "@/components/ui/badge";
+import React from 'react';
+import { Badge } from '@/components/ui/badge';
 
 interface VerifiedBadgeProps {
   verified: boolean;
@@ -9,20 +9,11 @@ interface VerifiedBadgeProps {
   className?: string;
 }
 
-export function VerifiedBadge({
-  verified,
-  sourceCount = 0,
-  className,
-}: VerifiedBadgeProps) {
+export function VerifiedBadge({ verified, sourceCount = 0, className }: VerifiedBadgeProps) {
   if (!verified) {
     return (
       <Badge variant="outline" className={className}>
-        <svg
-          className="w-3 h-3 mr-1"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -37,12 +28,7 @@ export function VerifiedBadge({
 
   return (
     <Badge variant="success" className={className}>
-      <svg
-        className="w-3 h-3 mr-1"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
+      <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -84,9 +70,7 @@ export function SourceList({ sources, className }: SourceListProps) {
             >
               {source.title}
             </a>
-            <p className="text-muted-foreground text-xs mt-0.5 line-clamp-2">
-              {source.snippet}
-            </p>
+            <p className="text-muted-foreground text-xs mt-0.5 line-clamp-2">{source.snippet}</p>
           </li>
         ))}
       </ul>

@@ -1,13 +1,13 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { HiOutlinePuzzlePiece } from "react-icons/hi2";
-import EditCourseBasicInfo from "./EditCourseBasicInfo";
-import { updateCourseBanner } from "@/app/actions/course";
-import Link from "next/link";
-import { toast } from "sonner";
-import AiBannerButton from "../../_components/AiBannerButton";
+'use client';
+import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
+import { HiOutlinePuzzlePiece } from 'react-icons/hi2';
+import EditCourseBasicInfo from './EditCourseBasicInfo';
+import { updateCourseBanner } from '@/app/actions/course';
+import Link from 'next/link';
+import { toast } from 'sonner';
+import AiBannerButton from '../../_components/AiBannerButton';
 
 function CourseBasicInfo({ course, refreshData, edit = true }) {
   const [selectedFile, setSelectedFile] = useState();
@@ -28,27 +28,24 @@ function CourseBasicInfo({ course, refreshData, edit = true }) {
 
     try {
       const formData = new FormData();
-      formData.append("file", file);
-      formData.append(
-        "upload_preset",
-        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
-      );
+      formData.append('file', file);
+      formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
 
       const res = await fetch(
         `https://api.cloudinary.com/v1_/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-        { method: "POST", body: formData }
+        { method: 'POST', body: formData }
       );
 
       const data = await res.json();
       if (data.secure_url) {
         await updateCourseBanner(course?.courseId, data.secure_url);
-        toast.success("Banner updated successfully!");
+        toast.success('Banner updated successfully!');
       } else {
-        throw new Error("Upload failed");
+        throw new Error('Upload failed');
       }
     } catch (err) {
-      console.error("Upload failed:", err);
-      toast.error("Failed to upload image. Please try again.");
+      console.error('Upload failed:', err);
+      toast.error('Failed to upload image. Please try again.');
     } finally {
       setUploading(false);
     }
@@ -59,13 +56,8 @@ function CourseBasicInfo({ course, refreshData, edit = true }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
           <h2 className="font-bold text-2xl dark:text-white">
-            {course?.courseOutput?.course?.name}{" "}
-            {edit && (
-              <EditCourseBasicInfo
-                course={course}
-                refreshData={() => refreshData(true)}
-              />
-            )}
+            {course?.courseOutput?.course?.name}{' '}
+            {edit && <EditCourseBasicInfo course={course} refreshData={() => refreshData(true)} />}
           </h2>
           <p className="text-sm text-gray-400 dark:text-gray-500 mt-3">
             {course?.courseOutput?.course?.description}
@@ -83,7 +75,7 @@ function CourseBasicInfo({ course, refreshData, edit = true }) {
             </p>
           )}
           {!edit && (
-            <Link href={"/course/" + course?.courseId + "/start"}>
+            <Link href={'/course/' + course?.courseId + '/start'}>
               <Button className="w-full mt-5">Start</Button>
             </Link>
           )}
@@ -91,7 +83,7 @@ function CourseBasicInfo({ course, refreshData, edit = true }) {
         <div>
           <label htmlFor="upload-image" className="cursor-pointer block">
             <Image
-              src={selectedFile ? selectedFile : "/placeholderr.png"}
+              src={selectedFile ? selectedFile : '/placeholderr.png'}
               width={300}
               height={200}
               className="w-full rounded-xl h-[200px] md:h-[300px] object-cover"

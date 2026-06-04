@@ -1,74 +1,71 @@
-import { inngest } from "@/server/services/inngest";
-import { db } from "@/server/db";
-import { CourseList, Chapters } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
-import { generateChapterContent } from "./generate";
-import { getVideos } from "@/server/services/youtube";
-import { generateChapterIllustration } from "@/server/services/fal";
-import { designCurriculum } from "./agents/curriculum-designer";
-import { checkFacts } from "./agents/fact-checker";
-import { reviewPedagogy } from "./agents/pedagogical-expert";
+import { inngest } from '@/server/services/inngest';
+import { db } from '@/server/db';
+import { CourseList, Chapters } from '@/server/db/schema';
+import { eq } from 'drizzle-orm';
+import { generateChapterContent } from './generate';
+import { getVideos } from '@/server/services/youtube';
+import { generateChapterIllustration } from '@/server/services/fal';
+import { designCurriculum } from './agents/curriculum-designer';
+import { checkFacts } from './agents/fact-checker';
+import { reviewPedagogy } from './agents/pedagogical-expert';
 
 export const generateCourse = inngest.createFunction(
   {
-    id: "generate-course",
-    triggers: [{ event: "course.generate" }],
+    id: 'generate-course',
+    triggers: [{ event: 'course.generate' }],
   },
   async ({ event, step }) => {
     const { courseId } = event.data as { courseId: string };
 
     // Fetch full course data from DB
-    const courseRows = await db
-      .select()
-      .from(CourseList)
-      .where(eq(CourseList.courseId, courseId));
+    const courseRows = await db.select().from(CourseList).where(eq(CourseList.courseId, courseId));
     const courseData = courseRows[0];
     if (!courseData) throw new Error(`Course ${courseId} not found`);
 
     const topic = courseData.name;
     const category = courseData.category;
     const level = courseData.level;
-    const duration = (courseData.courseOutput as any)?.course?.duration || "4 weeks";
+    const duration = (courseData.courseOutput as any)?.course?.duration || '4 weeks';
     const numChapters = (courseData.courseOutput as any)?.course?.chapters?.length || 6;
     const includeVideo = courseData.includeVideo;
 
     // Step 1: Update status to generating
-    await step.run("update-status-generating", () =>
+    await step.run('update-status-generating', () =>
       db
         .update(CourseList)
         .set({
-          status: "generating_outline",
+          status: 'generating_outline',
           progress: 5,
-          currentStep: "Designing curriculum...",
+          currentStep: 'Designing curriculum...',
         })
         .where(eq(CourseList.courseId, courseId))
     );
 
     // Step 2: Curriculum Designer Agent
-    const curriculum = await step.run("curriculum-designer", async () => {
+    const curriculum = await step.run('curriculum-designer', async () => {
       await db
         .update(CourseList)
-        .set({ progress: 10, currentStep: "Curriculum Designer analyzing topic..." })
+        .set({ progress: 10, currentStep: 'Curriculum Designer analyzing topic...' })
         .where(eq(CourseList.courseId, courseId));
 
       return designCurriculum(category, topic, level, duration, numChapters);
     });
 
     // Step 3: Fact Checker Agent
-    const factCheck = await step.run("fact-checker", async () => {
+    const factCheck = await step.run('fact-checker', async () => {
       await db
         .update(CourseList)
-        .set({ progress: 20, currentStep: "Fact Checker verifying accuracy..." })
+        .set({ progress: 20, currentStep: 'Fact Checker verifying accuracy...' })
         .where(eq(CourseList.courseId, courseId));
 
       return checkFacts(curriculum);
     });
 
     // Step 4: Pedagogical Expert Agent
-    const pedagogy = await step.run("pedagogical-expert", async () => {
+    const pedagogy = await step.run('pedagogical-expert', async () => {
       await db
         .update(CourseList)
-        .set({ progress: 30, currentStep: "Pedagogical Expert optimizing learning path..." })
+        .set({ progress: 30, currentStep: 'Pedagogical Expert optimizing learning path...' })
         .where(eq(CourseList.courseId, courseId));
 
       return reviewPedagogy(
@@ -94,14 +91,14 @@ export const generateCourse = inngest.createFunction(
       },
     };
 
-    await step.run("save-course-outline", () =>
+    await step.run('save-course-outline', () =>
       db
         .update(CourseList)
         .set({
           courseOutput,
-          status: "generating_chapters",
+          status: 'generating_chapters',
           progress: 35,
-          currentStep: "Generating chapter content...",
+          currentStep: 'Generating chapter content...',
         })
         .where(eq(CourseList.courseId, courseId))
     );
@@ -129,18 +126,18 @@ export const generateCourse = inngest.createFunction(
             {
               title: chapter.name,
               explanation: chapter.about,
-              code: "",
+              code: '',
             },
           ];
         }
 
-        let videoId = "";
-        if (includeVideo === "Yes") {
+        let videoId = '';
+        if (includeVideo === 'Yes') {
           try {
             const videoResponse = await getVideos(`${topic}: ${chapter.name}`);
-            videoId = videoResponse[0]?.id?.videoId || "";
+            videoId = videoResponse[0]?.id?.videoId || '';
           } catch (error) {
-            console.error("Error fetching video:", error);
+            console.error('Error fetching video:', error);
           }
         }
 
@@ -163,21 +160,21 @@ export const generateCourse = inngest.createFunction(
     }
 
     // Step 7: Mark as complete
-    await step.run("update-status-complete", () =>
+    await step.run('update-status-complete', () =>
       db
         .update(CourseList)
         .set({
-          status: "complete",
+          status: 'complete',
           progress: 100,
-          currentStep: "Complete",
+          currentStep: 'Complete',
         })
         .where(eq(CourseList.courseId, courseId))
     );
 
     return {
       courseId,
-      status: "complete",
-      agentsUsed: ["curriculum-designer", "fact-checker", "pedagogical-expert"],
+      status: 'complete',
+      agentsUsed: ['curriculum-designer', 'fact-checker', 'pedagogical-expert'],
       verified: factCheck.verified,
       difficultyAdjustments: pedagogy.difficultyAdjustments.length,
       quizTopicsGenerated: pedagogy.quizPrompts.length,

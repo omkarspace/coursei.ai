@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 
 interface MermaidDiagramProps {
   code: string;
@@ -9,7 +9,7 @@ interface MermaidDiagramProps {
 
 export function MermaidDiagram({ code, id }: MermaidDiagramProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [svg, setSvg] = useState<string>("");
+  const [svg, setSvg] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -18,12 +18,12 @@ export function MermaidDiagram({ code, id }: MermaidDiagramProps) {
     async function renderDiagram() {
       try {
         // Dynamic import to avoid SSR issues
-        const mermaid = (await import("mermaid")).default;
+        const mermaid = (await import('mermaid')).default;
 
         mermaid.initialize({
           startOnLoad: false,
-          theme: "default",
-          securityLevel: "loose",
+          theme: 'default',
+          securityLevel: 'loose',
         });
 
         const diagramId = id || `mermaid-${Math.random().toString(36).substr(2, 9)}`;
@@ -35,8 +35,8 @@ export function MermaidDiagram({ code, id }: MermaidDiagramProps) {
         }
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Failed to render diagram");
-          setSvg("");
+          setError(err instanceof Error ? err.message : 'Failed to render diagram');
+          setSvg('');
         }
       }
     }
@@ -51,9 +51,7 @@ export function MermaidDiagram({ code, id }: MermaidDiagramProps) {
   if (error) {
     return (
       <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-        <p className="text-red-600 dark:text-red-400 text-sm">
-          Failed to render diagram: {error}
-        </p>
+        <p className="text-red-600 dark:text-red-400 text-sm">Failed to render diagram: {error}</p>
         <pre className="mt-2 text-xs text-red-500 overflow-x-auto">{code}</pre>
       </div>
     );
@@ -68,10 +66,6 @@ export function MermaidDiagram({ code, id }: MermaidDiagramProps) {
   }
 
   return (
-    <div
-      ref={ref}
-      className="mermaid-container my-4"
-      dangerouslySetInnerHTML={{ __html: svg }}
-    />
+    <div ref={ref} className="mermaid-container my-4" dangerouslySetInnerHTML={{ __html: svg }} />
   );
 }

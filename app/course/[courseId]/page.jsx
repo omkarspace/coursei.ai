@@ -1,12 +1,12 @@
-import { Suspense } from "react";
-import { getPublishedCourseById } from "@/app/actions/course";
-import { notFound } from "next/navigation";
-import CourseShell from "./_components/CourseShell";
-import CourseRating from "./_components/CourseRating";
-import CourseForkButton from "./_components/CourseForkButton";
-import ChapterList from "@/app/create-course/[courseId]/_components/ChapterList";
-import Header from "@/app/dashboard/_components/Header";
-import ConceptCanvasWrapper from "./_components/ConceptCanvasWrapper";
+import { Suspense } from 'react';
+import { getPublishedCourseById } from '@/app/actions/course';
+import { notFound } from 'next/navigation';
+import CourseShell from './_components/CourseShell';
+import CourseRating from './_components/CourseRating';
+import CourseForkButton from './_components/CourseForkButton';
+import ChapterList from '@/app/create-course/[courseId]/_components/ChapterList';
+import Header from '@/app/dashboard/_components/Header';
+import ConceptCanvasWrapper from './_components/ConceptCanvasWrapper';
 
 export async function generateMetadata({ params }) {
   const { courseId } = await params;
@@ -14,7 +14,7 @@ export async function generateMetadata({ params }) {
   if (!course) return {};
 
   return {
-    title: `${course.courseOutput?.course?.name || "Course"} - Coursei.ai`,
+    title: `${course.courseOutput?.course?.name || 'Course'} - Coursei.ai`,
     description: course.courseOutput?.course?.description,
     openGraph: {
       title: course.courseOutput?.course?.name,
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }) {
       images: course.courseBanner ? [course.courseBanner] : [],
     },
     twitter: {
-      card: "summary_large_image",
+      card: 'summary_large_image',
       title: course.courseOutput?.course?.name,
       description: course.courseOutput?.course?.description,
     },
@@ -43,9 +43,7 @@ function RatingSkeleton() {
 }
 
 function ForkButtonSkeleton() {
-  return (
-    <div className="h-9 w-32 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
-  );
+  return <div className="h-9 w-32 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />;
 }
 
 export default async function Course({ params }) {

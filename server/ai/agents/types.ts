@@ -3,7 +3,7 @@ export interface ChapterOutline {
   about: string;
   duration: string;
   learningObjectives: string[];
-  difficulty: "beginner" | "intermediate" | "advanced";
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
   prerequisites: string[];
 }
 
@@ -29,5 +29,10 @@ export interface PedagogicalReview {
   finalChapters: ChapterOutline[];
   quizPrompts: { chapterName: string; suggestedTopics: string[] }[];
   codeBlockPlaceholders: { chapterName: string; language: string; description: string }[];
-  difficultyAdjustments: { chapterName: string; originalDifficulty: string; suggestedDifficulty: string; reason: string }[];
+  difficultyAdjustments: {
+    chapterName: string;
+    originalDifficulty: string;
+    suggestedDifficulty: string;
+    reason: string;
+  }[];
 }

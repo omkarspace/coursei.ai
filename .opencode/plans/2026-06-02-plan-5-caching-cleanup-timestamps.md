@@ -12,35 +12,38 @@
 
 ## File Structure
 
-| Action | File | Purpose |
-|--------|------|---------|
-| Modify | `app/actions/course.ts` | Add caching to read-heavy actions |
-| Modify | `app/actions/rating.ts` | Add caching to rating summary |
-| Modify | `app/dashboard/_components/CourseCard.jsx` | Show timestamps, progress |
-| Modify | `app/course/[courseId]/_components/CourseClient.jsx` | Show timestamps |
-| Modify | `app/create-course/[courseId]/_components/CourseBasicInfo.jsx` | Show createdAt |
-| Delete | `configs/db.jsx` | Dead code |
-| Delete | `configs/schema.jsx` | Dead code |
-| Delete | `configs/service.jsx` | Dead code |
-| Delete | `configs/cloudinary.js` | Dead code |
+| Action | File                                                           | Purpose                           |
+| ------ | -------------------------------------------------------------- | --------------------------------- |
+| Modify | `app/actions/course.ts`                                        | Add caching to read-heavy actions |
+| Modify | `app/actions/rating.ts`                                        | Add caching to rating summary     |
+| Modify | `app/dashboard/_components/CourseCard.jsx`                     | Show timestamps, progress         |
+| Modify | `app/course/[courseId]/_components/CourseClient.jsx`           | Show timestamps                   |
+| Modify | `app/create-course/[courseId]/_components/CourseBasicInfo.jsx` | Show createdAt                    |
+| Delete | `configs/db.jsx`                                               | Dead code                         |
+| Delete | `configs/schema.jsx`                                           | Dead code                         |
+| Delete | `configs/service.jsx`                                          | Dead code                         |
+| Delete | `configs/cloudinary.js`                                        | Dead code                         |
 
 ---
 
 ### Task 1: Add Caching to Course Server Actions
 
 **Files:**
+
 - Modify: `app/actions/course.ts`
 
 - [ ] **Step 1: Import cache functions**
 
 Add at top:
+
 ```typescript
-import { getCachedCourse, setCachedCourse, invalidateCourseCache } from "@/server/services/cache";
+import { getCachedCourse, setCachedCourse, invalidateCourseCache } from '@/server/services/cache';
 ```
 
 - [ ] **Step 2: Add caching to getCourseById**
 
 Replace `getCourseById`:
+
 ```typescript
 export async function getCourseById(courseId: string) {
   // Check cache first
@@ -51,12 +54,7 @@ export async function getCourseById(courseId: string) {
   const courses = await db
     .select()
     .from(CourseList)
-    .where(
-      and(
-        eq(CourseList.courseId, courseId),
-        eq(CourseList.createdBy, email)
-      )
-    );
+    .where(and(eq(CourseList.courseId, courseId), eq(CourseList.createdBy, email)));
 
   const course = courses[0] || null;
 
@@ -72,21 +70,25 @@ export async function getCourseById(courseId: string) {
 - [ ] **Step 3: Add cache invalidation to mutations**
 
 In `updateCourse`, add after the update:
+
 ```typescript
 await invalidateCourseCache(courseId);
 ```
 
 In `deleteCourse`, add before the return:
+
 ```typescript
 await invalidateCourseCache(courseId);
 ```
 
 In `publishCourse`, add after the update:
+
 ```typescript
 await invalidateCourseCache(courseId);
 ```
 
 In `updateCourseBanner`, add after the update:
+
 ```typescript
 await invalidateCourseCache(courseId);
 ```
@@ -96,16 +98,19 @@ await invalidateCourseCache(courseId);
 ### Task 2: Add Caching to Rating Summary
 
 **Files:**
+
 - Modify: `app/actions/rating.ts`
 
 - [ ] **Step 1: Import cache and add caching**
 
 Add import:
+
 ```typescript
-import { getCached, setCached } from "@/server/services/cache";
+import { getCached, setCached } from '@/server/services/cache';
 ```
 
 Replace `getCourseRatingSummary`:
+
 ```typescript
 export async function getCourseRatingSummary(courseId: string) {
   const cacheKey = `rating:${courseId}`;
@@ -131,8 +136,9 @@ export async function getCourseRatingSummary(courseId: string) {
 ```
 
 Add cache invalidation in `submitRating` and `deleteRating`:
+
 ```typescript
-import { getCached, setCached, invalidateCache } from "@/server/services/cache";
+import { getCached, setCached, invalidateCache } from '@/server/services/cache';
 
 // In submitRating, after revalidatePath:
 await invalidateCache(`rating:${courseId}`);
@@ -146,37 +152,44 @@ await invalidateCache(`rating:${courseId}`);
 ### Task 3: Add Timestamps to CourseCard
 
 **Files:**
+
 - Modify: `app/dashboard/_components/CourseCard.jsx`
 
 - [ ] **Step 1: Add timestamp display**
 
 After the rating stars section (or after the level badge if no ratings), add:
+
 ```jsx
-{course?.createdAt && (
-  <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
-    Created {new Date(course.createdAt).toLocaleDateString()}
-  </p>
-)}
+{
+  course?.createdAt && (
+    <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
+      Created {new Date(course.createdAt).toLocaleDateString()}
+    </p>
+  );
+}
 ```
 
 - [ ] **Step 2: Add progress display for in-progress courses**
 
 After the status badge area, add progress bar for generating courses:
+
 ```jsx
-{(course?.status === "generating_outline" || course?.status === "generating_chapters") && (
-  <div className="mt-2">
-    <div className="flex justify-between text-xs text-gray-500 mb-1">
-      <span>{course?.currentStep || "Generating..."}</span>
-      <span>{course?.progress || 0}%</span>
+{
+  (course?.status === 'generating_outline' || course?.status === 'generating_chapters') && (
+    <div className="mt-2">
+      <div className="flex justify-between text-xs text-gray-500 mb-1">
+        <span>{course?.currentStep || 'Generating...'}</span>
+        <span>{course?.progress || 0}%</span>
+      </div>
+      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+        <div
+          className="bg-primary h-1.5 rounded-full transition-all duration-300"
+          style={{ width: `${course?.progress || 0}%` }}
+        />
+      </div>
     </div>
-    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-      <div
-        className="bg-primary h-1.5 rounded-full transition-all duration-300"
-        style={{ width: `${course?.progress || 0}%` }}
-      />
-    </div>
-  </div>
-)}
+  );
+}
 ```
 
 ---
@@ -184,16 +197,16 @@ After the status badge area, add progress bar for generating courses:
 ### Task 4: Add Timestamps to Public Course View
 
 **Files:**
+
 - Modify: `app/course/[courseId]/_components/CourseClient.jsx`
 
 - [ ] **Step 1: Add timestamp display**
 
 In the course info area (below CourseDetails), add:
+
 ```jsx
 <div className="text-sm text-gray-500 dark:text-gray-400">
-  {course?.createdAt && (
-    <span>Created {new Date(course.createdAt).toLocaleDateString()}</span>
-  )}
+  {course?.createdAt && <span>Created {new Date(course.createdAt).toLocaleDateString()}</span>}
   {course?.updatedAt && course.updatedAt !== course.createdAt && (
     <span> · Updated {new Date(course.updatedAt).toLocaleDateString()}</span>
   )}
@@ -205,20 +218,24 @@ In the course info area (below CourseDetails), add:
 ### Task 5: Add Timestamps to Course Basic Info
 
 **Files:**
+
 - Modify: `app/create-course/[courseId]/_components/CourseBasicInfo.jsx`
 
 - [ ] **Step 1: Add createdAt display**
 
 After the course name/description area, add:
+
 ```jsx
-{course?.createdAt && (
-  <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
-    Created {new Date(course.createdAt).toLocaleDateString()}
-    {course?.updatedAt && course.updatedAt !== course.createdAt && (
-      <> · Updated {new Date(course.updatedAt).toLocaleDateString()}</>
-    )}
-  </p>
-)}
+{
+  course?.createdAt && (
+    <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
+      Created {new Date(course.createdAt).toLocaleDateString()}
+      {course?.updatedAt && course.updatedAt !== course.createdAt && (
+        <> · Updated {new Date(course.updatedAt).toLocaleDateString()}</>
+      )}
+    </p>
+  );
+}
 ```
 
 ---
@@ -226,6 +243,7 @@ After the course name/description area, add:
 ### Task 6: Delete Dead Config Files
 
 **Files:**
+
 - Delete: `configs/db.jsx`
 - Delete: `configs/schema.jsx`
 - Delete: `configs/service.jsx`
@@ -278,6 +296,7 @@ git commit -m "feat: add Redis caching, timestamps, cleanup dead configs"
 ## Summary
 
 After this plan:
+
 1. **Redis caching** for course data and rating summaries (5-min TTL)
 2. **Cache invalidation** on all mutations (update, delete, publish, rate)
 3. **Timestamps** displayed on course cards, detail pages, and basic info

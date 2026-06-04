@@ -1,26 +1,24 @@
-import { generateObject } from "ai";
-import { getModel } from "../models";
-import { z } from "zod";
-import type { ChapterOutline, PedagogicalReview } from "./types";
+import { generateObject } from 'ai';
+import { getModel } from '../models';
+import { z } from 'zod';
+import type { ChapterOutline, PedagogicalReview } from './types';
 
 const QuizPromptSchema = z.object({
-  chapterName: z.string().describe("The chapter name"),
-  suggestedTopics: z
-    .array(z.string())
-    .describe("3-5 topics that would make good quiz questions"),
+  chapterName: z.string().describe('The chapter name'),
+  suggestedTopics: z.array(z.string()).describe('3-5 topics that would make good quiz questions'),
 });
 
 const CodeBlockPlaceholderSchema = z.object({
-  chapterName: z.string().describe("The chapter name"),
-  language: z.string().describe("Programming language for the code example"),
-  description: z.string().describe("What the code example should demonstrate"),
+  chapterName: z.string().describe('The chapter name'),
+  language: z.string().describe('Programming language for the code example'),
+  description: z.string().describe('What the code example should demonstrate'),
 });
 
 const DifficultyAdjustmentSchema = z.object({
-  chapterName: z.string().describe("The chapter name"),
-  originalDifficulty: z.string().describe("The original difficulty level"),
-  suggestedDifficulty: z.string().describe("The suggested difficulty level"),
-  reason: z.string().describe("Why the adjustment is recommended"),
+  chapterName: z.string().describe('The chapter name'),
+  originalDifficulty: z.string().describe('The original difficulty level'),
+  suggestedDifficulty: z.string().describe('The suggested difficulty level'),
+  reason: z.string().describe('Why the adjustment is recommended'),
 });
 
 const PedagogicalReviewSchema = z.object({
@@ -31,18 +29,18 @@ const PedagogicalReviewSchema = z.object({
         about: z.string(),
         duration: z.string(),
         learningObjectives: z.array(z.string()),
-        difficulty: z.enum(["beginner", "intermediate", "advanced"]),
+        difficulty: z.enum(['beginner', 'intermediate', 'advanced']),
         prerequisites: z.array(z.string()),
       })
     )
-    .describe("Final chapter list with any pedagogical adjustments"),
-  quizPrompts: z.array(QuizPromptSchema).describe("Quiz topic suggestions per chapter"),
+    .describe('Final chapter list with any pedagogical adjustments'),
+  quizPrompts: z.array(QuizPromptSchema).describe('Quiz topic suggestions per chapter'),
   codeBlockPlaceholders: z
     .array(CodeBlockPlaceholderSchema)
-    .describe("Suggested code examples for chapters that benefit from them"),
+    .describe('Suggested code examples for chapters that benefit from them'),
   difficultyAdjustments: z
     .array(DifficultyAdjustmentSchema)
-    .describe("Any difficulty level changes recommended"),
+    .describe('Any difficulty level changes recommended'),
 });
 
 /**
@@ -54,14 +52,14 @@ export async function reviewPedagogy(
   courseName: string,
   courseDescription: string
 ): Promise<PedagogicalReview> {
-  const model = getModel("gemini-2.0-flash");
+  const model = getModel('gemini-2.0-flash');
 
   const chapterSummaries = chapters
     .map(
       (ch, i) =>
-        `Chapter ${i + 1}: ${ch.name}\nDescription: ${ch.about}\nDifficulty: ${ch.difficulty}\nObjectives: ${ch.learningObjectives.join(", ")}`
+        `Chapter ${i + 1}: ${ch.name}\nDescription: ${ch.about}\nDifficulty: ${ch.difficulty}\nObjectives: ${ch.learningObjectives.join(', ')}`
     )
-    .join("\n\n");
+    .join('\n\n');
 
   const { object } = await generateObject({
     model,

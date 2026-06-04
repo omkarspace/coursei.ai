@@ -1,7 +1,7 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { getWikipediaContent } from "@/app/actions/content";
-import { HiOutlineBookOpen, HiOutlineArrowTopRightOnSquare } from "react-icons/hi2";
+'use client';
+import React, { useState, useEffect } from 'react';
+import { getWikipediaContent } from '@/app/actions/content';
+import { HiOutlineBookOpen, HiOutlineArrowTopRightOnSquare } from 'react-icons/hi2';
 
 export default function WikipediaSidebar({ chapterName, courseName }) {
   const [wikiData, setWikiData] = useState(null);
@@ -20,7 +20,7 @@ export default function WikipediaSidebar({ chapterName, courseName }) {
       const data = await getWikipediaContent(chapterName);
       setWikiData(data);
     } catch (error) {
-      console.error("Wikipedia fetch error:", error);
+      console.error('Wikipedia fetch error:', error);
     } finally {
       setLoading(false);
     }
@@ -52,7 +52,7 @@ export default function WikipediaSidebar({ chapterName, courseName }) {
       {wikiData.summary && (
         <div className="mb-3">
           <a
-            href={wikiData.summary.content_urls?.desktop?.page || "#"}
+            href={wikiData.summary.content_urls?.desktop?.page || '#'}
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm font-medium text-primary hover:underline flex items-center gap-1"
@@ -72,7 +72,7 @@ export default function WikipediaSidebar({ chapterName, courseName }) {
             onClick={() => setExpanded(!expanded)}
             className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
           >
-            {expanded ? "Show less" : `+${wikiData.related.length} related articles`}
+            {expanded ? 'Show less' : `+${wikiData.related.length} related articles`}
           </button>
           {expanded && (
             <ul className="mt-2 space-y-2">

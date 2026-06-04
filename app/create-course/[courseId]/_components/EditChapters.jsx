@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Dialog,
   DialogContent,
@@ -6,8 +6,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { HiPencilSquare } from "react-icons/hi2";
+} from '@/components/ui/dialog';
+import { HiPencilSquare } from 'react-icons/hi2';
 
 function EditChapters({ chapter, onUpdate }) {
   return (
@@ -23,9 +23,7 @@ function EditChapters({ chapter, onUpdate }) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Edit Chapter</DialogTitle>
-          <DialogDescription>
-            Make changes to the chapter content here.
-          </DialogDescription>
+          <DialogDescription>Make changes to the chapter content here.</DialogDescription>
         </DialogHeader>
         <div className="py-4">
           <p className="text-sm text-gray-500">

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
 interface ProgressIndicatorProps {
   completedChapters: number[];
@@ -11,19 +11,15 @@ interface ProgressIndicatorProps {
 export function ProgressIndicator({
   completedChapters,
   totalChapters,
-  className = "",
+  className = '',
 }: ProgressIndicatorProps) {
   const completedCount = completedChapters.length;
-  const percentage = totalChapters > 0 
-    ? Math.round((completedCount / totalChapters) * 100) 
-    : 0;
+  const percentage = totalChapters > 0 ? Math.round((completedCount / totalChapters) * 100) : 0;
 
   return (
     <div className={`p-4 border-t dark:border-gray-700 ${className}`}>
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          Progress
-        </span>
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Progress</span>
         <span className="text-sm text-gray-500 dark:text-gray-400">
           {completedCount}/{totalChapters} chapters
         </span>
@@ -34,9 +30,7 @@ export function ProgressIndicator({
           style={{ width: `${percentage}%` }}
         />
       </div>
-      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-        {percentage}% complete
-      </p>
+      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{percentage}% complete</p>
     </div>
   );
 }

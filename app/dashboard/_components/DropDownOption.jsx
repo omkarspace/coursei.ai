@@ -1,13 +1,13 @@
-"use client";
-import React, { useState } from "react";
+'use client';
+import React, { useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { HiOutlineTrash } from "react-icons/hi2";
+} from '@/components/ui/dropdown-menu';
+import { HiOutlineTrash } from 'react-icons/hi2';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,8 +17,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import PublishButton from "./PublishButton";
+} from '@/components/ui/alert-dialog';
+import PublishButton from './PublishButton';
 
 function DropDownOption({ children, handleOnDelete, course, refreshData }) {
   const [openAlert, setOpenAlert] = useState(false);
@@ -52,16 +52,13 @@ function DropDownOption({ children, handleOnDelete, course, refreshData }) {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Course?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete this
-              course and all its content.
+              This action cannot be undone. This will permanently delete this course and all its
+              content.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleOnDelete}
-              className="bg-red-600 hover:bg-red-700"
-            >
+            <AlertDialogAction onClick={handleOnDelete} className="bg-red-600 hover:bg-red-700">
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>

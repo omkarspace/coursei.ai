@@ -12,25 +12,26 @@
 
 ## File Structure
 
-| File | Purpose |
-|------|---------|
-| `app/page.js` | Main landing page (compose all sections) |
-| `app/_components/Navbar.jsx` | Sticky navbar with backdrop blur |
-| `app/_components/Hero.jsx` | Hero section with animated demo |
-| `app/_components/Features.jsx` | Bento grid feature cards |
-| `app/_components/HowItWorks.jsx` | 3-step horizontal flow |
-| `app/_components/TechnicalArchitecture.jsx` | OSS contributor section |
-| `app/_components/Community.jsx` | Community section (3-column) |
-| `app/_components/Pricing.jsx` | Pricing comparison table |
-| `app/_components/FAQ.jsx` | Accordion FAQ |
-| `app/_components/Footer.jsx` | Updated footer |
-| `app/_components/SectionWrapper.jsx` | Reusable section container |
+| File                                        | Purpose                                  |
+| ------------------------------------------- | ---------------------------------------- |
+| `app/page.js`                               | Main landing page (compose all sections) |
+| `app/_components/Navbar.jsx`                | Sticky navbar with backdrop blur         |
+| `app/_components/Hero.jsx`                  | Hero section with animated demo          |
+| `app/_components/Features.jsx`              | Bento grid feature cards                 |
+| `app/_components/HowItWorks.jsx`            | 3-step horizontal flow                   |
+| `app/_components/TechnicalArchitecture.jsx` | OSS contributor section                  |
+| `app/_components/Community.jsx`             | Community section (3-column)             |
+| `app/_components/Pricing.jsx`               | Pricing comparison table                 |
+| `app/_components/FAQ.jsx`                   | Accordion FAQ                            |
+| `app/_components/Footer.jsx`                | Updated footer                           |
+| `app/_components/SectionWrapper.jsx`        | Reusable section container               |
 
 ---
 
 ### Task 1: Install Dependencies
 
 **Files:**
+
 - Modify: `package.json`
 
 - [ ] **Step 1: Install framer-motion**
@@ -59,21 +60,17 @@ git commit -m "deps: add framer-motion for scroll animations"
 ### Task 2: Create SectionWrapper Component
 
 **Files:**
+
 - Create: `app/_components/SectionWrapper.jsx`
 
 - [ ] **Step 1: Create reusable section wrapper**
 
 ```jsx
 // app/_components/SectionWrapper.jsx
-export default function SectionWrapper({ children, className = "", id }) {
+export default function SectionWrapper({ children, className = '', id }) {
   return (
-    <section
-      id={id}
-      className={`py-20 sm:py-28 ${className}`}
-    >
-      <div className="mx-auto max-w-7xl px-5 sm:px-10 md:px-12 lg:px-5">
-        {children}
-      </div>
+    <section id={id} className={`py-20 sm:py-28 ${className}`}>
+      <div className="mx-auto max-w-7xl px-5 sm:px-10 md:px-12 lg:px-5">{children}</div>
     </section>
   );
 }
@@ -91,21 +88,22 @@ git commit -m "feat: add SectionWrapper reusable component"
 ### Task 3: Create Navbar Component
 
 **Files:**
+
 - Create: `app/_components/Navbar.jsx`
 
 - [ ] **Step 1: Create Navbar component**
 
 ```jsx
-"use client";
-import Link from "next/link";
-import { useState } from "react";
-import { HiOutlineSparkles } from "react-icons/hi2";
+'use client';
+import Link from 'next/link';
+import { useState } from 'react';
+import { HiOutlineSparkles } from 'react-icons/hi2';
 
 const navLinks = [
-  { label: "Features", href: "#features" },
-  { label: "How It Works", href: "#how-it-works" },
-  { label: "Community", href: "#community" },
-  { label: "GitHub", href: "https://github.com/omkarspace/coursei.ai", external: true },
+  { label: 'Features', href: '#features' },
+  { label: 'How It Works', href: '#how-it-works' },
+  { label: 'Community', href: '#community' },
+  { label: 'GitHub', href: 'https://github.com/omkarspace/coursei.ai', external: true },
 ];
 
 export default function Navbar() {
@@ -126,8 +124,8 @@ export default function Navbar() {
             <Link
               key={link.label}
               href={link.href}
-              target={link.external ? "_blank" : undefined}
-              rel={link.external ? "noopener noreferrer" : undefined}
+              target={link.external ? '_blank' : undefined}
+              rel={link.external ? 'noopener noreferrer' : undefined}
               className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
             >
               {link.label}
@@ -149,9 +147,19 @@ export default function Navbar() {
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               {mobileOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               )}
             </svg>
           </button>
@@ -197,20 +205,21 @@ git commit -m "feat: add Navbar component with sticky header and mobile menu"
 ### Task 4: Create Hero Component
 
 **Files:**
+
 - Create: `app/_components/Hero.jsx`
 
 - [ ] **Step 1: Create Hero component**
 
 ```jsx
-"use client";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { HiOutlineSparkles, HiArrowRight } from "react-icons/hi2";
+'use client';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { HiOutlineSparkles, HiArrowRight } from 'react-icons/hi2';
 
 const stats = [
-  { value: "5min", label: "Course Creation" },
-  { value: "AI", label: "Powered Content" },
-  { value: "Free", label: "Open Source" },
+  { value: '5min', label: 'Course Creation' },
+  { value: 'AI', label: 'Powered Content' },
+  { value: 'Free', label: 'Open Source' },
 ];
 
 export default function Hero() {
@@ -240,7 +249,7 @@ export default function Hero() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-center text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 leading-tight max-w-5xl mx-auto"
         >
-          The Open-Source Learning Platform{" "}
+          The Open-Source Learning Platform{' '}
           <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 bg-clip-text text-transparent">
             Powered by AI
           </span>
@@ -253,8 +262,8 @@ export default function Hero() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-center text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto mt-6 leading-relaxed"
         >
-          Create courses, quizzes, flashcards, and study notes in minutes.
-          Fork, customize, and share with the community.
+          Create courses, quizzes, flashcards, and study notes in minutes. Fork, customize, and
+          share with the community.
         </motion.p>
 
         {/* CTAs */}
@@ -271,7 +280,11 @@ export default function Hero() {
             className="w-full sm:w-auto inline-flex items-center justify-center h-12 px-8 rounded-full bg-white text-gray-700 font-medium border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all"
           >
             <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-              <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+              <path
+                fillRule="evenodd"
+                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                clipRule="evenodd"
+              />
             </svg>
             Star on GitHub
           </Link>
@@ -335,13 +348,14 @@ git commit -m "feat: add Hero component with animations and product demo placeho
 ### Task 5: Create Features Component
 
 **Files:**
+
 - Create: `app/_components/Features.jsx`
 
 - [ ] **Step 1: Create Features component**
 
 ```jsx
-"use client";
-import { motion } from "framer-motion";
+'use client';
+import { motion } from 'framer-motion';
 import {
   HiOutlineSparkles,
   HiOutlineAcademicCap,
@@ -352,57 +366,57 @@ import {
   HiOutlineCodeBracket,
   HiOutlineGlobeAlt,
   HiOutlineArrowDownTray,
-} from "react-icons/hi2";
-import SectionWrapper from "./SectionWrapper";
+} from 'react-icons/hi2';
+import SectionWrapper from './SectionWrapper';
 
 const features = [
   {
     icon: HiOutlineSparkles,
-    title: "AI Course Generator",
-    description: "Create full course structures with Gemini in seconds.",
-    color: "from-purple-500 to-indigo-500",
+    title: 'AI Course Generator',
+    description: 'Create full course structures with Gemini in seconds.',
+    color: 'from-purple-500 to-indigo-500',
   },
   {
     icon: HiOutlineAcademicCap,
-    title: "AI Quiz Generator",
-    description: "Auto-generate multiple-choice and short-answer questions.",
-    color: "from-blue-500 to-cyan-500",
+    title: 'AI Quiz Generator',
+    description: 'Auto-generate multiple-choice and short-answer questions.',
+    color: 'from-blue-500 to-cyan-500',
   },
   {
     icon: HiOutlineRectangleStack,
-    title: "AI Flashcards",
-    description: "Leitner-system spaced repetition cards for retention.",
-    color: "from-emerald-500 to-teal-500",
+    title: 'AI Flashcards',
+    description: 'Leitner-system spaced repetition cards for retention.',
+    color: 'from-emerald-500 to-teal-500',
   },
   {
     icon: HiOutlineDocumentText,
-    title: "AI Study Notes",
-    description: "Summaries, key points, and term definitions.",
-    color: "from-orange-500 to-red-500",
+    title: 'AI Study Notes',
+    description: 'Summaries, key points, and term definitions.',
+    color: 'from-orange-500 to-red-500',
   },
   {
     icon: HiOutlineChatBubbleLeftRight,
-    title: "AI Study Buddy",
-    description: "Context-aware chatbot for each course.",
-    color: "from-pink-500 to-rose-500",
+    title: 'AI Study Buddy',
+    description: 'Context-aware chatbot for each course.',
+    color: 'from-pink-500 to-rose-500',
   },
   {
     icon: HiOutlineCodeBracket,
-    title: "Course Forking",
-    description: "Customize public courses like GitHub repos.",
-    color: "from-violet-500 to-purple-500",
+    title: 'Course Forking',
+    description: 'Customize public courses like GitHub repos.',
+    color: 'from-violet-500 to-purple-500',
   },
   {
     icon: HiOutlineGlobeAlt,
-    title: "Community Marketplace",
-    description: "Browse, filter, and upvote shared courses.",
-    color: "from-cyan-500 to-blue-500",
+    title: 'Community Marketplace',
+    description: 'Browse, filter, and upvote shared courses.',
+    color: 'from-cyan-500 to-blue-500',
   },
   {
     icon: HiOutlineArrowDownTray,
-    title: "Export Options",
-    description: "PDF, Markdown, SCORM/xAPI packages.",
-    color: "from-amber-500 to-orange-500",
+    title: 'Export Options',
+    description: 'PDF, Markdown, SCORM/xAPI packages.',
+    color: 'from-amber-500 to-orange-500',
   },
 ];
 
@@ -426,13 +440,14 @@ export default function Features() {
     <SectionWrapper id="features" className="bg-white">
       <div className="text-center mb-16">
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
-          Everything You Need to Create{" "}
+          Everything You Need to Create{' '}
           <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
             Amazing Courses
           </span>
         </h2>
         <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
-          Our AI handles the heavy lifting so you can focus on what matters most — sharing your knowledge.
+          Our AI handles the heavy lifting so you can focus on what matters most — sharing your
+          knowledge.
         </p>
       </div>
 
@@ -440,7 +455,7 @@ export default function Features() {
         variants={container}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: '-100px' }}
         className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
       >
         {features.map((feature) => (
@@ -449,7 +464,9 @@ export default function Features() {
             variants={item}
             className="group p-6 rounded-2xl border border-gray-100 hover:border-gray-200 hover:shadow-xl hover:shadow-gray-100/50 transition-all duration-300"
           >
-            <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+            <div
+              className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
+            >
               <feature.icon className="w-6 h-6 text-white" />
             </div>
             <h3 className="font-semibold text-gray-900 mb-2">{feature.title}</h3>
@@ -474,30 +491,31 @@ git commit -m "feat: add Features component with bento grid layout"
 ### Task 6: Create HowItWorks Component
 
 **Files:**
+
 - Create: `app/_components/HowItWorks.jsx`
 
 - [ ] **Step 1: Create HowItWorks component**
 
 ```jsx
-"use client";
-import { motion } from "framer-motion";
-import SectionWrapper from "./SectionWrapper";
+'use client';
+import { motion } from 'framer-motion';
+import SectionWrapper from './SectionWrapper';
 
 const steps = [
   {
-    step: "01",
-    title: "Choose Topic",
-    description: "Select a category and enter your course idea. Our AI understands your vision.",
+    step: '01',
+    title: 'Choose Topic',
+    description: 'Select a category and enter your course idea. Our AI understands your vision.',
   },
   {
-    step: "02",
-    title: "AI Generates",
-    description: "Watch as AI creates quizzes, flashcards, notes, and course structure.",
+    step: '02',
+    title: 'AI Generates',
+    description: 'Watch as AI creates quizzes, flashcards, notes, and course structure.',
   },
   {
-    step: "03",
-    title: "Publish & Share",
-    description: "Edit, customize, and share your course with the world.",
+    step: '03',
+    title: 'Publish & Share',
+    description: 'Edit, customize, and share your course with the world.',
   },
 ];
 
@@ -551,42 +569,43 @@ git commit -m "feat: add HowItWorks component with 3-step flow"
 ### Task 7: Create TechnicalArchitecture Component
 
 **Files:**
+
 - Create: `app/_components/TechnicalArchitecture.jsx`
 
 - [ ] **Step 1: Create TechnicalArchitecture component**
 
 ```jsx
-"use client";
-import { motion } from "framer-motion";
-import Link from "next/link";
-import SectionWrapper from "./SectionWrapper";
+'use client';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import SectionWrapper from './SectionWrapper';
 import {
   HiOutlineCpu,
   HiOutlineChartBar,
   HiOutlineLanguage,
   HiOutlinePuzzlePiece,
-} from "react-icons/hi2";
+} from 'react-icons/hi2';
 
 const features = [
   {
     icon: HiOutlineCpu,
-    title: "AI Provider Abstraction",
-    description: "Swap Gemini for OpenAI, Anthropic, or Ollama.",
+    title: 'AI Provider Abstraction',
+    description: 'Swap Gemini for OpenAI, Anthropic, or Ollama.',
   },
   {
     icon: HiOutlineChartBar,
-    title: "Progress Tracking",
-    description: "Analytics dashboard with Recharts.",
+    title: 'Progress Tracking',
+    description: 'Analytics dashboard with Recharts.',
   },
   {
     icon: HiOutlineLanguage,
-    title: "i18n Support",
-    description: "Multi-language with next-intl.",
+    title: 'i18n Support',
+    description: 'Multi-language with next-intl.',
   },
   {
     icon: HiOutlinePuzzlePiece,
-    title: "Plugin System",
-    description: "Extend with custom features.",
+    title: 'Plugin System',
+    description: 'Extend with custom features.',
   },
 ];
 
@@ -603,8 +622,8 @@ export default function TechnicalArchitecture() {
             Built for Contributors
           </h2>
           <p className="text-gray-600 mb-8">
-            Modular architecture designed for open-source collaboration.
-            Easy to understand, easy to extend.
+            Modular architecture designed for open-source collaboration. Easy to understand, easy to
+            extend.
           </p>
 
           <div className="space-y-6">
@@ -638,7 +657,7 @@ export default function TechnicalArchitecture() {
           className="rounded-2xl border border-gray-200 bg-gray-50 p-6 font-mono text-sm overflow-x-auto"
         >
           <pre className="text-gray-800">
-{`// AI Provider Abstraction
+            {`// AI Provider Abstraction
 const providers = {
   gemini: GeminiProvider,
   openai: OpenAIProvider,
@@ -668,38 +687,39 @@ git commit -m "feat: add TechnicalArchitecture component for OSS contributors"
 ### Task 8: Create Community Component
 
 **Files:**
+
 - Create: `app/_components/Community.jsx`
 
 - [ ] **Step 1: Create Community component**
 
 ```jsx
-"use client";
-import { motion } from "framer-motion";
-import Link from "next/link";
-import SectionWrapper from "./SectionWrapper";
-import { HiOutlineUserGroup, HiOutlineChatBubbleLeftRight, HiOutlineMap } from "react-icons/hi2";
+'use client';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import SectionWrapper from './SectionWrapper';
+import { HiOutlineUserGroup, HiOutlineChatBubbleLeftRight, HiOutlineMap } from 'react-icons/hi2';
 
 const columns = [
   {
     icon: HiOutlineUserGroup,
-    title: "GitHub Contributors",
-    description: "40+ contributors building the future of learning",
-    cta: "View Contributors",
-    href: "https://github.com/omkarspace/coursei.ai/graphs/contributors",
+    title: 'GitHub Contributors',
+    description: '40+ contributors building the future of learning',
+    cta: 'View Contributors',
+    href: 'https://github.com/omkarspace/coursei.ai/graphs/contributors',
   },
   {
     icon: HiOutlineChatBubbleLeftRight,
-    title: "Discord Server",
-    description: "500+ members sharing ideas and helping each other",
-    cta: "Join Discord",
-    href: "#",
+    title: 'Discord Server',
+    description: '500+ members sharing ideas and helping each other',
+    cta: 'Join Discord',
+    href: '#',
   },
   {
     icon: HiOutlineMap,
-    title: "Roadmap",
+    title: 'Roadmap',
     description: "Vote on features and see what's coming next",
-    cta: "View Roadmap",
-    href: "#",
+    cta: 'View Roadmap',
+    href: '#',
   },
 ];
 
@@ -707,9 +727,7 @@ export default function Community() {
   return (
     <SectionWrapper id="community" className="bg-gray-50">
       <div className="text-center mb-16">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
-          Join the Community
-        </h2>
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">Join the Community</h2>
         <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
           Be part of the open-source revolution in education.
         </p>
@@ -758,50 +776,51 @@ git commit -m "feat: add Community component with contributor, Discord, roadmap"
 ### Task 9: Create Pricing Component
 
 **Files:**
+
 - Create: `app/_components/Pricing.jsx`
 
 - [ ] **Step 1: Create Pricing component**
 
 ```jsx
-"use client";
-import { motion } from "framer-motion";
-import Link from "next/link";
-import SectionWrapper from "./SectionWrapper";
-import { HiOutlineCheck, HiOutlineX } from "react-icons/hi2";
+'use client';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import SectionWrapper from './SectionWrapper';
+import { HiOutlineCheck, HiOutlineX } from 'react-icons/hi2';
 
 const plans = [
   {
-    name: "Free & Open Source",
-    price: "$0",
-    period: "forever",
-    description: "Everything you need, self-hosted.",
+    name: 'Free & Open Source',
+    price: '$0',
+    period: 'forever',
+    description: 'Everything you need, self-hosted.',
     features: [
-      { text: "AI Course Generation", included: true },
-      { text: "Quizzes, Flashcards, Notes", included: true },
-      { text: "Community Courses", included: true },
-      { text: "Self-Hosting", included: true },
-      { text: "Priority Support", included: false },
-      { text: "Custom Domain", included: false },
+      { text: 'AI Course Generation', included: true },
+      { text: 'Quizzes, Flashcards, Notes', included: true },
+      { text: 'Community Courses', included: true },
+      { text: 'Self-Hosting', included: true },
+      { text: 'Priority Support', included: false },
+      { text: 'Custom Domain', included: false },
     ],
-    cta: "Get Started Free",
-    ctaLink: "/dashboard",
+    cta: 'Get Started Free',
+    ctaLink: '/dashboard',
     primary: true,
   },
   {
-    name: "Managed Hosting",
-    price: "Coming Soon",
-    period: "",
-    description: "We host it for you.",
+    name: 'Managed Hosting',
+    price: 'Coming Soon',
+    period: '',
+    description: 'We host it for you.',
     features: [
-      { text: "AI Course Generation", included: true },
-      { text: "Quizzes, Flashcards, Notes", included: true },
-      { text: "Community Courses", included: true },
-      { text: "Self-Hosting", included: false },
-      { text: "Priority Support", included: true },
-      { text: "Custom Domain", included: true },
+      { text: 'AI Course Generation', included: true },
+      { text: 'Quizzes, Flashcards, Notes', included: true },
+      { text: 'Community Courses', included: true },
+      { text: 'Self-Hosting', included: false },
+      { text: 'Priority Support', included: true },
+      { text: 'Custom Domain', included: true },
     ],
-    cta: "Join Waitlist",
-    ctaLink: "#",
+    cta: 'Join Waitlist',
+    ctaLink: '#',
     primary: false,
   },
 ];
@@ -827,9 +846,7 @@ export default function Pricing() {
             viewport={{ once: true }}
             transition={{ delay: index * 0.1 }}
             className={`rounded-2xl p-8 border ${
-              plan.primary
-                ? "border-purple-200 bg-purple-50"
-                : "border-gray-200 bg-gray-50"
+              plan.primary ? 'border-purple-200 bg-purple-50' : 'border-gray-200 bg-gray-50'
             }`}
           >
             <h3 className="font-semibold text-gray-900 mb-2">{plan.name}</h3>
@@ -847,7 +864,9 @@ export default function Pricing() {
                   ) : (
                     <HiOutlineX className="w-5 h-5 text-gray-300" />
                   )}
-                  <span className={`text-sm ${feature.included ? "text-gray-700" : "text-gray-400"}`}>
+                  <span
+                    className={`text-sm ${feature.included ? 'text-gray-700' : 'text-gray-400'}`}
+                  >
                     {feature.text}
                   </span>
                 </li>
@@ -858,8 +877,8 @@ export default function Pricing() {
               href={plan.ctaLink}
               className={`w-full inline-flex items-center justify-center h-12 px-6 rounded-full font-medium transition-colors ${
                 plan.primary
-                  ? "bg-gray-900 text-white hover:bg-gray-800"
-                  : "bg-white text-gray-900 border border-gray-200 hover:bg-gray-50"
+                  ? 'bg-gray-900 text-white hover:bg-gray-800'
+                  : 'bg-white text-gray-900 border border-gray-200 hover:bg-gray-50'
               }`}
             >
               {plan.cta}
@@ -884,63 +903,65 @@ git commit -m "feat: add Pricing component with Free vs Managed tiers"
 ### Task 10: Create FAQ Component
 
 **Files:**
+
 - Create: `app/_components/FAQ.jsx`
 
 - [ ] **Step 1: Create FAQ component**
 
 ```jsx
-"use client";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import SectionWrapper from "./SectionWrapper";
-import { HiOutlineChevronDown } from "react-icons/hi2";
+'use client';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import SectionWrapper from './SectionWrapper';
+import { HiOutlineChevronDown } from 'react-icons/hi2';
 
 const faqs = [
   {
-    question: "What is Coursei.ai?",
-    answer: "Coursei.ai is an open-source, AI-powered learning platform that helps you create courses, quizzes, flashcards, and study notes in minutes.",
+    question: 'What is Coursei.ai?',
+    answer:
+      'Coursei.ai is an open-source, AI-powered learning platform that helps you create courses, quizzes, flashcards, and study notes in minutes.',
   },
   {
-    question: "Is it really free?",
-    answer: "Yes! Coursei.ai is completely free and open source under the MIT license. You can self-host it or use the community version.",
+    question: 'Is it really free?',
+    answer:
+      'Yes! Coursei.ai is completely free and open source under the MIT license. You can self-host it or use the community version.',
   },
   {
-    question: "How do I self-host?",
-    answer: "Clone the repository, install dependencies, configure your database and API keys, and run the development server. See the README for detailed instructions.",
+    question: 'How do I self-host?',
+    answer:
+      'Clone the repository, install dependencies, configure your database and API keys, and run the development server. See the README for detailed instructions.',
   },
   {
-    question: "Can I contribute?",
-    answer: "Absolutely! We welcome contributions. Check out the CONTRIBUTING.md file for guidelines, or pick up a 'Good First Issue' on GitHub.",
+    question: 'Can I contribute?',
+    answer:
+      "Absolutely! We welcome contributions. Check out the CONTRIBUTING.md file for guidelines, or pick up a 'Good First Issue' on GitHub.",
   },
   {
-    question: "What AI models are supported?",
-    answer: "Currently Google Gemini is supported out of the box. The architecture is designed for AI provider abstraction, so OpenAI, Anthropic, and Ollama support is planned.",
+    question: 'What AI models are supported?',
+    answer:
+      'Currently Google Gemini is supported out of the box. The architecture is designed for AI provider abstraction, so OpenAI, Anthropic, and Ollama support is planned.',
   },
   {
-    question: "Can I export courses?",
-    answer: "Export options are on the roadmap. Planned formats include PDF, Markdown, and SCORM/xAPI packages for LMS integration.",
+    question: 'Can I export courses?',
+    answer:
+      'Export options are on the roadmap. Planned formats include PDF, Markdown, and SCORM/xAPI packages for LMS integration.',
   },
 ];
 
 function FAQItem({ faq, isOpen, onClick }) {
   return (
     <div className="border-b border-gray-200">
-      <button
-        onClick={onClick}
-        className="w-full py-5 flex items-center justify-between text-left"
-      >
+      <button onClick={onClick} className="w-full py-5 flex items-center justify-between text-left">
         <span className="font-medium text-gray-900">{faq.question}</span>
         <HiOutlineChevronDown
-          className={`w-5 h-5 text-gray-500 transition-transform ${
-            isOpen ? "rotate-180" : ""
-          }`}
+          className={`w-5 h-5 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
+            animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
@@ -958,9 +979,7 @@ export default function FAQ() {
   return (
     <SectionWrapper id="faq" className="bg-gray-50">
       <div className="text-center mb-16">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
-          Frequently Asked Questions
-        </h2>
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">Frequently Asked Questions</h2>
       </div>
 
       <div className="max-w-3xl mx-auto">
@@ -990,29 +1009,30 @@ git commit -m "feat: add FAQ component with accordion"
 ### Task 11: Update Footer Component
 
 **Files:**
+
 - Modify: `app/_components/Footer.jsx`
 
 - [ ] **Step 1: Replace Footer with clean minimal design**
 
 ```jsx
-import Link from "next/link";
-import { HiOutlineSparkles } from "react-icons/hi2";
+import Link from 'next/link';
+import { HiOutlineSparkles } from 'react-icons/hi2';
 
 const footerLinks = {
   Product: [
-    { label: "Features", href: "#features" },
-    { label: "Pricing", href: "#pricing" },
-    { label: "Roadmap", href: "#" },
+    { label: 'Features', href: '#features' },
+    { label: 'Pricing', href: '#pricing' },
+    { label: 'Roadmap', href: '#' },
   ],
   Community: [
-    { label: "GitHub", href: "https://github.com/omkarspace/coursei.ai" },
-    { label: "Discord", href: "#" },
-    { label: "Twitter", href: "https://x.com/omkareact" },
+    { label: 'GitHub', href: 'https://github.com/omkarspace/coursei.ai' },
+    { label: 'Discord', href: '#' },
+    { label: 'Twitter', href: 'https://x.com/omkareact' },
   ],
   Legal: [
-    { label: "Privacy", href: "#" },
-    { label: "Terms", href: "#" },
-    { label: "License (MIT)", href: "https://github.com/omkarspace/coursei.ai/blob/main/LICENSE" },
+    { label: 'Privacy', href: '#' },
+    { label: 'Terms', href: '#' },
+    { label: 'License (MIT)', href: 'https://github.com/omkarspace/coursei.ai/blob/main/LICENSE' },
   ],
 };
 
@@ -1028,9 +1048,7 @@ export default function FooterBlock() {
               </div>
               <span className="text-xl font-bold text-white">coursei.ai</span>
             </Link>
-            <p className="text-sm">
-              The open-source learning platform powered by AI.
-            </p>
+            <p className="text-sm">The open-source learning platform powered by AI.</p>
           </div>
 
           {Object.entries(footerLinks).map(([category, links]) => (
@@ -1041,8 +1059,8 @@ export default function FooterBlock() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      target={link.href.startsWith("http") ? "_blank" : undefined}
-                      rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                      target={link.href.startsWith('http') ? '_blank' : undefined}
+                      rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                       className="text-sm hover:text-white transition-colors"
                     >
                       {link.label}
@@ -1055,12 +1073,8 @@ export default function FooterBlock() {
         </div>
 
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm">
-            © {new Date().getFullYear()} Coursei.ai. MIT License.
-          </p>
-          <p className="text-sm">
-            Made with ❤️ by the Open Source Community
-          </p>
+          <p className="text-sm">© {new Date().getFullYear()} Coursei.ai. MIT License.</p>
+          <p className="text-sm">Made with ❤️ by the Open Source Community</p>
         </div>
       </div>
     </footer>
@@ -1080,20 +1094,21 @@ git commit -m "feat: update Footer with clean minimal dark design"
 ### Task 12: Update Main Page
 
 **Files:**
+
 - Modify: `app/page.js`
 
 - [ ] **Step 1: Update page.js to compose all sections**
 
 ```jsx
-import Navbar from "./_components/Navbar";
-import Hero from "./_components/Hero";
-import Features from "./_components/Features";
-import HowItWorks from "./_components/HowItWorks";
-import TechnicalArchitecture from "./_components/TechnicalArchitecture";
-import Community from "./_components/Community";
-import Pricing from "./_components/Pricing";
-import FAQ from "./_components/FAQ";
-import FooterBlock from "./_components/Footer";
+import Navbar from './_components/Navbar';
+import Hero from './_components/Hero';
+import Features from './_components/Features';
+import HowItWorks from './_components/HowItWorks';
+import TechnicalArchitecture from './_components/TechnicalArchitecture';
+import Community from './_components/Community';
+import Pricing from './_components/Pricing';
+import FAQ from './_components/FAQ';
+import FooterBlock from './_components/Footer';
 
 export default function Home() {
   return (
@@ -1126,6 +1141,7 @@ git commit -m "feat: update landing page with all new sections"
 ### Task 13: Verify Build
 
 **Files:**
+
 - None (verification only)
 
 - [ ] **Step 1: Run build**

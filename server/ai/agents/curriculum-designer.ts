@@ -1,31 +1,31 @@
-import { generateObject } from "ai";
-import { getModel } from "../models";
-import { z } from "zod";
-import type { CurriculumDesign } from "./types";
+import { generateObject } from 'ai';
+import { getModel } from '../models';
+import { z } from 'zod';
+import type { CurriculumDesign } from './types';
 
 const ChapterOutlineSchema = z.object({
-  name: z.string().describe("The name of the chapter"),
-  about: z.string().describe("A brief description of what the chapter covers"),
-  duration: z.string().describe("Estimated time to complete the chapter"),
+  name: z.string().describe('The name of the chapter'),
+  about: z.string().describe('A brief description of what the chapter covers'),
+  duration: z.string().describe('Estimated time to complete the chapter'),
   learningObjectives: z
     .array(z.string())
-    .describe("3-5 specific learning objectives for this chapter"),
-  difficulty: z.enum(["beginner", "intermediate", "advanced"]).describe("Difficulty level"),
+    .describe('3-5 specific learning objectives for this chapter'),
+  difficulty: z.enum(['beginner', 'intermediate', 'advanced']).describe('Difficulty level'),
   prerequisites: z
     .array(z.string())
-    .describe("Chapter names that should be completed before this one"),
+    .describe('Chapter names that should be completed before this one'),
 });
 
 const CurriculumDesignSchema = z.object({
   course: z.object({
-    name: z.string().describe("The name of the course"),
-    description: z.string().describe("A comprehensive description of the course"),
-    noOfChapters: z.number().describe("Number of chapters in the course"),
-    duration: z.string().describe("Total estimated duration of the course"),
-    chapters: z.array(ChapterOutlineSchema).describe("List of chapters in the course"),
+    name: z.string().describe('The name of the course'),
+    description: z.string().describe('A comprehensive description of the course'),
+    noOfChapters: z.number().describe('Number of chapters in the course'),
+    duration: z.string().describe('Total estimated duration of the course'),
+    chapters: z.array(ChapterOutlineSchema).describe('List of chapters in the course'),
     learningObjectives: z
       .array(z.string())
-      .describe("3-5 top-level learning objectives for the entire course"),
+      .describe('3-5 top-level learning objectives for the entire course'),
   }),
 });
 
@@ -40,7 +40,7 @@ export async function designCurriculum(
   duration: string,
   numChapters: number
 ): Promise<CurriculumDesign> {
-  const model = getModel("gemini-2.0-flash");
+  const model = getModel('gemini-2.0-flash');
 
   const { object } = await generateObject({
     model,

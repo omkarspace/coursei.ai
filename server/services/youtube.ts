@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios from 'axios';
 
-const YOUTUBE_BASE_URL = "https://www.googleapis.com/youtube/v3";
+const YOUTUBE_BASE_URL = 'https://www.googleapis.com/youtube/v3';
 
 export interface YouTubeVideo {
   id: { videoId: string };
@@ -19,10 +19,10 @@ export async function getVideos(query: string): Promise<YouTubeVideo[]> {
   }
 
   const params = {
-    part: "snippet",
+    part: 'snippet',
     q: query,
     maxResults: 1,
-    type: "video",
+    type: 'video',
     key: apiKey,
   };
 
@@ -30,7 +30,7 @@ export async function getVideos(query: string): Promise<YouTubeVideo[]> {
     const resp = await axios.get(`${YOUTUBE_BASE_URL}/search`, { params });
     return resp.data.items || [];
   } catch (error) {
-    console.error("YouTube API error:", error);
+    console.error('YouTube API error:', error);
     return [];
   }
 }

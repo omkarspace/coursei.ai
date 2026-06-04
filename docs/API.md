@@ -1,6 +1,7 @@
 # Coursei.ai API Documentation
 
 ## Base URL
+
 ```
 https://coursei.ai/api
 ```
@@ -8,6 +9,7 @@ https://coursei.ai/api
 ## Endpoints
 
 ### Health Check
+
 ```http
 GET /api/health
 ```
@@ -15,6 +17,7 @@ GET /api/health
 Returns system health status including database connectivity.
 
 **Response:**
+
 ```json
 {
   "status": "healthy",
@@ -33,6 +36,7 @@ Returns system health status including database connectivity.
 ---
 
 ### List Courses
+
 ```http
 GET /api/courses?limit=20&offset=0&category=programming&level=beginner
 ```
@@ -48,6 +52,7 @@ Returns published courses with pagination.
 | level | string | - | Filter by difficulty level |
 
 **Response:**
+
 ```json
 {
   "courses": [
@@ -73,6 +78,7 @@ Returns published courses with pagination.
 ---
 
 ### Get Course Details
+
 ```http
 GET /api/courses/:courseId
 ```
@@ -80,6 +86,7 @@ GET /api/courses/:courseId
 Returns detailed course information including chapter content.
 
 **Response:**
+
 ```json
 {
   "courseId": "course_123456",
@@ -110,6 +117,7 @@ Returns detailed course information including chapter content.
 ---
 
 ### Search Courses
+
 ```http
 GET /api/search?q=typescript&limit=10
 ```
@@ -123,6 +131,7 @@ Semantic search for courses using Upstash Vector (falls back to text search).
 | limit | number | 10 | Max results |
 
 **Response:**
+
 ```json
 {
   "results": [
@@ -141,6 +150,7 @@ Semantic search for courses using Upstash Vector (falls back to text search).
 ---
 
 ### Course Generation Status
+
 ```http
 GET /api/course/:courseId/status
 ```
@@ -148,6 +158,7 @@ GET /api/course/:courseId/status
 Check the status of an AI course generation.
 
 **Response:**
+
 ```json
 {
   "status": "generating_chapters",
@@ -181,6 +192,7 @@ Authorization: Bearer <session_token>
 ```
 
 Common HTTP status codes:
+
 - `200` - Success
 - `400` - Bad request
 - `401` - Unauthorized

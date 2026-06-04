@@ -1,7 +1,7 @@
-"use client";
-import dynamic from "next/dynamic";
+'use client';
+import dynamic from 'next/dynamic';
 
-const ConceptCanvas = dynamic(() => import("@/app/_components/ConceptCanvas"), {
+const ConceptCanvas = dynamic(() => import('@/app/_components/ConceptCanvas'), {
   ssr: false,
   loading: () => (
     <div className="h-96 bg-gray-50 dark:bg-gray-800 rounded-xl flex items-center justify-center">

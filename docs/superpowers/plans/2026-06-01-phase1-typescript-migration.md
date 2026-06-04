@@ -33,12 +33,14 @@ server/
 ## Task 1: Install TypeScript Dependencies
 
 **Files:**
+
 - Modify: `package.json`
 - Create: `tsconfig.json`
 
 - [ ] **Step 1: Install TypeScript and type definitions**
 
 Run:
+
 ```bash
 npm install -D typescript @types/node @types/react @types/react-dom
 ```
@@ -46,6 +48,7 @@ npm install -D typescript @types/node @types/react @types/react-dom
 - [ ] **Step 2: Create tsconfig.json**
 
 Create `tsconfig.json`:
+
 ```json
 {
   "compilerOptions": {
@@ -84,6 +87,7 @@ git commit -m "chore: install TypeScript and create tsconfig.json"
 ## Task 2: Create Server Directory Structure
 
 **Files:**
+
 - Create: `server/db/schema.ts`
 - Create: `server/db/index.ts`
 - Create: `server/ai/prompts.ts`
@@ -96,6 +100,7 @@ git commit -m "chore: install TypeScript and create tsconfig.json"
 - [ ] **Step 1: Create directory structure**
 
 Run:
+
 ```bash
 mkdir -p server/db server/ai server/services server/types
 ```
@@ -112,6 +117,7 @@ git commit -m "chore: create server directory structure"
 ## Task 3: Migrate Schema with TypeScript + Relations
 
 **Files:**
+
 - Create: `server/db/schema.ts`
 - Modify: `drizzle.config.js` (update schema path)
 
@@ -129,8 +135,8 @@ import {
   text,
   timestamp,
   varchar,
-} from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+} from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 
 // ===== Course Output Types =====
 export interface Chapter {
@@ -175,85 +181,85 @@ export interface StudyNotes {
 
 // ===== Course Generation Status =====
 export type CourseStatus =
-  | "draft"
-  | "generating_outline"
-  | "generating_chapters"
-  | "complete"
-  | "failed";
+  | 'draft'
+  | 'generating_outline'
+  | 'generating_chapters'
+  | 'complete'
+  | 'failed';
 
 // ===== Tables =====
 
-export const CourseList = pgTable("CourseList", {
-  id: serial("id").primaryKey(),
-  courseId: varchar("courseId").notNull().unique(),
-  name: varchar("name").notNull(),
-  category: varchar("category").notNull(),
-  level: varchar("level").notNull(),
-  includeVideo: varchar("includeVideo").notNull().default("Yes"),
-  courseOutput: json("courseOutput").notNull().$type<CourseOutput>(),
-  createdBy: varchar("createdBy").notNull(),
-  userName: varchar("username"),
-  userProfileImage: varchar("userProfileImage"),
-  courseBanner: varchar("courseBanner").default("/placeholderr.png"),
-  publish: boolean("publish").default(false),
-  status: varchar("status").$type<CourseStatus>().notNull().default("draft"),
-  progress: integer("progress").notNull().default(0),
-  currentStep: varchar("currentStep"),
-  generationError: text("generationError"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+export const CourseList = pgTable('CourseList', {
+  id: serial('id').primaryKey(),
+  courseId: varchar('courseId').notNull().unique(),
+  name: varchar('name').notNull(),
+  category: varchar('category').notNull(),
+  level: varchar('level').notNull(),
+  includeVideo: varchar('includeVideo').notNull().default('Yes'),
+  courseOutput: json('courseOutput').notNull().$type<CourseOutput>(),
+  createdBy: varchar('createdBy').notNull(),
+  userName: varchar('username'),
+  userProfileImage: varchar('userProfileImage'),
+  courseBanner: varchar('courseBanner').default('/placeholderr.png'),
+  publish: boolean('publish').default(false),
+  status: varchar('status').$type<CourseStatus>().notNull().default('draft'),
+  progress: integer('progress').notNull().default(0),
+  currentStep: varchar('currentStep'),
+  generationError: text('generationError'),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+  updatedAt: timestamp('updatedAt').defaultNow().notNull(),
 });
 
-export const Chapters = pgTable("chapters", {
-  id: serial("id").primaryKey(),
-  courseId: varchar("courseId").notNull(),
-  chapterId: integer("chapterId").notNull(),
-  content: json("content").notNull().$type<ChapterContent[]>(),
-  videoId: varchar("videoId").notNull().default(""),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
+export const Chapters = pgTable('chapters', {
+  id: serial('id').primaryKey(),
+  courseId: varchar('courseId').notNull(),
+  chapterId: integer('chapterId').notNull(),
+  content: json('content').notNull().$type<ChapterContent[]>(),
+  videoId: varchar('videoId').notNull().default(''),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 
-export const Quizzes = pgTable("quizzes", {
-  id: serial("id").primaryKey(),
-  courseId: varchar("courseId").notNull(),
-  chapterId: integer("chapterId").notNull(),
-  questions: json("questions").notNull().$type<QuizQuestion[]>(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
+export const Quizzes = pgTable('quizzes', {
+  id: serial('id').primaryKey(),
+  courseId: varchar('courseId').notNull(),
+  chapterId: integer('chapterId').notNull(),
+  questions: json('questions').notNull().$type<QuizQuestion[]>(),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 
-export const Flashcards = pgTable("flashcards", {
-  id: serial("id").primaryKey(),
-  courseId: varchar("courseId").notNull(),
-  chapterId: integer("chapterId").notNull(),
-  cards: json("cards").notNull().$type<Flashcard[]>(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
+export const Flashcards = pgTable('flashcards', {
+  id: serial('id').primaryKey(),
+  courseId: varchar('courseId').notNull(),
+  chapterId: integer('chapterId').notNull(),
+  cards: json('cards').notNull().$type<Flashcard[]>(),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 
-export const StudyNotesTable = pgTable("study_notes", {
-  id: serial("id").primaryKey(),
-  courseId: varchar("courseId").notNull(),
-  chapterId: integer("chapterId").notNull(),
-  notes: json("notes").notNull().$type<StudyNotes>(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
+export const StudyNotesTable = pgTable('study_notes', {
+  id: serial('id').primaryKey(),
+  courseId: varchar('courseId').notNull(),
+  chapterId: integer('chapterId').notNull(),
+  notes: json('notes').notNull().$type<StudyNotes>(),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 
-export const UserProgress = pgTable("user_progress", {
-  id: serial("id").primaryKey(),
-  userId: varchar("userId").notNull(),
-  courseId: varchar("courseId").notNull(),
-  chapterId: integer("chapterId").notNull(),
-  completed: boolean("completed").notNull().default(false),
-  lastAccessedAt: timestamp("lastAccessedAt").defaultNow().notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
+export const UserProgress = pgTable('user_progress', {
+  id: serial('id').primaryKey(),
+  userId: varchar('userId').notNull(),
+  courseId: varchar('courseId').notNull(),
+  chapterId: integer('chapterId').notNull(),
+  completed: boolean('completed').notNull().default(false),
+  lastAccessedAt: timestamp('lastAccessedAt').defaultNow().notNull(),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 
-export const CourseRatings = pgTable("course_ratings", {
-  id: serial("id").primaryKey(),
-  courseId: varchar("courseId").notNull(),
-  userId: varchar("userId").notNull(),
-  rating: integer("rating").notNull(),
-  review: text("review"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
+export const CourseRatings = pgTable('course_ratings', {
+  id: serial('id').primaryKey(),
+  courseId: varchar('courseId').notNull(),
+  userId: varchar('userId').notNull(),
+  rating: integer('rating').notNull(),
+  review: text('review'),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 
 // ===== Relations =====
@@ -313,9 +319,10 @@ export const courseRatingsRelations = relations(CourseRatings, ({ one }) => ({
 - [ ] **Step 2: Update drizzle.config.js**
 
 Modify `drizzle.config.js`:
+
 ```javascript
-import dotenv from "dotenv"
-dotenv.config()
+import dotenv from 'dotenv';
+dotenv.config();
 
 /** @type {import("drizzle-kit").Config} */
 export default {
@@ -339,6 +346,7 @@ git commit -m "feat: migrate schema to TypeScript with relations and new tables"
 ## Task 4: Consolidate Database Connection
 
 **Files:**
+
 - Create: `server/db/index.ts`
 - Delete: `configs/db.jsx`
 - Delete: `lib/db.js`
@@ -346,10 +354,11 @@ git commit -m "feat: migrate schema to TypeScript with relations and new tables"
 - [ ] **Step 1: Create consolidated server/db/index.ts**
 
 Create `server/db/index.ts`:
+
 ```typescript
-import { neon } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
-import * as schema from "./schema";
+import { neon } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-http';
+import * as schema from './schema';
 
 const sql = neon(process.env.DATABASE_URL!);
 
@@ -359,6 +368,7 @@ export const db = drizzle({ client: sql, schema });
 - [ ] **Step 2: Delete old database connection files**
 
 Run:
+
 ```bash
 rm configs/db.jsx lib/db.js
 ```
@@ -366,11 +376,13 @@ rm configs/db.jsx lib/db.js
 - [ ] **Step 3: Update all imports to use new path**
 
 Files to update:
+
 - `app/actions/course.js` → change `@/lib/db` to `@/server/db`
 
 Update `app/actions/course.js` line 3:
+
 ```typescript
-import { db } from "@/server/db";
+import { db } from '@/server/db';
 ```
 
 - [ ] **Step 4: Commit**
@@ -386,6 +398,7 @@ git commit -m "refactor: consolidate DB connections to server/db/index.ts"
 ## Task 5: Update Server Actions with New Schema
 
 **Files:**
+
 - Modify: `app/actions/course.js` → rename to `app/actions/course.ts`
 
 - [ ] **Step 1: Rename and update server actions**
@@ -393,9 +406,9 @@ git commit -m "refactor: consolidate DB connections to server/db/index.ts"
 Rename `app/actions/course.js` to `app/actions/course.ts` and update imports:
 
 ```typescript
-"use server";
+'use server';
 
-import { db } from "@/server/db";
+import { db } from '@/server/db';
 import {
   CourseList,
   Chapters,
@@ -403,26 +416,23 @@ import {
   Flashcards,
   StudyNotesTable,
   UserProgress,
-} from "@/server/db/schema";
-import { eq, and } from "drizzle-orm";
-import { auth, clerkClient } from "@clerk/nextjs/server";
-import { revalidatePath } from "next/cache";
+} from '@/server/db/schema';
+import { eq, and } from 'drizzle-orm';
+import { auth, clerkClient } from '@clerk/nextjs/server';
+import { revalidatePath } from 'next/cache';
 
 async function getUserEmail(): Promise<string> {
   const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) throw new Error('Unauthorized');
   const user = await (await clerkClient()).users.getUser(userId);
   const email = user.emailAddresses[0]?.emailAddress;
-  if (!email) throw new Error("No email found");
+  if (!email) throw new Error('No email found');
   return email;
 }
 
 export async function getUserCourses() {
   const email = await getUserEmail();
-  const courses = await db
-    .select()
-    .from(CourseList)
-    .where(eq(CourseList.createdBy, email));
+  const courses = await db.select().from(CourseList).where(eq(CourseList.createdBy, email));
   return courses;
 }
 
@@ -431,20 +441,12 @@ export async function getCourseById(courseId: string) {
   const courses = await db
     .select()
     .from(CourseList)
-    .where(
-      and(
-        eq(CourseList.courseId, courseId),
-        eq(CourseList.createdBy, email)
-      )
-    );
+    .where(and(eq(CourseList.courseId, courseId), eq(CourseList.createdBy, email)));
   return courses[0] || null;
 }
 
 export async function getPublishedCourseById(courseId: string) {
-  const courses = await db
-    .select()
-    .from(CourseList)
-    .where(eq(CourseList.courseId, courseId));
+  const courses = await db.select().from(CourseList).where(eq(CourseList.courseId, courseId));
   return courses[0] || null;
 }
 
@@ -466,9 +468,7 @@ export async function createCourse(courseData: {
   courseOutput: any;
 }) {
   const email = await getUserEmail();
-  const user = await (await clerkClient()).users.getUser(
-    (await auth()).userId!
-  );
+  const user = await (await clerkClient()).users.getUser((await auth()).userId!);
 
   const result = await db
     .insert(CourseList)
@@ -480,7 +480,7 @@ export async function createCourse(courseData: {
     })
     .returning({ id: CourseList.id, courseId: CourseList.courseId });
 
-  revalidatePath("/dashboard");
+  revalidatePath('/dashboard');
   return result[0];
 }
 
@@ -492,22 +492,17 @@ export async function updateCourse(
   const result = await db
     .update(CourseList)
     .set(updates)
-    .where(
-      and(
-        eq(CourseList.courseId, courseId),
-        eq(CourseList.createdBy, email)
-      )
-    )
+    .where(and(eq(CourseList.courseId, courseId), eq(CourseList.createdBy, email)))
     .returning({ id: CourseList.id });
 
-  revalidatePath("/dashboard");
+  revalidatePath('/dashboard');
   revalidatePath(`/course/${courseId}`);
   return result[0];
 }
 
 export async function updateCourseStatus(
   courseId: string,
-  status: "draft" | "generating_outline" | "generating_chapters" | "complete" | "failed",
+  status: 'draft' | 'generating_outline' | 'generating_chapters' | 'complete' | 'failed',
   progress: number,
   currentStep?: string,
   error?: string
@@ -528,12 +523,7 @@ export async function updateCourseBanner(courseId: string, bannerUrl: string) {
   await db
     .update(CourseList)
     .set({ courseBanner: bannerUrl })
-    .where(
-      and(
-        eq(CourseList.courseId, courseId),
-        eq(CourseList.createdBy, email)
-      )
-    );
+    .where(and(eq(CourseList.courseId, courseId), eq(CourseList.createdBy, email)));
 
   revalidatePath(`/course/${courseId}`);
 }
@@ -542,15 +532,10 @@ export async function deleteCourse(courseId: string) {
   const email = await getUserEmail();
   const result = await db
     .delete(CourseList)
-    .where(
-      and(
-        eq(CourseList.courseId, courseId),
-        eq(CourseList.createdBy, email)
-      )
-    )
+    .where(and(eq(CourseList.courseId, courseId), eq(CourseList.createdBy, email)))
     .returning({ id: CourseList.id });
 
-  revalidatePath("/dashboard");
+  revalidatePath('/dashboard');
   return result[0];
 }
 
@@ -559,15 +544,10 @@ export async function publishCourse(courseId: string) {
   await db
     .update(CourseList)
     .set({ publish: true })
-    .where(
-      and(
-        eq(CourseList.courseId, courseId),
-        eq(CourseList.createdBy, email)
-      )
-    );
+    .where(and(eq(CourseList.courseId, courseId), eq(CourseList.createdBy, email)));
 
-  revalidatePath("/dashboard");
-  revalidatePath("/explore");
+  revalidatePath('/dashboard');
+  revalidatePath('/explore');
   revalidatePath(`/course/${courseId}`);
 }
 
@@ -600,14 +580,9 @@ export async function updateCourseNameAndDescription(
   const courses = await db
     .select()
     .from(CourseList)
-    .where(
-      and(
-        eq(CourseList.courseId, courseId),
-        eq(CourseList.createdBy, email)
-      )
-    );
+    .where(and(eq(CourseList.courseId, courseId), eq(CourseList.createdBy, email)));
 
-  if (!courses[0]) throw new Error("Course not found");
+  if (!courses[0]) throw new Error('Course not found');
 
   const courseOutput = courses[0].courseOutput as any;
   courseOutput.course.name = name;
@@ -616,15 +591,10 @@ export async function updateCourseNameAndDescription(
   await db
     .update(CourseList)
     .set({ courseOutput })
-    .where(
-      and(
-        eq(CourseList.courseId, courseId),
-        eq(CourseList.createdBy, email)
-      )
-    );
+    .where(and(eq(CourseList.courseId, courseId), eq(CourseList.createdBy, email)));
 
   revalidatePath(`/course/${courseId}`);
-  revalidatePath("/dashboard");
+  revalidatePath('/dashboard');
 }
 
 export async function getQuiz(courseId: string, chapterId: number) {
@@ -632,24 +602,15 @@ export async function getQuiz(courseId: string, chapterId: number) {
   const result = await db
     .select()
     .from(Quizzes)
-    .where(
-      and(eq(Quizzes.courseId, courseId), eq(Quizzes.chapterId, chapterId))
-    );
+    .where(and(eq(Quizzes.courseId, courseId), eq(Quizzes.chapterId, chapterId)));
   return result[0] || null;
 }
 
-export async function saveQuiz(
-  courseId: string,
-  chapterId: number,
-  questions: any[]
-) {
+export async function saveQuiz(courseId: string, chapterId: number, questions: any[]) {
   await getUserEmail();
   const existing = await getQuiz(courseId, chapterId);
   if (existing) {
-    await db
-      .update(Quizzes)
-      .set({ questions })
-      .where(eq(Quizzes.id, existing.id));
+    await db.update(Quizzes).set({ questions }).where(eq(Quizzes.id, existing.id));
   } else {
     await db.insert(Quizzes).values({ courseId, chapterId, questions });
   }
@@ -661,27 +622,15 @@ export async function getFlashcards(courseId: string, chapterId: number) {
   const result = await db
     .select()
     .from(Flashcards)
-    .where(
-      and(
-        eq(Flashcards.courseId, courseId),
-        eq(Flashcards.chapterId, chapterId)
-      )
-    );
+    .where(and(eq(Flashcards.courseId, courseId), eq(Flashcards.chapterId, chapterId)));
   return result[0] || null;
 }
 
-export async function saveFlashcards(
-  courseId: string,
-  chapterId: number,
-  cards: any[]
-) {
+export async function saveFlashcards(courseId: string, chapterId: number, cards: any[]) {
   await getUserEmail();
   const existing = await getFlashcards(courseId, chapterId);
   if (existing) {
-    await db
-      .update(Flashcards)
-      .set({ cards })
-      .where(eq(Flashcards.id, existing.id));
+    await db.update(Flashcards).set({ cards }).where(eq(Flashcards.id, existing.id));
   } else {
     await db.insert(Flashcards).values({ courseId, chapterId, cards });
   }
@@ -693,27 +642,15 @@ export async function getStudyNotes(courseId: string, chapterId: number) {
   const result = await db
     .select()
     .from(StudyNotesTable)
-    .where(
-      and(
-        eq(StudyNotesTable.courseId, courseId),
-        eq(StudyNotesTable.chapterId, chapterId)
-      )
-    );
+    .where(and(eq(StudyNotesTable.courseId, courseId), eq(StudyNotesTable.chapterId, chapterId)));
   return result[0] || null;
 }
 
-export async function saveStudyNotes(
-  courseId: string,
-  chapterId: number,
-  notes: any
-) {
+export async function saveStudyNotes(courseId: string, chapterId: number, notes: any) {
   await getUserEmail();
   const existing = await getStudyNotes(courseId, chapterId);
   if (existing) {
-    await db
-      .update(StudyNotesTable)
-      .set({ notes })
-      .where(eq(StudyNotesTable.id, existing.id));
+    await db.update(StudyNotesTable).set({ notes }).where(eq(StudyNotesTable.id, existing.id));
   } else {
     await db.insert(StudyNotesTable).values({ courseId, chapterId, notes });
   }
@@ -722,23 +659,18 @@ export async function saveStudyNotes(
 
 export async function getUserProgress(courseId: string) {
   const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) throw new Error('Unauthorized');
 
   const progress = await db
     .select()
     .from(UserProgress)
-    .where(
-      and(
-        eq(UserProgress.courseId, courseId),
-        eq(UserProgress.userId, userId)
-      )
-    );
+    .where(and(eq(UserProgress.courseId, courseId), eq(UserProgress.userId, userId)));
   return progress;
 }
 
 export async function markChapterComplete(courseId: string, chapterId: number) {
   const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) throw new Error('Unauthorized');
 
   const existing = await db
     .select()
@@ -770,6 +702,7 @@ export async function markChapterComplete(courseId: string, chapterId: number) {
 - [ ] **Step 2: Find and update all files importing from @/configs/schema**
 
 Run:
+
 ```bash
 grep -r "@/configs/schema" app/ --include="*.js" --include="*.jsx" --include="*.ts" --include="*.tsx"
 ```
@@ -788,16 +721,18 @@ git commit -m "feat: update server actions with TypeScript types and new progres
 ## Task 6: Migrate YouTube Service
 
 **Files:**
+
 - Create: `server/services/youtube.ts`
 - Delete: `configs/service.jsx`
 
 - [ ] **Step 1: Create server/services/youtube.ts**
 
 Create `server/services/youtube.ts`:
-```typescript
-import axios from "axios";
 
-const YOUTUBE_BASE_URL = "https://www.googleapis.com/youtube/v3";
+```typescript
+import axios from 'axios';
+
+const YOUTUBE_BASE_URL = 'https://www.googleapis.com/youtube/v3';
 
 export interface YouTubeVideo {
   id: { videoId: string };
@@ -816,10 +751,10 @@ export async function getVideos(query: string): Promise<YouTubeVideo[]> {
   }
 
   const params = {
-    part: "snippet",
+    part: 'snippet',
     q: query,
     maxResults: 1,
-    type: "video",
+    type: 'video',
     key: apiKey,
   };
 
@@ -827,7 +762,7 @@ export async function getVideos(query: string): Promise<YouTubeVideo[]> {
     const resp = await axios.get(`${YOUTUBE_BASE_URL}/search`, { params });
     return resp.data.items || [];
   } catch (error) {
-    console.error("YouTube API error:", error);
+    console.error('YouTube API error:', error);
     return [];
   }
 }
@@ -836,6 +771,7 @@ export async function getVideos(query: string): Promise<YouTubeVideo[]> {
 - [ ] **Step 2: Delete old service file**
 
 Run:
+
 ```bash
 rm configs/service.jsx
 ```
@@ -843,6 +779,7 @@ rm configs/service.jsx
 - [ ] **Step 3: Update all imports**
 
 Files that import from `@/configs/service`:
+
 - Search and update all references to use `@/server/services/youtube`
 
 - [ ] **Step 4: Commit**
@@ -858,14 +795,16 @@ git commit -m "refactor: migrate YouTube service to TypeScript"
 ## Task 7: Create Storage Abstraction Layer
 
 **Files:**
+
 - Create: `server/services/storage.ts`
 - Delete: `configs/cloudinary.js`
 
 - [ ] **Step 1: Create storage adapter interface and implementations**
 
 Create `server/services/storage.ts`:
+
 ```typescript
-import { v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary } from 'cloudinary';
 
 // ===== Storage Adapter Interface =====
 export interface StorageAdapter {
@@ -886,16 +825,18 @@ class CloudinaryStorage implements StorageAdapter {
 
   async upload(file: Buffer, path: string, contentType?: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      cloudinary.uploader.upload_stream(
-        {
-          public_id: path,
-          resource_type: "auto",
-        },
-        (error, result) => {
-          if (error) reject(error);
-          else resolve(result?.secure_url || "");
-        }
-      ).end(file);
+      cloudinary.uploader
+        .upload_stream(
+          {
+            public_id: path,
+            resource_type: 'auto',
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result?.secure_url || '');
+          }
+        )
+        .end(file);
     });
   }
 
@@ -913,11 +854,11 @@ class LocalStorage implements StorageAdapter {
   private uploadDir: string;
 
   constructor() {
-    this.uploadDir = process.env.LOCAL_STORAGE_DIR || "./public/uploads";
+    this.uploadDir = process.env.LOCAL_STORAGE_DIR || './public/uploads';
   }
 
   async upload(file: Buffer, path: string, contentType?: string): Promise<string> {
-    const fs = await import("fs/promises");
+    const fs = await import('fs/promises');
     const filePath = `${this.uploadDir}/${path}`;
     await fs.mkdir(`${this.uploadDir}/${path.dirname(path)}`, { recursive: true });
     await fs.writeFile(filePath, file);
@@ -925,7 +866,7 @@ class LocalStorage implements StorageAdapter {
   }
 
   async delete(path: string): Promise<void> {
-    const fs = await import("fs/promises");
+    const fs = await import('fs/promises');
     await fs.unlink(`${this.uploadDir}/${path}`);
   }
 
@@ -936,16 +877,16 @@ class LocalStorage implements StorageAdapter {
 
 // ===== Factory Function =====
 export function getStorage(): StorageAdapter {
-  const provider = process.env.STORAGE_PROVIDER || "local";
+  const provider = process.env.STORAGE_PROVIDER || 'local';
 
   switch (provider) {
-    case "cloudinary":
+    case 'cloudinary':
       if (!process.env.CLOUDINARY_CLOUD_NAME) {
-        console.warn("Missing Cloudinary env vars, falling back to local storage");
+        console.warn('Missing Cloudinary env vars, falling back to local storage');
         return new LocalStorage();
       }
       return new CloudinaryStorage();
-    case "local":
+    case 'local':
     default:
       return new LocalStorage();
   }
@@ -958,6 +899,7 @@ export const storage = getStorage();
 - [ ] **Step 2: Delete old cloudinary config**
 
 Run:
+
 ```bash
 rm configs/cloudinary.js
 ```
@@ -975,11 +917,13 @@ git commit -m "feat: add storage abstraction layer with Cloudinary and local sup
 ## Task 8: Create Inngest Client
 
 **Files:**
+
 - Create: `server/services/inngest.ts`
 
 - [ ] **Step 1: Install Inngest**
 
 Run:
+
 ```bash
 npm install inngest
 ```
@@ -987,35 +931,37 @@ npm install inngest
 - [ ] **Step 2: Create Inngest client**
 
 Create `server/services/inngest.ts`:
+
 ```typescript
-import { Inngest } from "inngest";
+import { Inngest } from 'inngest';
 
 export const inngest = new Inngest({
-  id: "coursei-ai",
-  name: "Coursei.ai",
+  id: 'coursei-ai',
+  name: 'Coursei.ai',
 });
 ```
 
 - [ ] **Step 3: Create course generation function**
 
 Create `server/ai/generate-course.ts`:
+
 ```typescript
-import { inngest } from "@/server/services/inngest";
-import { db } from "@/server/db";
-import { CourseList, Chapters } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { inngest } from '@/server/services/inngest';
+import { db } from '@/server/db';
+import { CourseList, Chapters } from '@/server/db/schema';
+import { eq } from 'drizzle-orm';
 
 export const generateCourse = inngest.createFunction(
-  { id: "generate-course" },
-  { event: "course.generate" },
+  { id: 'generate-course' },
+  { event: 'course.generate' },
   async ({ event, step }) => {
     const { courseId, topic, chapters } = event.data;
 
     // Step 1: Update status to generating
-    await step.run("update-status-generating", () =>
+    await step.run('update-status-generating', () =>
       db
         .update(CourseList)
-        .set({ status: "generating_chapters", progress: 10, currentStep: "Starting generation..." })
+        .set({ status: 'generating_chapters', progress: 10, currentStep: 'Starting generation...' })
         .where(eq(CourseList.courseId, courseId))
     );
 
@@ -1042,20 +988,20 @@ export const generateCourse = inngest.createFunction(
           courseId,
           chapterId: i,
           content: [], // Will be populated by AI
-          videoId: "",
+          videoId: '',
         });
       });
     }
 
     // Step 3: Mark as complete
-    await step.run("update-status-complete", () =>
+    await step.run('update-status-complete', () =>
       db
         .update(CourseList)
-        .set({ status: "complete", progress: 100, currentStep: "Complete" })
+        .set({ status: 'complete', progress: 100, currentStep: 'Complete' })
         .where(eq(CourseList.courseId, courseId))
     );
 
-    return { courseId, status: "complete" };
+    return { courseId, status: 'complete' };
   }
 );
 ```
@@ -1063,10 +1009,11 @@ export const generateCourse = inngest.createFunction(
 - [ ] **Step 4: Create Inngest API route**
 
 Create `app/api/inngest/route.ts`:
+
 ```typescript
-import { serve } from "inngest/next";
-import { inngest } from "@/server/services/inngest";
-import { generateCourse } from "@/server/ai/generate-course";
+import { serve } from 'inngest/next';
+import { inngest } from '@/server/services/inngest';
+import { generateCourse } from '@/server/ai/generate-course';
 
 export const { GET, POST, PUT } = serve({
   client: inngest,
@@ -1086,11 +1033,13 @@ git commit -m "feat: add Inngest for background course generation"
 ## Task 9: Create Upstash Cache Service
 
 **Files:**
+
 - Create: `server/services/cache.ts`
 
 - [ ] **Step 1: Install Upstash Redis**
 
 Run:
+
 ```bash
 npm install @upstash/redis
 ```
@@ -1098,8 +1047,9 @@ npm install @upstash/redis
 - [ ] **Step 2: Create cache service**
 
 Create `server/services/cache.ts`:
+
 ```typescript
-import { Redis } from "@upstash/redis";
+import { Redis } from '@upstash/redis';
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
@@ -1113,7 +1063,7 @@ export async function getCached<T>(key: string): Promise<T | null> {
     const data = await redis.get<T>(key);
     return data;
   } catch (error) {
-    console.error("Cache read error:", error);
+    console.error('Cache read error:', error);
     return null;
   }
 }
@@ -1122,7 +1072,7 @@ export async function setCached<T>(key: string, data: T, ttl = DEFAULT_TTL): Pro
   try {
     await redis.set(key, data, { ex: ttl });
   } catch (error) {
-    console.error("Cache write error:", error);
+    console.error('Cache write error:', error);
   }
 }
 
@@ -1133,7 +1083,7 @@ export async function invalidateCache(pattern: string): Promise<void> {
       await redis.del(...keys);
     }
   } catch (error) {
-    console.error("Cache invalidation error:", error);
+    console.error('Cache invalidation error:', error);
   }
 }
 
@@ -1162,11 +1112,13 @@ git commit -m "feat: add Upstash Redis caching layer"
 ## Task 10: Update Environment Variables
 
 **Files:**
+
 - Modify: `.env.example`
 
 - [ ] **Step 1: Update .env.example with new variables**
 
 Modify `.env.example`:
+
 ```env
 # Clerk Authentication
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
@@ -1220,11 +1172,13 @@ git commit -m "docs: update .env.example with new environment variables"
 ## Task 11: Run Database Migration
 
 **Files:**
+
 - Modify: `drizzle/` (migration files)
 
 - [ ] **Step 1: Generate and push schema changes**
 
 Run:
+
 ```bash
 npm run db:push
 ```
@@ -1234,6 +1188,7 @@ This will create the new tables (`user_progress`, `course_ratings`) and add the 
 - [ ] **Step 2: Verify migration**
 
 Run:
+
 ```bash
 npm run db:studio
 ```
@@ -1254,6 +1209,7 @@ git commit -m "chore: database migration for Phase 1 schema changes"
 - [ ] **Step 1: Run TypeScript compiler**
 
 Run:
+
 ```bash
 npx tsc --noEmit
 ```
@@ -1263,6 +1219,7 @@ Fix any type errors.
 - [ ] **Step 2: Run Next.js build**
 
 Run:
+
 ```bash
 npm run build
 ```

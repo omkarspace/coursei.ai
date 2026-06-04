@@ -1,5 +1,5 @@
-import React from "react";
-import { HiOutlineClock, HiCheck } from "react-icons/hi2";
+import React from 'react';
+import { HiOutlineClock, HiCheck } from 'react-icons/hi2';
 
 function ChapterListCard({ chapter, index, isCompleted = false }) {
   return (
@@ -16,7 +16,9 @@ function ChapterListCard({ chapter, index, isCompleted = false }) {
         )}
       </div>
       <div className="col-span-4 sm:col-span-4">
-        <h2 className={`font-medium text-sm sm:text-base ${isCompleted ? "text-green-600 dark:text-green-400" : ""}`}>
+        <h2
+          className={`font-medium text-sm sm:text-base ${isCompleted ? 'text-green-600 dark:text-green-400' : ''}`}
+        >
           {chapter?.name}
         </h2>
         <h2 className="flex items-center gap-2 text-xs sm:text-sm text-primary">

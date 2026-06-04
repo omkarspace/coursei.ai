@@ -1,7 +1,11 @@
-"use server";
+'use server';
 
-import { getWikipediaSummary, getRelatedArticles, searchWikipedia } from "@/server/services/wikipedia";
-import { verifyWithTavily, isTavilyConfigured } from "@/server/services/verification";
+import {
+  getWikipediaSummary,
+  getRelatedArticles,
+  searchWikipedia,
+} from '@/server/services/wikipedia';
+import { verifyWithTavily, isTavilyConfigured } from '@/server/services/verification';
 
 export async function getWikipediaContent(topic: string) {
   const [summary, related] = await Promise.all([

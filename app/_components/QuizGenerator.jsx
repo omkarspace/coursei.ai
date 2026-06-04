@@ -1,9 +1,9 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { HiOutlineAcademicCap, HiCheckCircle, HiXCircle } from "react-icons/hi2";
-import { generateQuizAction } from "@/app/actions/ai";
-import { saveQuiz, getQuiz } from "@/app/actions/course";
-import { toast } from "sonner";
+'use client';
+import React, { useState, useEffect } from 'react';
+import { HiOutlineAcademicCap, HiCheckCircle, HiXCircle } from 'react-icons/hi2';
+import { generateQuizAction } from '@/app/actions/ai';
+import { saveQuiz, getQuiz } from '@/app/actions/course';
+import { toast } from 'sonner';
 
 function QuizGenerator({ courseId, chapterId, chapterName, chapterContent }) {
   const [quiz, setQuiz] = useState(null);
@@ -28,17 +28,16 @@ function QuizGenerator({ courseId, chapterId, chapterName, chapterContent }) {
   const generateQuiz = async () => {
     setLoading(true);
     try {
-      const contentText = chapterContent?.content
-        ?.map((c) => c.explanation)
-        .join("\n") || chapterName;
+      const contentText =
+        chapterContent?.content?.map((c) => c.explanation).join('\n') || chapterName;
 
       const response = await generateQuizAction(chapterName, contentText.substring(0, 2000));
       setQuiz(response.questions);
       await saveQuiz(courseId, chapterId, response.questions);
-      toast.success("Quiz generated successfully!");
+      toast.success('Quiz generated successfully!');
     } catch (error) {
-      console.error("Error generating quiz:", error);
-      toast.error("Failed to generate quiz. Please try again.");
+      console.error('Error generating quiz:', error);
+      toast.error('Failed to generate quiz. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -87,7 +86,7 @@ function QuizGenerator({ courseId, chapterId, chapterName, chapterContent }) {
           aria-label="Generate quiz"
           className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         >
-          {loading ? "Generating Quiz..." : "Generate Quiz"}
+          {loading ? 'Generating Quiz...' : 'Generate Quiz'}
         </button>
       </div>
     );
@@ -106,10 +105,10 @@ function QuizGenerator({ courseId, chapterId, chapterName, chapterContent }) {
           </p>
           <p className="text-gray-500 dark:text-gray-400 mb-4">
             {score === quiz.length
-              ? "Perfect score! Excellent work!"
+              ? 'Perfect score! Excellent work!'
               : score >= quiz.length * 0.7
-              ? "Great job! Keep practicing!"
-              : "Keep studying and try again!"}
+                ? 'Great job! Keep practicing!'
+                : 'Keep studying and try again!'}
           </p>
           <button
             onClick={resetQuiz}
@@ -154,15 +153,17 @@ function QuizGenerator({ courseId, chapterId, chapterName, chapterContent }) {
             className={`w-full p-4 text-left rounded-lg border transition-all ${
               showResult
                 ? index === question.correctAnswer
-                  ? "bg-green-100 dark:bg-green-900/30 border-green-500"
+                  ? 'bg-green-100 dark:bg-green-900/30 border-green-500'
                   : index === selectedAnswer
-                  ? "bg-red-100 dark:bg-red-900/30 border-red-500"
-                  : "bg-gray-50 dark:bg-gray-800"
-                : "hover:bg-purple-50 dark:hover:bg-purple-900/20 hover:border-primary"
+                    ? 'bg-red-100 dark:bg-red-900/30 border-red-500'
+                    : 'bg-gray-50 dark:bg-gray-800'
+                : 'hover:bg-purple-50 dark:hover:bg-purple-900/20 hover:border-primary'
             }`}
           >
             <div className="flex items-center gap-3">
-              <span className="font-medium dark:text-white">{String.fromCharCode(65 + index)}.</span>
+              <span className="font-medium dark:text-white">
+                {String.fromCharCode(65 + index)}.
+              </span>
               <span className="dark:text-gray-200">{option}</span>
               {showResult && index === question.correctAnswer && (
                 <HiCheckCircle className="h-5 w-5 text-green-500 ml-auto" />
@@ -186,10 +187,10 @@ function QuizGenerator({ courseId, chapterId, chapterName, chapterContent }) {
       {showResult && (
         <button
           onClick={nextQuestion}
-          aria-label={currentQuestion < quiz.length - 1 ? "Next question" : "See results"}
+          aria-label={currentQuestion < quiz.length - 1 ? 'Next question' : 'See results'}
           className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         >
-          {currentQuestion < quiz.length - 1 ? "Next Question" : "See Results"}
+          {currentQuestion < quiz.length - 1 ? 'Next Question' : 'See Results'}
         </button>
       )}
     </div>

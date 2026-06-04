@@ -1,5 +1,10 @@
-import React from 'react'
-import { HiOutlineBookOpen, HiOutlineChartBar, HiOutlineClock, HiOutlinePlayCircle } from 'react-icons/hi2'
+import React from 'react';
+import {
+  HiOutlineBookOpen,
+  HiOutlineChartBar,
+  HiOutlineClock,
+  HiOutlinePlayCircle,
+} from 'react-icons/hi2';
 
 function CourseDetails({ course }) {
   return (
@@ -39,7 +44,7 @@ function CourseDetails({ course }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default CourseDetails
+export default CourseDetails;

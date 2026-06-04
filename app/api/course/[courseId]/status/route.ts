@@ -1,12 +1,9 @@
-import { NextResponse } from "next/server";
-import { db } from "@/server/db";
-import { CourseList } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { NextResponse } from 'next/server';
+import { db } from '@/server/db';
+import { CourseList } from '@/server/db/schema';
+import { eq } from 'drizzle-orm';
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ courseId: string }> }
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ courseId: string }> }) {
   try {
     const { courseId } = await params;
 
@@ -22,10 +19,7 @@ export async function GET(
       .limit(1);
 
     if (!courses[0]) {
-      return NextResponse.json(
-        { error: "Course not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Course not found' }, { status: 404 });
     }
 
     const course = courses[0];
@@ -37,10 +31,7 @@ export async function GET(
       generationError: course.generationError,
     });
   } catch (error) {
-    console.error("Error fetching course status:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    console.error('Error fetching course status:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

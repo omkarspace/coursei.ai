@@ -1,5 +1,5 @@
-"use client";
-import React, { useEffect, useState } from "react";
+'use client';
+import React, { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogClose,
@@ -9,13 +9,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { HiPencilSquare } from "react-icons/hi2";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { updateCourseNameAndDescription } from "@/app/actions/course";
-import { toast } from "sonner";
+} from '@/components/ui/dialog';
+import { HiPencilSquare } from 'react-icons/hi2';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { updateCourseNameAndDescription } from '@/app/actions/course';
+import { toast } from 'sonner';
 
 function EditCourseBasicInfo({ course, refreshData }) {
   const [name, setName] = useState();
@@ -24,8 +24,8 @@ function EditCourseBasicInfo({ course, refreshData }) {
 
   useEffect(() => {
     if (course?.courseOutput?.course) {
-      setName(course.courseOutput.course.name || "");
-      setDescription(course.courseOutput.course.description || "");
+      setName(course.courseOutput.course.name || '');
+      setDescription(course.courseOutput.course.description || '');
     }
   }, [course]);
 
@@ -33,10 +33,10 @@ function EditCourseBasicInfo({ course, refreshData }) {
     setIsUpdating(true);
     try {
       await updateCourseNameAndDescription(course?.courseId, name, description);
-      toast.success("Course updated successfully");
+      toast.success('Course updated successfully');
       refreshData?.();
     } catch (error) {
-      toast.error("Failed to update course");
+      toast.error('Failed to update course');
     } finally {
       setIsUpdating(false);
     }
@@ -88,7 +88,7 @@ function EditCourseBasicInfo({ course, refreshData }) {
           </DialogClose>
           <DialogClose asChild>
             <Button onClick={onUpdateHandler} disabled={isUpdating}>
-              {isUpdating ? "Updating..." : "Update"}
+              {isUpdating ? 'Updating...' : 'Update'}
             </Button>
           </DialogClose>
         </DialogFooter>

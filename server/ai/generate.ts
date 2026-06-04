@@ -1,19 +1,13 @@
-import { generateObject } from "ai";
-import { aiModel } from "./models";
+import { generateObject } from 'ai';
+import { aiModel } from './models';
 import {
   CourseLayoutSchema,
   ChapterContentSchema,
   QuizSchema,
   FlashcardsSchema,
   StudyNotesSchema,
-} from "./schemas";
-import type {
-  CourseLayout,
-  ChapterContent,
-  Quiz,
-  Flashcards,
-  StudyNotes,
-} from "./schemas";
+} from './schemas';
+import type { CourseLayout, ChapterContent, Quiz, Flashcards, StudyNotes } from './schemas';
 
 // ===== Generate Course Layout =====
 export async function generateCourseLayout(
@@ -52,10 +46,7 @@ export async function generateChapterContent(
 }
 
 // ===== Generate Quiz =====
-export async function generateQuiz(
-  chapterName: string,
-  contentSummary: string
-): Promise<Quiz> {
+export async function generateQuiz(chapterName: string, contentSummary: string): Promise<Quiz> {
   const { object } = await generateObject({
     model: aiModel,
     schema: QuizSchema,

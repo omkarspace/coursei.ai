@@ -1,8 +1,8 @@
-"use server";
+'use server';
 
-import { generateChapterAudio, VOICE_OPTIONS } from "@/server/services/tts";
-import { transcribeAndWait } from "@/server/services/transcription";
-import { generateStaticAudio } from "@/server/services/audio-stream";
+import { generateChapterAudio, VOICE_OPTIONS } from '@/server/services/tts';
+import { transcribeAndWait } from '@/server/services/transcription';
+import { generateStaticAudio } from '@/server/services/audio-stream';
 
 interface ChapterSection {
   title: string;
@@ -17,7 +17,7 @@ export async function generateChapterAudioAction(
 ) {
   const fullText = chapterContent
     .map((section) => `${section.title}. ${section.explanation}`)
-    .join("\n\n");
+    .join('\n\n');
   const truncatedText = fullText.substring(0, 5000);
   const audioBase64 = await generateChapterAudio(truncatedText, voiceId);
   return { audio: audioBase64 };
@@ -45,7 +45,7 @@ export async function generateAudioResponseAction(
     chapterName,
     chapterContent,
     userQuestion,
-    voiceId || "Rachel"
+    voiceId || 'Rachel'
   );
   return { audio: audioBase64 };
 }

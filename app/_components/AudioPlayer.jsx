@@ -1,15 +1,20 @@
-"use client";
-import React, { useState, useRef, useEffect } from "react";
-import { generateChapterAudioAction, generateAudioResponseAction } from "@/app/actions/audio";
-import { HiOutlineSpeakerWave, HiPlay, HiPause, HiOutlineChatBubbleLeftRight } from "react-icons/hi2";
+'use client';
+import React, { useState, useRef, useEffect } from 'react';
+import { generateChapterAudioAction, generateAudioResponseAction } from '@/app/actions/audio';
+import {
+  HiOutlineSpeakerWave,
+  HiPlay,
+  HiPause,
+  HiOutlineChatBubbleLeftRight,
+} from 'react-icons/hi2';
 
 export default function AudioPlayer({ courseId, chapterId, chapterContent, chapterName }) {
   const [audioUrl, setAudioUrl] = useState(null);
   const [loading, setLoading] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [voice, setVoice] = useState("Rachel");
-  const [mode, setMode] = useState("listen"); // "listen" | "chat"
-  const [chatInput, setChatInput] = useState("");
+  const [voice, setVoice] = useState('Rachel');
+  const [mode, setMode] = useState('listen'); // "listen" | "chat"
+  const [chatInput, setChatInput] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
   const [chatLoading, setChatLoading] = useState(false);
   const audioRef = useRef(null);
@@ -23,7 +28,7 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
         setAudioUrl(result.audio);
       }
     } catch (error) {
-      console.error("Failed to generate audio:", error);
+      console.error('Failed to generate audio:', error);
     } finally {
       setLoading(false);
     }
@@ -40,7 +45,7 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
   }, [playing, audioUrl]);
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatHistory]);
 
   const handleChatSubmit = async (e) => {
@@ -48,8 +53,8 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
     if (!chatInput.trim() || chatLoading) return;
 
     const question = chatInput.trim();
-    setChatInput("");
-    setChatHistory((prev) => [...prev, { role: "user", content: question }]);
+    setChatInput('');
+    setChatHistory((prev) => [...prev, { role: 'user', content: question }]);
     setChatLoading(true);
 
     try {
@@ -63,14 +68,14 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
       if (result.audio) {
         setChatHistory((prev) => [
           ...prev,
-          { role: "assistant", content: "Audio response generated", audio: result.audio },
+          { role: 'assistant', content: 'Audio response generated', audio: result.audio },
         ]);
       }
     } catch (error) {
-      console.error("Failed to generate response:", error);
+      console.error('Failed to generate response:', error);
       setChatHistory((prev) => [
         ...prev,
-        { role: "assistant", content: "Sorry, I couldn't generate a response." },
+        { role: 'assistant', content: "Sorry, I couldn't generate a response." },
       ]);
     } finally {
       setChatLoading(false);
@@ -78,10 +83,10 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
   };
 
   const VOICES = [
-    { id: "Rachel", name: "Rachel (Female)" },
-    { id: "Antoni", name: "Antoni (Male)" },
-    { id: "Josh", name: "Josh (Deep Male)" },
-    { id: "Bella", name: "Bella (Soft Female)" },
+    { id: 'Rachel', name: 'Rachel (Female)' },
+    { id: 'Antoni', name: 'Antoni (Male)' },
+    { id: 'Josh', name: 'Josh (Deep Male)' },
+    { id: 'Bella', name: 'Bella (Soft Female)' },
   ];
 
   return (
@@ -90,26 +95,26 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
         <div className="flex items-center gap-3">
           <HiOutlineSpeakerWave className="h-6 w-6 text-primary" />
           <h3 className="font-medium text-lg dark:text-white">
-            {mode === "listen" ? "Audio Narration" : "Voice Tutor"}
+            {mode === 'listen' ? 'Audio Narration' : 'Voice Tutor'}
           </h3>
         </div>
         <div className="flex gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
           <button
-            onClick={() => setMode("listen")}
+            onClick={() => setMode('listen')}
             className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
-              mode === "listen"
-                ? "bg-white dark:bg-gray-700 shadow text-primary"
-                : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+              mode === 'listen'
+                ? 'bg-white dark:bg-gray-700 shadow text-primary'
+                : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
             }`}
           >
             Listen
           </button>
           <button
-            onClick={() => setMode("chat")}
+            onClick={() => setMode('chat')}
             className={`px-3 py-1.5 text-sm rounded-md transition-colors flex items-center gap-1.5 ${
-              mode === "chat"
-                ? "bg-white dark:bg-gray-700 shadow text-primary"
-                : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+              mode === 'chat'
+                ? 'bg-white dark:bg-gray-700 shadow text-primary'
+                : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
             }`}
           >
             <HiOutlineChatBubbleLeftRight className="h-4 w-4" />
@@ -118,7 +123,7 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
         </div>
       </div>
 
-      {mode === "listen" ? (
+      {mode === 'listen' ? (
         !audioUrl ? (
           <div className="space-y-4">
             <p className="text-gray-500 dark:text-gray-400 text-sm">
@@ -131,7 +136,9 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
                 className="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm"
               >
                 {VOICES.map((v) => (
-                  <option key={v.id} value={v.id}>{v.name}</option>
+                  <option key={v.id} value={v.id}>
+                    {v.name}
+                  </option>
                 ))}
               </select>
               <button
@@ -139,7 +146,7 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
                 disabled={loading}
                 className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 disabled:opacity-50 text-sm"
               >
-                {loading ? "Generating..." : "Generate Audio"}
+                {loading ? 'Generating...' : 'Generate Audio'}
               </button>
             </div>
           </div>
@@ -158,10 +165,13 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
                 className="inline-flex items-center gap-2 bg-primary text-white px-3 py-1.5 rounded-md text-sm"
               >
                 {playing ? <HiPause className="h-4 w-4" /> : <HiPlay className="h-4 w-4" />}
-                {playing ? "Pause" : "Play"}
+                {playing ? 'Pause' : 'Play'}
               </button>
               <button
-                onClick={() => { setAudioUrl(null); setPlaying(false); }}
+                onClick={() => {
+                  setAudioUrl(null);
+                  setPlaying(false);
+                }}
                 className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
               >
                 Regenerate
@@ -178,18 +188,19 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
               </p>
             )}
             {chatHistory.map((msg, i) => (
-              <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div
+                key={i}
+                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
                 <div
                   className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${
-                    msg.role === "user"
-                      ? "bg-primary text-white"
-                      : "bg-white dark:bg-gray-700 dark:text-gray-200"
+                    msg.role === 'user'
+                      ? 'bg-primary text-white'
+                      : 'bg-white dark:bg-gray-700 dark:text-gray-200'
                   }`}
                 >
                   <p>{msg.content}</p>
-                  {msg.audio && (
-                    <audio src={msg.audio} controls className="mt-2 w-full" />
-                  )}
+                  {msg.audio && <audio src={msg.audio} controls className="mt-2 w-full" />}
                 </div>
               </div>
             ))}
@@ -221,7 +232,7 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
               disabled={chatLoading || !chatInput.trim()}
               className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 disabled:opacity-50 text-sm"
             >
-              {chatLoading ? "..." : "Ask"}
+              {chatLoading ? '...' : 'Ask'}
             </button>
           </form>
 
@@ -233,7 +244,9 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
               className="h-7 rounded border border-input bg-transparent px-2 text-xs"
             >
               {VOICES.map((v) => (
-                <option key={v.id} value={v.id}>{v.name}</option>
+                <option key={v.id} value={v.id}>
+                  {v.name}
+                </option>
               ))}
             </select>
           </div>

@@ -1,32 +1,21 @@
-import { NextResponse } from "next/server";
-import { db } from "@/server/db";
-import { CourseList, Chapters } from "@/server/db/schema";
-import { eq, and } from "drizzle-orm";
+import { NextResponse } from 'next/server';
+import { db } from '@/server/db';
+import { CourseList, Chapters } from '@/server/db/schema';
+import { eq, and } from 'drizzle-orm';
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ courseId: string }> }
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ courseId: string }> }) {
   try {
     const { courseId } = await params;
 
     const courses = await db
       .select()
       .from(CourseList)
-      .where(
-        and(
-          eq(CourseList.courseId, courseId),
-          eq(CourseList.publish, true)
-        )
-      );
+      .where(and(eq(CourseList.courseId, courseId), eq(CourseList.publish, true)));
 
     const course = courses[0];
 
     if (!course) {
-      return NextResponse.json(
-        { error: "Course not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Course not found' }, { status: 404 });
     }
 
     // Get chapters
@@ -51,10 +40,7 @@ export async function GET(
       createdAt: course.createdAt,
     });
   } catch (error) {
-    console.error("Error fetching course:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    console.error('Error fetching course:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

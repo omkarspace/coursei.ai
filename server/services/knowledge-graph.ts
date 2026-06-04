@@ -1,7 +1,7 @@
-import neo4j, { Driver, Session } from "neo4j-driver";
+import neo4j, { Driver, Session } from 'neo4j-driver';
 
 const NEO4J_URI = process.env.NEO4J_URI;
-const NEO4J_USER = process.env.NEO4J_USER || "neo4j";
+const NEO4J_USER = process.env.NEO4J_USER || 'neo4j';
 const NEO4J_PASSWORD = process.env.NEO4J_PASSWORD;
 
 let driver: Driver | null = null;
@@ -67,7 +67,12 @@ export async function upsertConcept(concept: ConceptNode): Promise<void> {
 /**
  * Upsert a course node
  */
-export async function upsertCourse(courseId: string, name: string, category: string, level: string): Promise<void> {
+export async function upsertCourse(
+  courseId: string,
+  name: string,
+  category: string,
+  level: string
+): Promise<void> {
   const session = getSession();
   if (!session) return;
 
@@ -115,7 +120,7 @@ export async function createConceptRelationship(
   if (!session) return;
 
   try {
-    const relType = relationship.toUpperCase().replace(/\s+/g, "_");
+    const relType = relationship.toUpperCase().replace(/\s+/g, '_');
     await session.run(
       `MATCH (a:Concept {id: $sourceId}), (b:Concept {id: $targetId})
        MERGE (a)-[r:${relType}]->(b)
@@ -169,7 +174,7 @@ export async function buildCourseGraph(
 
     // Create relationships
     for (const rel of relationships) {
-      const relType = rel.relationship.toUpperCase().replace(/\s+/g, "_");
+      const relType = rel.relationship.toUpperCase().replace(/\s+/g, '_');
       await session.run(
         `MATCH (a:Concept {id: $sourceId}), (b:Concept {id: $targetId})
          MERGE (a)-[r:${relType}]->(b)
@@ -201,11 +206,11 @@ export async function searchGraph(query: string, limit = 10): Promise<GraphSearc
     );
 
     const concepts: ConceptNode[] = conceptResult.records.map((r) => ({
-      id: r.get("id"),
-      name: r.get("name"),
-      description: r.get("description"),
-      domain: r.get("domain"),
-      difficulty: r.get("difficulty"),
+      id: r.get('id'),
+      name: r.get('name'),
+      description: r.get('description'),
+      domain: r.get('domain'),
+      difficulty: r.get('difficulty'),
     }));
 
     // Find courses that cover these concepts
@@ -223,9 +228,9 @@ export async function searchGraph(query: string, limit = 10): Promise<GraphSearc
       );
 
       relatedCourses = courseResult.records.map((r) => ({
-        courseId: r.get("courseId"),
-        name: r.get("name"),
-        relevance: Number(r.get("relevance")),
+        courseId: r.get('courseId'),
+        name: r.get('name'),
+        relevance: Number(r.get('relevance')),
       }));
     }
 
@@ -251,11 +256,11 @@ export async function getPrerequisiteChain(conceptId: string, depth = 3): Promis
     );
 
     return result.records.map((r) => ({
-      id: r.get("id"),
-      name: r.get("name"),
-      description: r.get("description"),
-      domain: r.get("domain"),
-      difficulty: r.get("difficulty"),
+      id: r.get('id'),
+      name: r.get('name'),
+      description: r.get('description'),
+      domain: r.get('domain'),
+      difficulty: r.get('difficulty'),
     }));
   } finally {
     await session.close();

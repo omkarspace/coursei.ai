@@ -1,7 +1,7 @@
-import { UserInputContext } from "@/app/_context/UserInputContext";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import React, { useContext } from "react";
+import { UserInputContext } from '@/app/_context/UserInputContext';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import React, { useContext } from 'react';
 
 function TopicDescription() {
   const { userCourseInput, setUserCourseInput } = useContext(UserInputContext);
@@ -23,7 +23,7 @@ function TopicDescription() {
           placeholder="Topic"
           className="h-12 sm:h-14 text-lg sm:text-xl dark:bg-gray-800 dark:border-gray-700"
           defaultValue={userCourseInput?.topic}
-          onChange={(e) => handleInputChange("topic", e.target.value)}
+          onChange={(e) => handleInputChange('topic', e.target.value)}
         />
       </div>
       <div className="mt-5">
@@ -34,7 +34,7 @@ function TopicDescription() {
           placeholder="About your Course"
           className="h-24 sm:h-32 text-lg sm:text-xl dark:bg-gray-800 dark:border-gray-700"
           defaultValue={userCourseInput?.description}
-          onChange={(e) => handleInputChange("description", e.target.value)}
+          onChange={(e) => handleInputChange('description', e.target.value)}
         />
       </div>
     </div>

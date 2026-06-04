@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React from "react";
-import AddCourse from "./_components/AddCourse";
-import UserCourseList from "./_components/UserCourseList";
+import React from 'react';
+import AddCourse from './_components/AddCourse';
+import UserCourseList from './_components/UserCourseList';
 
 function Dashboard() {
   return (

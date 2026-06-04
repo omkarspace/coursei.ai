@@ -1,11 +1,11 @@
-"use client";
-import { UserCourseListContext } from "@/app/_context/UserCourseListContext";
-import { Progress } from "@/components/ui/progress";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import React, { useContext, useState } from "react";
-import { useClerk } from "@clerk/nextjs";
+'use client';
+import { UserCourseListContext } from '@/app/_context/UserCourseListContext';
+import { Progress } from '@/components/ui/progress';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import React, { useContext, useState } from 'react';
+import { useClerk } from '@clerk/nextjs';
 import {
   HiOutlineCurrencyRupee,
   HiOutlineHome,
@@ -13,7 +13,7 @@ import {
   HiOutlineArrowRightOnRectangle,
   HiMiniBars3,
   HiXMark,
-} from "react-icons/hi2";
+} from 'react-icons/hi2';
 
 function SideBar() {
   const { UserCourseList } = useContext(UserCourseListContext);
@@ -24,12 +24,17 @@ function SideBar() {
 
   const handleLogout = async () => {
     await signOut();
-    router.push("/");
+    router.push('/');
   };
 
   const Menu = [
-    { id: 1, name: "Home", icon: <HiOutlineHome aria-hidden="true" />, path: "/dashboard" },
-    { id: 2, name: "Explore", icon: <HiMiniMagnifyingGlass aria-hidden="true" />, path: "/dashboard/explore" },
+    { id: 1, name: 'Home', icon: <HiOutlineHome aria-hidden="true" />, path: '/dashboard' },
+    {
+      id: 2,
+      name: 'Explore',
+      icon: <HiMiniMagnifyingGlass aria-hidden="true" />,
+      path: '/dashboard/explore',
+    },
   ];
 
   const SidebarContent = () => (
@@ -48,9 +53,11 @@ function SideBar() {
             <Link
               href={item.path}
               className={`flex items-center gap-3 text-[#5F2A95] dark:text-purple-400 p-3 cursor-pointer rounded-lg transition-colors duration-200 hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-white ${
-                item.path === path ? "bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-white font-semibold" : ""
+                item.path === path
+                  ? 'bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-white font-semibold'
+                  : ''
               }`}
-              aria-current={item.path === path ? "page" : undefined}
+              aria-current={item.path === path ? 'page' : undefined}
               onClick={() => setIsMobileOpen(false)}
             >
               <span className="text-xl md:text-2xl">{item.icon}</span>
@@ -78,9 +85,7 @@ function SideBar() {
           aria-label={`${UserCourseList?.length || 0} of 5 courses created`}
         />
         <div className="text-[#5F2A95] dark:text-purple-400 mt-2 text-xs md:text-sm">
-          <p>
-            {UserCourseList?.length || 0} out of 5 Courses created
-          </p>
+          <p>{UserCourseList?.length || 0} out of 5 Courses created</p>
           <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">
             Upgrade your plan for unlimited course generation
           </p>
@@ -95,7 +100,7 @@ function SideBar() {
       <button
         className="md:hidden fixed top-4 left-4 z-50 p-2 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        aria-label={isMobileOpen ? "Close menu" : "Open menu"}
+        aria-label={isMobileOpen ? 'Close menu' : 'Open menu'}
       >
         {isMobileOpen ? (
           <HiXMark className="w-6 h-6 text-gray-700 dark:text-gray-300" />
@@ -115,7 +120,7 @@ function SideBar() {
       {/* Mobile sidebar */}
       <nav
         className={`md:hidden fixed h-full w-64 p-4 shadow-lg bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 z-50 transition-transform duration-300 ${
-          isMobileOpen ? "translate-x-0" : "-translate-x-full"
+          isMobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         aria-label="Dashboard navigation"
       >

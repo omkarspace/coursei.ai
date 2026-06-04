@@ -1,41 +1,41 @@
-"use client";
-import { motion } from "framer-motion";
-import { HiCheck } from "react-icons/hi2";
-import SectionWrapper from "./SectionWrapper";
+'use client';
+import { motion } from 'framer-motion';
+import { HiCheck } from 'react-icons/hi2';
+import SectionWrapper from './SectionWrapper';
 
 const plans = [
   {
-    name: "Open Source",
-    price: "Free",
-    description: "Self-host and customize",
+    name: 'Open Source',
+    price: 'Free',
+    description: 'Self-host and customize',
     features: [
-      "Unlimited courses",
-      "AI quiz generation",
-      "AI flashcards",
-      "AI study notes",
-      "Course forking",
-      "Community marketplace",
-      "Full source code",
+      'Unlimited courses',
+      'AI quiz generation',
+      'AI flashcards',
+      'AI study notes',
+      'Course forking',
+      'Community marketplace',
+      'Full source code',
     ],
-    cta: "Get Started",
-    href: "https://github.com/omkarspace/coursei.ai",
+    cta: 'Get Started',
+    href: 'https://github.com/omkarspace/coursei.ai',
     highlighted: false,
   },
   {
-    name: "Managed",
-    price: "$9/mo",
-    description: "We handle hosting and maintenance",
+    name: 'Managed',
+    price: '$9/mo',
+    description: 'We handle hosting and maintenance',
     features: [
-      "Everything in Open Source",
-      "Managed hosting",
-      "Custom domain",
-      "Priority support",
-      "Analytics dashboard",
-      "Team collaboration",
-      "SCORM export",
+      'Everything in Open Source',
+      'Managed hosting',
+      'Custom domain',
+      'Priority support',
+      'Analytics dashboard',
+      'Team collaboration',
+      'SCORM export',
     ],
-    cta: "Coming Soon",
-    href: "#",
+    cta: 'Coming Soon',
+    href: '#',
     highlighted: true,
   },
 ];
@@ -45,7 +45,7 @@ export default function Pricing() {
     <SectionWrapper id="pricing" className="bg-white">
       <div className="text-center mb-16">
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
-          Simple{" "}
+          Simple{' '}
           <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
             Pricing
           </span>
@@ -65,8 +65,8 @@ export default function Pricing() {
             transition={{ delay: index * 0.15 }}
             className={`relative p-8 rounded-2xl border ${
               plan.highlighted
-                ? "border-purple-200 bg-gradient-to-b from-purple-50 to-white shadow-xl shadow-purple-100/50"
-                : "border-gray-200 bg-white"
+                ? 'border-purple-200 bg-gradient-to-b from-purple-50 to-white shadow-xl shadow-purple-100/50'
+                : 'border-gray-200 bg-white'
             }`}
           >
             {plan.highlighted && (
@@ -78,9 +78,7 @@ export default function Pricing() {
               <h3 className="text-xl font-semibold text-gray-900">{plan.name}</h3>
               <div className="mt-4">
                 <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
-                {plan.price !== "Free" && (
-                  <span className="text-gray-500 ml-2">/month</span>
-                )}
+                {plan.price !== 'Free' && <span className="text-gray-500 ml-2">/month</span>}
               </div>
               <p className="text-gray-600 mt-2">{plan.description}</p>
             </div>
@@ -94,12 +92,12 @@ export default function Pricing() {
             </ul>
             <a
               href={plan.href}
-              target={plan.href.startsWith("http") ? "_blank" : undefined}
-              rel={plan.href.startsWith("http") ? "noopener noreferrer" : undefined}
+              target={plan.href.startsWith('http') ? '_blank' : undefined}
+              rel={plan.href.startsWith('http') ? 'noopener noreferrer' : undefined}
               className={`block w-full text-center py-3 rounded-full font-medium transition-all ${
                 plan.highlighted
-                  ? "bg-gray-900 text-white hover:bg-gray-800"
-                  : "bg-gray-100 text-gray-900 hover:bg-gray-200"
+                  ? 'bg-gray-900 text-white hover:bg-gray-800'
+                  : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
               }`}
             >
               {plan.cta}

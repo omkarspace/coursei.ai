@@ -1,15 +1,12 @@
-import { Suspense } from "react";
-import { db } from "@/server/db";
-import { Chapters, CourseList } from "@/server/db/schema";
-import { and, eq } from "drizzle-orm";
-import { notFound } from "next/navigation";
-import CourseStartClient from "./_components/CourseStartClient";
+import { Suspense } from 'react';
+import { db } from '@/server/db';
+import { Chapters, CourseList } from '@/server/db/schema';
+import { and, eq } from 'drizzle-orm';
+import { notFound } from 'next/navigation';
+import CourseStartClient from './_components/CourseStartClient';
 
 async function getCourse(courseId) {
-  const result = await db
-    .select()
-    .from(CourseList)
-    .where(eq(CourseList.courseId, courseId));
+  const result = await db.select().from(CourseList).where(eq(CourseList.courseId, courseId));
   return result[0] || null;
 }
 
@@ -17,12 +14,7 @@ async function getChapterContent(courseId, chapterId) {
   const result = await db
     .select()
     .from(Chapters)
-    .where(
-      and(
-        eq(Chapters.chapterId, chapterId),
-        eq(Chapters.courseId, courseId)
-      )
-    );
+    .where(and(eq(Chapters.chapterId, chapterId), eq(Chapters.courseId, courseId)));
   return result[0] || null;
 }
 
@@ -32,7 +24,7 @@ export async function generateMetadata({ params }) {
   if (!course) return {};
 
   return {
-    title: `${course.courseOutput?.course?.name || "Course"} - Coursei.ai`,
+    title: `${course.courseOutput?.course?.name || 'Course'} - Coursei.ai`,
     description: course.courseOutput?.course?.description,
     openGraph: {
       title: course.courseOutput?.course?.name,
@@ -52,10 +44,7 @@ export default async function CourseStart({ params }) {
 
   return (
     <Suspense fallback={<CourseStartSkeleton />}>
-      <CourseStartClient
-        course={course}
-        initialChapterContent={initialChapterContent}
-      />
+      <CourseStartClient course={course} initialChapterContent={initialChapterContent} />
     </Suspense>
   );
 }

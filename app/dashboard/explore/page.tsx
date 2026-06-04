@@ -1,8 +1,8 @@
-"use client";
-import { getAllPublishedCourses, getPublishedCoursesWithFilters } from "@/app/actions/course";
-import React, { useEffect, useState, useCallback } from "react";
-import CourseCard from "../_components/CourseCard";
-import CourseFilters from "../_components/CourseFilters";
+'use client';
+import { getAllPublishedCourses, getPublishedCoursesWithFilters } from '@/app/actions/course';
+import React, { useEffect, useState, useCallback } from 'react';
+import CourseCard from '../_components/CourseCard';
+import CourseFilters from '../_components/CourseFilters';
 
 interface Course {
   courseId: string;
@@ -19,12 +19,12 @@ interface Course {
 function Explore() {
   const [courseList, setCourseList] = useState<Course[]>([]);
   const [pageIndex, setPageIndex] = useState(0);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [searchSource, setSearchSource] = useState<string | null>(null);
-  const [debouncedQuery, setDebouncedQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedLevel, setSelectedLevel] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedLevel, setSelectedLevel] = useState('');
 
   // Debounce search input
   useEffect(() => {
@@ -47,23 +47,28 @@ function Explore() {
   const GetAllCourse = async () => {
     setIsSearching(true);
     try {
-      const result = await getPublishedCoursesWithFilters(pageIndex, 9, selectedCategory || undefined, selectedLevel || undefined);
+      const result = await getPublishedCoursesWithFilters(
+        pageIndex,
+        9,
+        selectedCategory || undefined,
+        selectedLevel || undefined
+      );
       setCourseList(result || []);
       setSearchSource(null);
-    } finally { setIsSearching(false); }
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   const performSearch = useCallback(async (query: string) => {
     setIsSearching(true);
     try {
-      const response = await fetch(
-        `/api/search?q=${encodeURIComponent(query)}&limit=12`
-      );
+      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}&limit=12`);
       const data = await response.json();
       setCourseList(data.results || []);
-      setSearchSource(data.source || "unknown");
+      setSearchSource(data.source || 'unknown');
     } catch (error) {
-      console.error("Search failed:", error);
+      console.error('Search failed:', error);
       setCourseList([]);
     } finally {
       setIsSearching(false);
@@ -77,8 +82,8 @@ function Explore() {
   };
 
   const clearSearch = () => {
-    setSearchQuery("");
-    setDebouncedQuery("");
+    setSearchQuery('');
+    setDebouncedQuery('');
     setPageIndex(0);
   };
 
@@ -87,9 +92,7 @@ function Explore() {
       <div className="flex flex-col gap-4 mb-6">
         <div>
           <h2 className="font-bold text-3xl">Explore More Projects</h2>
-          <p className="text-muted-foreground">
-            Explore projects built by AI from other users
-          </p>
+          <p className="text-muted-foreground">Explore projects built by AI from other users</p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -112,7 +115,7 @@ function Explore() {
           </div>
           {searchSource && (
             <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
-              {searchSource === "vector" ? "Semantic search" : "Text search"}
+              {searchSource === 'vector' ? 'Semantic search' : 'Text search'}
             </span>
           )}
         </div>
@@ -121,9 +124,15 @@ function Explore() {
       {!searchQuery && (
         <CourseFilters
           selectedCategory={selectedCategory}
-          onCategoryChange={(val: string) => { setSelectedCategory(val); setPageIndex(0); }}
+          onCategoryChange={(val: string) => {
+            setSelectedCategory(val);
+            setPageIndex(0);
+          }}
           selectedLevel={selectedLevel}
-          onLevelChange={(val: string) => { setSelectedLevel(val); setPageIndex(0); }}
+          onLevelChange={(val: string) => {
+            setSelectedLevel(val);
+            setPageIndex(0);
+          }}
         />
       )}
 
@@ -134,9 +143,7 @@ function Explore() {
       ) : courseList.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-muted-foreground">
-            {searchQuery
-              ? "No courses found matching your search."
-              : "No courses available yet."}
+            {searchQuery ? 'No courses found matching your search.' : 'No courses available yet.'}
           </p>
           {searchQuery && (
             <button

@@ -1,5 +1,5 @@
-import React from "react";
-import { HiOutlineCheckCircle, HiOutlineClock } from "react-icons/hi2";
+import React from 'react';
+import { HiOutlineCheckCircle, HiOutlineClock } from 'react-icons/hi2';
 
 function ChapterList({ course }) {
   const chapters = course?.courseOutput?.course?.chapters || [];

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // Save original env values
 const originalEnv = {
@@ -6,7 +6,7 @@ const originalEnv = {
   UPSTASH_VECTOR_REST_TOKEN: process.env.UPSTASH_VECTOR_REST_TOKEN,
 };
 
-describe("Vector search configuration", () => {
+describe('Vector search configuration', () => {
   beforeEach(() => {
     vi.resetModules();
     delete process.env.UPSTASH_VECTOR_REST_URL;
@@ -27,30 +27,30 @@ describe("Vector search configuration", () => {
     }
   });
 
-  it("detects when vector search is not configured", async () => {
-    const { isVectorSearchEnabled } = await import("@/server/services/vector");
+  it('detects when vector search is not configured', async () => {
+    const { isVectorSearchEnabled } = await import('@/server/services/vector');
     expect(isVectorSearchEnabled()).toBe(false);
   });
 
-  it("detects when vector search is configured", async () => {
-    process.env.UPSTASH_VECTOR_REST_URL = "https://example.upstash.io";
-    process.env.UPSTASH_VECTOR_REST_TOKEN = "test-token";
+  it('detects when vector search is configured', async () => {
+    process.env.UPSTASH_VECTOR_REST_URL = 'https://example.upstash.io';
+    process.env.UPSTASH_VECTOR_REST_TOKEN = 'test-token';
 
-    const { isVectorSearchEnabled } = await import("@/server/services/vector");
+    const { isVectorSearchEnabled } = await import('@/server/services/vector');
     expect(isVectorSearchEnabled()).toBe(true);
   });
 
-  it("returns false when only URL is set", async () => {
-    process.env.UPSTASH_VECTOR_REST_URL = "https://example.upstash.io";
+  it('returns false when only URL is set', async () => {
+    process.env.UPSTASH_VECTOR_REST_URL = 'https://example.upstash.io';
 
-    const { isVectorSearchEnabled } = await import("@/server/services/vector");
+    const { isVectorSearchEnabled } = await import('@/server/services/vector');
     expect(isVectorSearchEnabled()).toBe(false);
   });
 
-  it("returns false when only token is set", async () => {
-    process.env.UPSTASH_VECTOR_REST_TOKEN = "test-token";
+  it('returns false when only token is set', async () => {
+    process.env.UPSTASH_VECTOR_REST_TOKEN = 'test-token';
 
-    const { isVectorSearchEnabled } = await import("@/server/services/vector");
+    const { isVectorSearchEnabled } = await import('@/server/services/vector');
     expect(isVectorSearchEnabled()).toBe(false);
   });
 });

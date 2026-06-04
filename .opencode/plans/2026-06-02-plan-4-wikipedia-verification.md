@@ -12,29 +12,34 @@
 
 ## File Structure
 
-| Action | File | Purpose |
-|--------|------|---------|
-| Create | `app/actions/content.ts` | Server actions for Wikipedia + verification |
-| Create | `app/_components/WikipediaSidebar.jsx` | Wikipedia related articles sidebar |
-| Create | `app/_components/ContentVerification.jsx` | Verification status component |
-| Modify | `app/course/[courseId]/start/_components/CourseStartClient.jsx` | Add Wikipedia sidebar |
-| Modify | `app/course/[courseId]/start/_components/ChapterContent.jsx` | Add verification badge |
-| Create | `app/api/verify/route.ts` | API endpoint for content verification |
+| Action | File                                                            | Purpose                                     |
+| ------ | --------------------------------------------------------------- | ------------------------------------------- |
+| Create | `app/actions/content.ts`                                        | Server actions for Wikipedia + verification |
+| Create | `app/_components/WikipediaSidebar.jsx`                          | Wikipedia related articles sidebar          |
+| Create | `app/_components/ContentVerification.jsx`                       | Verification status component               |
+| Modify | `app/course/[courseId]/start/_components/CourseStartClient.jsx` | Add Wikipedia sidebar                       |
+| Modify | `app/course/[courseId]/start/_components/ChapterContent.jsx`    | Add verification badge                      |
+| Create | `app/api/verify/route.ts`                                       | API endpoint for content verification       |
 
 ---
 
 ### Task 1: Create Content Server Actions
 
 **Files:**
+
 - Create: `app/actions/content.ts`
 
 - [ ] **Step 1: Create content server actions**
 
 ```typescript
-"use server";
+'use server';
 
-import { getWikipediaSummary, getRelatedArticles, searchWikipedia } from "@/server/services/wikipedia";
-import { verifyWithTavily, isTavilyConfigured } from "@/server/services/verification";
+import {
+  getWikipediaSummary,
+  getRelatedArticles,
+  searchWikipedia,
+} from '@/server/services/wikipedia';
+import { verifyWithTavily, isTavilyConfigured } from '@/server/services/verification';
 
 export async function getWikipediaContent(topic: string) {
   const [summary, related] = await Promise.all([
@@ -62,15 +67,16 @@ export async function verifyContent(query: string) {
 ### Task 2: Create Wikipedia Sidebar Component
 
 **Files:**
+
 - Create: `app/_components/WikipediaSidebar.jsx`
 
 - [ ] **Step 1: Create WikipediaSidebar component**
 
 ```jsx
-"use client";
-import React, { useState, useEffect } from "react";
-import { getWikipediaContent } from "@/app/actions/content";
-import { HiOutlineBookOpen, HiOutlineArrowTopRightOnSquare } from "react-icons/hi2";
+'use client';
+import React, { useState, useEffect } from 'react';
+import { getWikipediaContent } from '@/app/actions/content';
+import { HiOutlineBookOpen, HiOutlineArrowTopRightOnSquare } from 'react-icons/hi2';
 
 export default function WikipediaSidebar({ chapterName, courseName }) {
   const [wikiData, setWikiData] = useState(null);
@@ -89,7 +95,7 @@ export default function WikipediaSidebar({ chapterName, courseName }) {
       const data = await getWikipediaContent(chapterName);
       setWikiData(data);
     } catch (error) {
-      console.error("Wikipedia fetch error:", error);
+      console.error('Wikipedia fetch error:', error);
     } finally {
       setLoading(false);
     }
@@ -121,7 +127,7 @@ export default function WikipediaSidebar({ chapterName, courseName }) {
       {wikiData.summary && (
         <div className="mb-3">
           <a
-            href={wikiData.summary.content_urls?.desktop?.page || "#"}
+            href={wikiData.summary.content_urls?.desktop?.page || '#'}
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm font-medium text-primary hover:underline flex items-center gap-1"
@@ -141,7 +147,7 @@ export default function WikipediaSidebar({ chapterName, courseName }) {
             onClick={() => setExpanded(!expanded)}
             className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
           >
-            {expanded ? "Show less" : `+${wikiData.related.length} related articles`}
+            {expanded ? 'Show less' : `+${wikiData.related.length} related articles`}
           </button>
           {expanded && (
             <ul className="mt-2 space-y-2">
@@ -175,16 +181,17 @@ export default function WikipediaSidebar({ chapterName, courseName }) {
 ### Task 3: Create Content Verification Component
 
 **Files:**
+
 - Create: `app/_components/ContentVerification.jsx`
 
 - [ ] **Step 1: Create ContentVerification component**
 
 ```jsx
-"use client";
-import React, { useState, useEffect } from "react";
-import { verifyContent } from "@/app/actions/content";
-import { VerifiedBadge, SourceList } from "@/components/ui/VerifiedBadge";
-import { HiOutlineShieldCheck } from "react-icons/hi2";
+'use client';
+import React, { useState, useEffect } from 'react';
+import { verifyContent } from '@/app/actions/content';
+import { VerifiedBadge, SourceList } from '@/components/ui/VerifiedBadge';
+import { HiOutlineShieldCheck } from 'react-icons/hi2';
 
 export default function ContentVerification({ chapterName, contentSummary }) {
   const [verification, setVerification] = useState(null);
@@ -197,7 +204,7 @@ export default function ContentVerification({ chapterName, contentSummary }) {
       const result = await verifyContent(`${chapterName} ${contentSummary}`);
       setVerification(result);
     } catch (error) {
-      console.error("Verification error:", error);
+      console.error('Verification error:', error);
     } finally {
       setLoading(false);
     }
@@ -215,7 +222,7 @@ export default function ContentVerification({ chapterName, contentSummary }) {
           disabled={loading}
           className="text-xs text-primary hover:text-primary/80 disabled:opacity-50"
         >
-          {loading ? "Verifying..." : verification ? "Re-verify" : "Verify Content"}
+          {loading ? 'Verifying...' : verification ? 'Re-verify' : 'Verify Content'}
         </button>
       </div>
 
@@ -237,11 +244,9 @@ export default function ContentVerification({ chapterName, contentSummary }) {
                     onClick={() => setExpanded(!expanded)}
                     className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                   >
-                    {expanded ? "Hide sources" : `View ${verification.sources.length} sources`}
+                    {expanded ? 'Hide sources' : `View ${verification.sources.length} sources`}
                   </button>
-                  {expanded && (
-                    <SourceList sources={verification.sources} className="mt-2" />
-                  )}
+                  {expanded && <SourceList sources={verification.sources} className="mt-2" />}
                 </div>
               )}
             </>
@@ -258,12 +263,13 @@ export default function ContentVerification({ chapterName, contentSummary }) {
 ### Task 4: Add Wikipedia Sidebar to Learning View
 
 **Files:**
+
 - Modify: `app/course/[courseId]/start/_components/CourseStartClient.jsx`
 
 - [ ] **Step 1: Import WikipediaSidebar**
 
 ```jsx
-import WikipediaSidebar from "@/app/_components/WikipediaSidebar";
+import WikipediaSidebar from '@/app/_components/WikipediaSidebar';
 ```
 
 - [ ] **Step 2: Add sidebar below the content**
@@ -271,16 +277,19 @@ import WikipediaSidebar from "@/app/_components/WikipediaSidebar";
 After the main content area (after the tab content section), add a collapsible sidebar on desktop:
 
 ```jsx
-{/* Wikipedia Sidebar - Desktop */}
+{
+  /* Wikipedia Sidebar - Desktop */
+}
 <div className="hidden lg:block w-80 shrink-0">
   <WikipediaSidebar
     chapterName={selectedChapter?.name}
     courseName={course?.courseOutput?.course?.name}
   />
-</div>
+</div>;
 ```
 
 Wrap the content area and sidebar in a flex container:
+
 ```jsx
 <div className="flex gap-6">
   <div className="flex-1 min-w-0">
@@ -297,20 +306,28 @@ Wrap the content area and sidebar in a flex container:
 ### Task 5: Add Verification to Chapter Content
 
 **Files:**
+
 - Modify: `app/course/[courseId]/start/_components/ChapterContent.jsx`
 
 - [ ] **Step 1: Import and add ContentVerification**
 
 Add import:
+
 ```jsx
-import ContentVerification from "@/app/_components/ContentVerification";
+import ContentVerification from '@/app/_components/ContentVerification';
 ```
 
 Add at the bottom of the component, after the content rendering:
+
 ```jsx
 <ContentVerification
   chapterName={chapter?.name}
-  contentSummary={content?.content?.map((c) => c.explanation).join(" ").substring(0, 500) || ""}
+  contentSummary={
+    content?.content
+      ?.map((c) => c.explanation)
+      .join(' ')
+      .substring(0, 500) || ''
+  }
 />
 ```
 
@@ -319,19 +336,20 @@ Add at the bottom of the component, after the content rendering:
 ### Task 6: Create Verify API Endpoint
 
 **Files:**
+
 - Create: `app/api/verify/route.ts`
 
 - [ ] **Step 1: Create verify API route**
 
 ```typescript
-import { NextRequest, NextResponse } from "next/server";
-import { verifyWithTavily, isTavilyConfigured } from "@/server/services/verification";
+import { NextRequest, NextResponse } from 'next/server';
+import { verifyWithTavily, isTavilyConfigured } from '@/server/services/verification';
 
 export async function POST(req: NextRequest) {
   try {
     const { query } = await req.json();
     if (!query) {
-      return NextResponse.json({ error: "query is required" }, { status: 400 });
+      return NextResponse.json({ error: 'query is required' }, { status: 400 });
     }
 
     if (!isTavilyConfigured()) {
@@ -341,7 +359,7 @@ export async function POST(req: NextRequest) {
     const result = await verifyWithTavily(query);
     return NextResponse.json({ ...result, configured: true });
   } catch (error) {
-    return NextResponse.json({ error: "Verification failed" }, { status: 500 });
+    return NextResponse.json({ error: 'Verification failed' }, { status: 500 });
   }
 }
 ```
@@ -370,6 +388,7 @@ git commit -m "feat: add Wikipedia sidebar and content verification"
 ## Summary
 
 After this plan:
+
 1. Each chapter shows **related Wikipedia articles** in a sidebar
 2. Wikipedia summary and links displayed for topic enrichment
 3. Users can **verify content accuracy** via Tavily web search

@@ -22,12 +22,12 @@ Thank you for your interest in contributing to Coursei.ai! This guide will help 
 
 ### Accounts Needed
 
-| Service | Purpose | Free Tier |
-|---------|---------|-----------|
-| [Clerk](https://clerk.com) | Authentication | 10,000 MAUs |
-| [Google AI Studio](https://aistudio.google.com) | Gemini AI | Generous free tier |
-| [Neon](https://neon.tech) | PostgreSQL database | 0.5 GB storage |
-| [Cloudinary](https://cloudinary.com) | Image uploads | 25 GB storage |
+| Service                                         | Purpose             | Free Tier          |
+| ----------------------------------------------- | ------------------- | ------------------ |
+| [Clerk](https://clerk.com)                      | Authentication      | 10,000 MAUs        |
+| [Google AI Studio](https://aistudio.google.com) | Gemini AI           | Generous free tier |
+| [Neon](https://neon.tech)                       | PostgreSQL database | 0.5 GB storage     |
+| [Cloudinary](https://cloudinary.com)            | Image uploads       | 25 GB storage      |
 
 ### Setup
 
@@ -65,14 +65,14 @@ npm run dev
 
 Use descriptive branch names with prefixes:
 
-| Prefix | Use Case | Example |
-|--------|----------|---------|
-| `feature/` | New features | `feature/quiz-export` |
-| `fix/` | Bug fixes | `fix/flashcard-flip-animation` |
-| `docs/` | Documentation | `docs/update-readme` |
-| `refactor/` | Code refactoring | `refactor/server-actions` |
-| `test/` | Adding tests | `test/quiz-generator` |
-| `chore/` | Maintenance | `chore/upgrade-dependencies` |
+| Prefix      | Use Case         | Example                        |
+| ----------- | ---------------- | ------------------------------ |
+| `feature/`  | New features     | `feature/quiz-export`          |
+| `fix/`      | Bug fixes        | `fix/flashcard-flip-animation` |
+| `docs/`     | Documentation    | `docs/update-readme`           |
+| `refactor/` | Code refactoring | `refactor/server-actions`      |
+| `test/`     | Adding tests     | `test/quiz-generator`          |
+| `chore/`    | Maintenance      | `chore/upgrade-dependencies`   |
 
 ### Development Process
 
@@ -111,9 +111,9 @@ npm run start        # Start production server
 
 ```jsx
 // Use functional components with hooks
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
 export default function MyComponent({ title }) {
   const [count, setCount] = useState(0);
@@ -121,9 +121,7 @@ export default function MyComponent({ title }) {
   return (
     <div className="p-4">
       <h1>{title}</h1>
-      <button onClick={() => setCount(count + 1)}>
-        Count: {count}
-      </button>
+      <button onClick={() => setCount(count + 1)}>Count: {count}</button>
     </div>
   );
 }
@@ -169,15 +167,15 @@ export async function myAction(formData) {
 
 ### Types
 
-| Type | Description | Example |
-|------|-------------|---------|
-| `feat` | New feature | `feat: add quiz export to PDF` |
-| `fix` | Bug fix | `fix: resolve flashcard flip animation` |
-| `docs` | Documentation | `docs: update API reference` |
-| `style` | Code style | `style: fix indentation in Hero` |
-| `refactor` | Refactoring | `refactor: extract server actions` |
-| `test` | Tests | `test: add quiz generator tests` |
-| `chore` | Maintenance | `chore: upgrade Next.js to 15.5` |
+| Type       | Description   | Example                                 |
+| ---------- | ------------- | --------------------------------------- |
+| `feat`     | New feature   | `feat: add quiz export to PDF`          |
+| `fix`      | Bug fix       | `fix: resolve flashcard flip animation` |
+| `docs`     | Documentation | `docs: update API reference`            |
+| `style`    | Code style    | `style: fix indentation in Hero`        |
+| `refactor` | Refactoring   | `refactor: extract server actions`      |
+| `test`     | Tests         | `test: add quiz generator tests`        |
+| `chore`    | Maintenance   | `chore: upgrade Next.js to 15.5`        |
 
 ### Examples
 
@@ -206,23 +204,28 @@ git commit -m "WIP"
 
 ```markdown
 ## Description
+
 Brief description of changes
 
 ## Type of Change
+
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Breaking change
 - [ ] Documentation update
 
 ## Testing
+
 - [ ] Tested locally
 - [ ] Build passes
 - [ ] No console errors
 
 ## Screenshots (if applicable)
+
 Add screenshots of UI changes
 
 ## Related Issues
+
 Closes #123
 ```
 
@@ -237,6 +240,7 @@ Closes #123
 ### Bug Reports
 
 Include:
+
 - **Steps to reproduce**
 - **Expected behavior**
 - **Actual behavior**
@@ -246,6 +250,7 @@ Include:
 ### Feature Requests
 
 Include:
+
 - **Use case** — Why is this needed?
 - **Proposed solution** — How should it work?
 - **Alternatives considered** — Any other approaches?

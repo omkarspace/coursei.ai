@@ -1,7 +1,12 @@
-"use server";
+'use server';
 
-import { generateQuiz, generateFlashcards, generateStudyNotes, generateCourseLayout } from "@/server/ai/generate";
-import { generateCourseBanner } from "@/server/services/fal";
+import {
+  generateQuiz,
+  generateFlashcards,
+  generateStudyNotes,
+  generateCourseLayout,
+} from '@/server/ai/generate';
+import { generateCourseBanner } from '@/server/services/fal';
 
 export async function generateQuizAction(chapterName: string, contentSummary: string) {
   return generateQuiz(chapterName, contentSummary);
@@ -16,11 +21,15 @@ export async function generateStudyNotesAction(chapterName: string, contentSumma
 }
 
 export async function generateCourseLayoutAction(
-  category: string, topic: string, level: string, duration: string, numChapters: number
+  category: string,
+  topic: string,
+  level: string,
+  duration: string,
+  numChapters: number
 ) {
   return generateCourseLayout(category, topic, level, duration, numChapters);
 }
 
 export async function generateCourseBannerAction(courseName: string, category: string) {
-  return generateCourseBanner({ courseName, category, style: "modern" });
+  return generateCourseBanner({ courseName, category, style: 'modern' });
 }

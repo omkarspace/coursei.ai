@@ -1,17 +1,17 @@
-import CategoryList from '@/app/_shared/CategoryList'
-import Image from 'next/image'
-import React, { useContext } from 'react'
-import { UserInputContext } from '@/app/_context/UserInputContext'
+import CategoryList from '@/app/_shared/CategoryList';
+import Image from 'next/image';
+import React, { useContext } from 'react';
+import { UserInputContext } from '@/app/_context/UserInputContext';
 
 function SelectCategory() {
-  const { userCourseInput, setUserCourseInput } = useContext(UserInputContext)
+  const { userCourseInput, setUserCourseInput } = useContext(UserInputContext);
 
   const handleCategoryChange = (category) => {
     setUserCourseInput((prev) => ({
       ...prev,
       category: category,
-    }))
-  }
+    }));
+  };
 
   return (
     <div className="px-4 sm:px-8 md:px-16 lg:px-20">
@@ -46,7 +46,7 @@ function SelectCategory() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-export default SelectCategory
+export default SelectCategory;
