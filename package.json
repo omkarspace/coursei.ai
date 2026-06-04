@@ -11,7 +11,9 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@ai-sdk/fal": "^2.0.34",
@@ -77,6 +79,7 @@
     "eslint-config-next": "^15.5.18",
     "jsdom": "^29.1.1",
     "postcss": "^8",
+    "prettier": "^3.8.3",
     "tailwindcss": "^3.4.1",
     "typescript": "^6.0.3",
     "vitest": "^4.1.8"
