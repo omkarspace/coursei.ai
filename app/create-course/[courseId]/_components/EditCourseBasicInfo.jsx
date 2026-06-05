@@ -13,6 +13,7 @@ import {
 import { HiPencilSquare } from 'react-icons/hi2';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { updateCourseNameAndDescription } from '@/app/actions/course';
 import { toast } from 'sonner';
@@ -61,9 +62,9 @@ function EditCourseBasicInfo({ course, refreshData }) {
         </DialogHeader>
         <div className="space-y-4">
           <div>
-            <label htmlFor="course-name" className="block text-sm font-medium mb-1">
+            <Label htmlFor="course-name" className="block text-sm font-medium mb-1">
               Course Title
-            </label>
+            </Label>
             <Input
               id="course-name"
               defaultValue={course?.courseOutput?.course?.name}
@@ -71,9 +72,9 @@ function EditCourseBasicInfo({ course, refreshData }) {
             />
           </div>
           <div>
-            <label htmlFor="course-description" className="block text-sm font-medium mb-1">
+            <Label htmlFor="course-description" className="block text-sm font-medium mb-1">
               Description
-            </label>
+            </Label>
             <Textarea
               id="course-description"
               className="h-40"

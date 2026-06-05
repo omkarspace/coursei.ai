@@ -2,26 +2,28 @@
 import React, { useState, useEffect } from 'react';
 import ChapterListCard from './ChapterListCard';
 import ChapterContent from './ChapterContent';
-import { ProgressIndicator } from '@/components/ui/ProgressIndicator';
+import { ProgressIndicator } from '@/app/_components/ProgressIndicator';
 import {
   markChapterComplete,
   getChapterContentAction,
   getUserProgressAction,
 } from '@/app/actions/course';
 import dynamic from 'next/dynamic';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const QuizGenerator = dynamic(() => import('@/app/_components/QuizGenerator'), {
-  loading: () => <div className="animate-pulse h-64 bg-gray-100 dark:bg-gray-800 rounded-xl" />,
+  loading: () => <Skeleton className="h-64 rounded-xl" />,
   ssr: false,
 });
 
 const Flashcards = dynamic(() => import('@/app/_components/Flashcards'), {
-  loading: () => <div className="animate-pulse h-64 bg-gray-100 dark:bg-gray-800 rounded-xl" />,
+  loading: () => <Skeleton className="h-64 rounded-xl" />,
   ssr: false,
 });
 
 const StudyNotes = dynamic(() => import('@/app/_components/StudyNotes'), {
-  loading: () => <div className="animate-pulse h-64 bg-gray-100 dark:bg-gray-800 rounded-xl" />,
+  loading: () => <Skeleton className="h-64 rounded-xl" />,
   ssr: false,
 });
 
@@ -187,134 +189,148 @@ export default function CourseStartClient({ course, initialChapterContent }) {
       {/* Content section */}
       <div className={`md:ml-64 ${isMenuOpen ? 'ml-0' : ''} transition-all duration-300`}>
         <div className="p-6">
-          {/* Tabs */}
-          <div className="flex gap-2 border-b dark:border-gray-700 mb-6 overflow-x-auto">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-4 py-2 font-medium text-sm whitespace-nowrap cursor-pointer ${
-                  activeTab === tab.id
-                    ? 'border-b-2 border-primary text-primary'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Mark Complete Button */}
-          {activeTab === 'content' && selectedChapter && (
-            <div className="mb-4">
-              {completedChapters.includes(
-                course?.courseOutput?.course?.chapters.indexOf(selectedChapter)
-              ) ? (
-                <span className="inline-flex items-center gap-2 text-green-600 dark:text-green-400 text-sm font-medium">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  Completed
-                </span>
-              ) : (
-                <button
-                  onClick={handleMarkComplete}
-                  disabled={markingComplete}
-                  className="inline-flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            {/* Tabs */}
+            <TabsList className="mb-6 bg-transparent p-0 h-auto border-b dark:border-gray-700 rounded-none w-full justify-start overflow-x-auto">
+              {tabs.map((tab) => (
+                <TabsTrigger
+                  key={tab.id}
+                  value={tab.id}
+                  className="px-4 py-2 font-medium text-sm whitespace-nowrap rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                 >
-                  {markingComplete ? (
-                    <>
-                      <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        />
-                      </svg>
-                      Saving...
-                    </>
-                  ) : (
-                    <>
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                      Mark as Complete
-                    </>
-                  )}
-                </button>
-              )}
-            </div>
-          )}
+                  {tab.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
 
-          {/* Tab Content */}
-          <div className="flex gap-6">
-            <div className="flex-1 min-w-0">
-              {loadingChapter ? (
-                <div className="flex justify-center items-center py-12">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                </div>
-              ) : activeTab === 'content' ? (
-                <ChapterContent chapter={selectedChapter} content={chapterContent} />
-              ) : activeTab === 'quiz' && selectedChapter ? (
-                <QuizGenerator
-                  courseId={course?.courseId}
-                  chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
+            {/* Mark Complete Button */}
+            {activeTab === 'content' && selectedChapter && (
+              <div className="mb-4">
+                {completedChapters.includes(
+                  course?.courseOutput?.course?.chapters.indexOf(selectedChapter)
+                ) ? (
+                  <span className="inline-flex items-center gap-2 text-green-600 dark:text-green-400 text-sm font-medium">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Completed
+                  </span>
+                ) : (
+                  <button
+                    onClick={handleMarkComplete}
+                    disabled={markingComplete}
+                    className="inline-flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+                  >
+                    {markingComplete ? (
+                      <>
+                        <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          />
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          />
+                        </svg>
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                        Mark as Complete
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Tab Content */}
+            <div className="flex gap-6">
+              <div className="flex-1 min-w-0">
+                {loadingChapter ? (
+                  <div className="flex justify-center items-center py-12">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  </div>
+                ) : (
+                  <>
+                    <TabsContent value="content">
+                      <ChapterContent chapter={selectedChapter} content={chapterContent} />
+                    </TabsContent>
+                    <TabsContent value="quiz">
+                      {selectedChapter && (
+                        <QuizGenerator
+                          courseId={course?.courseId}
+                          chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
+                          chapterName={selectedChapter?.name}
+                          chapterContent={chapterContent}
+                        />
+                      )}
+                    </TabsContent>
+                    <TabsContent value="flashcards">
+                      {selectedChapter && (
+                        <Flashcards
+                          courseId={course?.courseId}
+                          chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
+                          chapterName={selectedChapter?.name}
+                          chapterContent={chapterContent}
+                        />
+                      )}
+                    </TabsContent>
+                    <TabsContent value="notes">
+                      {selectedChapter && (
+                        <StudyNotes
+                          courseId={course?.courseId}
+                          chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
+                          chapterName={selectedChapter?.name}
+                          chapterContent={chapterContent}
+                        />
+                      )}
+                    </TabsContent>
+                    <TabsContent value="audio">
+                      {selectedChapter && (
+                        <AudioPlayer
+                          courseId={course?.courseId}
+                          chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
+                          chapterContent={chapterContent?.content || []}
+                          chapterName={selectedChapter?.name}
+                        />
+                      )}
+                    </TabsContent>
+                  </>
+                )}
+              </div>
+              <div className="hidden lg:block w-80 shrink-0">
+                <WikipediaSidebar
                   chapterName={selectedChapter?.name}
-                  chapterContent={chapterContent}
+                  courseName={course?.courseOutput?.course?.name}
                 />
-              ) : activeTab === 'flashcards' && selectedChapter ? (
-                <Flashcards
-                  courseId={course?.courseId}
-                  chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
-                  chapterName={selectedChapter?.name}
-                  chapterContent={chapterContent}
-                />
-              ) : activeTab === 'notes' && selectedChapter ? (
-                <StudyNotes
-                  courseId={course?.courseId}
-                  chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
-                  chapterName={selectedChapter?.name}
-                  chapterContent={chapterContent}
-                />
-              ) : activeTab === 'audio' && selectedChapter ? (
-                <AudioPlayer
-                  courseId={course?.courseId}
-                  chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
-                  chapterContent={chapterContent?.content || []}
-                  chapterName={selectedChapter?.name}
-                />
-              ) : null}
+              </div>
             </div>
-            <div className="hidden lg:block w-80 shrink-0">
-              <WikipediaSidebar
-                chapterName={selectedChapter?.name}
-                courseName={course?.courseOutput?.course?.name}
-              />
-            </div>
-          </div>
+          </Tabs>
         </div>
       </div>
     </div>

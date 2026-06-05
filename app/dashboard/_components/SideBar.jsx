@@ -1,6 +1,8 @@
 'use client';
 import { UserCourseListContext } from '@/app/_context/UserCourseListContext';
 import { Progress } from '@/components/ui/progress';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Separator } from '@/components/ui/separator';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -45,7 +47,7 @@ function SideBar() {
         </Link>
       </div>
 
-      <hr className="my-4 border-gray-200 dark:border-gray-700" />
+      <Separator className="my-4" />
 
       <ul className="flex flex-col gap-1" role="list">
         {Menu.map((item) => (
@@ -96,36 +98,24 @@ function SideBar() {
 
   return (
     <>
-      {/* Mobile hamburger button */}
-      <button
-        className="md:hidden fixed top-4 left-4 z-50 p-2 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"
-        onClick={() => setIsMobileOpen(!isMobileOpen)}
-        aria-label={isMobileOpen ? 'Close menu' : 'Open menu'}
-      >
-        {isMobileOpen ? (
-          <HiXMark className="w-6 h-6 text-gray-700 dark:text-gray-300" />
-        ) : (
-          <HiMiniBars3 className="w-6 h-6 text-gray-700 dark:text-gray-300" />
-        )}
-      </button>
-
-      {/* Mobile overlay */}
-      {isMobileOpen && (
-        <div
-          className="md:hidden fixed inset-0 bg-black/50 z-40"
-          onClick={() => setIsMobileOpen(false)}
-        />
-      )}
-
-      {/* Mobile sidebar */}
-      <nav
-        className={`md:hidden fixed h-full w-64 p-4 shadow-lg bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 z-50 transition-transform duration-300 ${
-          isMobileOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
-        aria-label="Dashboard navigation"
-      >
-        <SidebarContent />
-      </nav>
+      {/* Mobile hamburger button - triggers Sheet */}
+      <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
+        <SheetTrigger asChild>
+          <button
+            className="md:hidden fixed top-4 left-4 z-50 p-2 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"
+            aria-label={isMobileOpen ? 'Close menu' : 'Open menu'}
+          >
+            {isMobileOpen ? (
+              <HiXMark className="w-6 h-6 text-gray-700 dark:text-gray-300" />
+            ) : (
+              <HiMiniBars3 className="w-6 h-6 text-gray-700 dark:text-gray-300" />
+            )}
+          </button>
+        </SheetTrigger>
+        <SheetContent side="left" className="w-64 p-4 overflow-y-auto" aria-label="Dashboard navigation">
+          <SidebarContent />
+        </SheetContent>
+      </Sheet>
 
       {/* Desktop sidebar */}
       <nav

@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Progress } from '@/components/ui/progress';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface GenerationStatus {
   status: 'draft' | 'generating_outline' | 'generating_chapters' | 'complete' | 'failed';
@@ -123,30 +124,32 @@ export function GenerationProgress({ courseId, onComplete }: GenerationProgressP
   };
 
   return (
-    <div className="my-6 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
-      <div className="flex items-center gap-3 mb-4">
-        <div className={getStatusColor()}>{getStatusIcon()}</div>
-        <h3 className={`font-semibold ${getStatusColor()}`}>
-          {status.status === 'generating_outline' && 'Generating Course Outline...'}
-          {status.status === 'generating_chapters' && 'Generating Chapter Content...'}
-          {status.status === 'complete' && 'Course Generation Complete!'}
-          {status.status === 'failed' && 'Generation Failed'}
-        </h3>
-      </div>
-
-      {status.currentStep && (
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{status.currentStep}</p>
-      )}
-
-      <Progress value={status.progress} className="h-2" />
-
-      <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">{status.progress}% complete</p>
-
-      {status.generationError && (
-        <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded">
-          <p className="text-sm text-red-600 dark:text-red-400">{status.generationError}</p>
+    <Card className="my-6 shadow-lg border-gray-200 dark:border-gray-700">
+      <CardContent className="p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <div className={getStatusColor()}>{getStatusIcon()}</div>
+          <h3 className={`font-semibold ${getStatusColor()}`}>
+            {status.status === 'generating_outline' && 'Generating Course Outline...'}
+            {status.status === 'generating_chapters' && 'Generating Chapter Content...'}
+            {status.status === 'complete' && 'Course Generation Complete!'}
+            {status.status === 'failed' && 'Generation Failed'}
+          </h3>
         </div>
-      )}
-    </div>
+
+        {status.currentStep && (
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{status.currentStep}</p>
+        )}
+
+        <Progress value={status.progress} className="h-2" />
+
+        <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">{status.progress}% complete</p>
+
+        {status.generationError && (
+          <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded">
+            <p className="text-sm text-red-600 dark:text-red-400">{status.generationError}</p>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }

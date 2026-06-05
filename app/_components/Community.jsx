@@ -6,6 +6,7 @@ import {
   HiOutlineHeart,
 } from 'react-icons/hi2';
 import SectionWrapper from './SectionWrapper';
+import { Card } from '@/components/ui/card';
 
 const communityItems = [
   {
@@ -54,38 +55,39 @@ export default function Community() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.15 }}
-            className="p-8 rounded-2xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 hover:border-gray-200 dark:hover:border-gray-600 hover:shadow-xl transition-all text-center group"
           >
-            <div className="w-14 h-14 mx-auto rounded-xl bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-              <item.icon className="w-7 h-7 text-white" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-              {item.title}
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
-              {item.description}
-            </p>
-            <a
-              href={item.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-purple-600 dark:text-purple-400 font-medium hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
-            >
-              {item.linkText}
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
+            <Card className="p-8 h-full rounded-2xl bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-gray-200 dark:hover:border-gray-600 hover:shadow-xl transition-all text-center group">
+              <div className="w-14 h-14 mx-auto rounded-xl bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <item.icon className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                {item.title}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                {item.description}
+              </p>
+              <a
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-purple-600 dark:text-purple-400 font-medium hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-                />
-              </svg>
-            </a>
+                {item.linkText}
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                  />
+                </svg>
+              </a>
+            </Card>
           </motion.div>
         ))}
       </div>

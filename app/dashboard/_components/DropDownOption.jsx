@@ -18,6 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import PublishButton from './PublishButton';
 
 function DropDownOption({ children, handleOnDelete, course, refreshData }) {
@@ -26,14 +27,19 @@ function DropDownOption({ children, handleOnDelete, course, refreshData }) {
   return (
     <div>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button
-            className="p-1 hover:bg-gray-100 rounded-md transition-colors"
-            aria-label="Course options"
-          >
-            {children}
-          </button>
-        </DropdownMenuTrigger>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="p-1 hover:bg-gray-100 rounded-md transition-colors"
+                aria-label="Course options"
+              >
+                {children}
+              </button>
+            </DropdownMenuTrigger>
+          </TooltipTrigger>
+          <TooltipContent>Course options</TooltipContent>
+        </Tooltip>
         <DropdownMenuContent>
           <PublishButton course={course} refreshData={refreshData} />
           <DropdownMenuSeparator />

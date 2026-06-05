@@ -3,8 +3,8 @@
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
-import { MermaidDiagram } from './MermaidDiagram';
-import { CodeEditor } from './CodeEditor';
+import { MermaidDiagram } from '@/app/_components/MermaidDiagram';
+import { CodeEditor } from '@/app/_components/CodeEditor';
 
 interface MarkdownRendererProps {
   content: string;

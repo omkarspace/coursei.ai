@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { verifyContent } from '@/app/actions/content';
-import { VerifiedBadge, SourceList } from '@/components/ui/VerifiedBadge';
+import { VerifiedBadge, SourceList } from '@/app/_components/VerifiedBadge';
 import { HiOutlineShieldCheck } from 'react-icons/hi2';
 
 export default function ContentVerification({ chapterName, contentSummary }) {

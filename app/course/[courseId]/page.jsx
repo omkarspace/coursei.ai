@@ -7,6 +7,7 @@ import CourseForkButton from './_components/CourseForkButton';
 import ChapterList from '@/app/create-course/[courseId]/_components/ChapterList';
 import Header from '@/app/dashboard/_components/Header';
 import ConceptCanvasWrapper from './_components/ConceptCanvasWrapper';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export async function generateMetadata({ params }) {
   const { courseId } = await params;
@@ -34,16 +35,16 @@ function RatingSkeleton() {
     <div className="flex items-center gap-4">
       <div className="flex items-center gap-1">
         {[1, 2, 3, 4, 5].map((star) => (
-          <div key={star} className="w-5 h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+          <Skeleton key={star} className="w-5 h-5 rounded" />
         ))}
-        <div className="w-24 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse ml-1" />
+        <Skeleton className="w-24 h-4 ml-1" />
       </div>
     </div>
   );
 }
 
 function ForkButtonSkeleton() {
-  return <div className="h-9 w-32 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />;
+  return <Skeleton className="h-9 w-32" />;
 }
 
 export default async function Course({ params }) {

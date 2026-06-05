@@ -12,6 +12,7 @@ import {
   HiOutlineArrowDownTray,
 } from 'react-icons/hi2';
 import SectionWrapper from './SectionWrapper';
+import { Card } from '@/components/ui/card';
 
 const features = [
   {
@@ -103,20 +104,20 @@ export default function Features() {
         className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
       >
         {features.map((feature) => (
-          <motion.div
-            key={feature.title}
-            variants={item}
-            className="group p-6 rounded-2xl border border-gray-100 dark:border-gray-800 hover:border-gray-200 dark:hover:border-gray-700 hover:shadow-xl hover:shadow-gray-100/50 dark:hover:shadow-gray-900/50 transition-all duration-300 bg-white dark:bg-gray-800"
-          >
-            <div
-              className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
-            >
-              <feature.icon className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{feature.title}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-              {feature.description}
-            </p>
+          <motion.div key={feature.title} variants={item}>
+            <Card className="group p-6 h-full rounded-2xl border-gray-100 dark:border-gray-800 hover:border-gray-200 dark:hover:border-gray-700 hover:shadow-xl hover:shadow-gray-100/50 dark:hover:shadow-gray-900/50 transition-all duration-300">
+              <div
+                className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
+              >
+                <feature.icon className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                {feature.title}
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                {feature.description}
+              </p>
+            </Card>
           </motion.div>
         ))}
       </motion.div>

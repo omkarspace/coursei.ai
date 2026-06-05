@@ -7,6 +7,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { UserInputContext } from '@/app/_context/UserInputContext';
 
 function SelectOption() {
@@ -23,14 +24,20 @@ function SelectOption() {
     <div className="px-6 sm:px-10 md:px-20 lg:px-44">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
-          <label className="text-lg sm:text-xl font-semibold text-[#5F2A95] dark:text-purple-400">
+          <Label
+            htmlFor="difficulty-level"
+            className="text-lg sm:text-xl font-semibold text-[#5F2A95] dark:text-purple-400"
+          >
             Difficulty Level
-          </label>
+          </Label>
           <Select
             onValueChange={(value) => handleInputChange('level', value)}
             defaultValue={userCourseInput?.level}
           >
-            <SelectTrigger className="h-14 text-lg dark:bg-gray-800 dark:border-gray-700">
+            <SelectTrigger
+              id="difficulty-level"
+              className="h-14 text-lg dark:bg-gray-800 dark:border-gray-700"
+            >
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
@@ -41,14 +48,20 @@ function SelectOption() {
           </Select>
         </div>
         <div>
-          <label className="text-lg sm:text-xl font-semibold text-[#5F2A95] dark:text-purple-400">
+          <Label
+            htmlFor="course-duration"
+            className="text-lg sm:text-xl font-semibold text-[#5F2A95] dark:text-purple-400"
+          >
             Course Duration
-          </label>
+          </Label>
           <Select
             onValueChange={(value) => handleInputChange('duration', value)}
             defaultValue={userCourseInput?.duration}
           >
-            <SelectTrigger className="h-14 text-lg dark:bg-gray-800 dark:border-gray-700">
+            <SelectTrigger
+              id="course-duration"
+              className="h-14 text-lg dark:bg-gray-800 dark:border-gray-700"
+            >
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
@@ -59,14 +72,20 @@ function SelectOption() {
           </Select>
         </div>
         <div>
-          <label className="text-lg sm:text-xl font-semibold text-[#5F2A95] dark:text-purple-400">
+          <Label
+            htmlFor="add-video"
+            className="text-lg sm:text-xl font-semibold text-[#5F2A95] dark:text-purple-400"
+          >
             Add Video
-          </label>
+          </Label>
           <Select
             onValueChange={(value) => handleInputChange('displayVideo', value)}
             defaultValue={userCourseInput?.displayVideo}
           >
-            <SelectTrigger className="h-14 text-lg dark:bg-gray-800 dark:border-gray-700">
+            <SelectTrigger
+              id="add-video"
+              className="h-14 text-lg dark:bg-gray-800 dark:border-gray-700"
+            >
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
@@ -76,10 +95,14 @@ function SelectOption() {
           </Select>
         </div>
         <div>
-          <label className="text-lg sm:text-xl font-semibold text-[#5F2A95] dark:text-purple-400">
+          <Label
+            htmlFor="no-of-chapters"
+            className="text-lg sm:text-xl font-semibold text-[#5F2A95] dark:text-purple-400"
+          >
             No. of Chapters
-          </label>
+          </Label>
           <Input
+            id="no-of-chapters"
             type="number"
             min="1"
             max="10"

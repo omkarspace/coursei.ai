@@ -4,6 +4,7 @@ import { UserCourseListContext } from '@/app/_context/UserCourseListContext';
 import React, { useContext, useEffect, useState } from 'react';
 import CourseCard from './CourseCard';
 import Link from 'next/link';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function UserCourseList() {
   const [courseList, setCourseList] = useState([]);
@@ -125,10 +126,7 @@ function UserCourseList() {
 
 function LoadingSkeleton({ count }) {
   return Array.from({ length: count }).map((_, index) => (
-    <div
-      key={index}
-      className="w-full mt-5 bg-slate-200 dark:bg-gray-800 animate-pulse rounded-lg h-[270px]"
-    ></div>
+    <Skeleton key={index} className="w-full mt-5 h-[270px]" />
   ));
 }
 

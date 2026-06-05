@@ -7,6 +7,7 @@ import {
   HiPause,
   HiOutlineChatBubbleLeftRight,
 } from 'react-icons/hi2';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function AudioPlayer({ courseId, chapterId, chapterContent, chapterName }) {
   const [audioUrl, setAudioUrl] = useState(null);
@@ -90,15 +91,13 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
   ];
 
   return (
-    <div className="border dark:border-gray-700 rounded-lg p-6 mt-4 dark:bg-gray-900">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
+    <Card className="mt-4">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-3 text-lg font-medium dark:text-white">
           <HiOutlineSpeakerWave className="h-6 w-6 text-primary" />
-          <h3 className="font-medium text-lg dark:text-white">
-            {mode === 'listen' ? 'Audio Narration' : 'Voice Tutor'}
-          </h3>
-        </div>
-        <div className="flex gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+          {mode === 'listen' ? 'Audio Narration' : 'Voice Tutor'}
+        </CardTitle>
+        <div className="flex gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1 ml-auto">
           <button
             onClick={() => setMode('listen')}
             className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
@@ -121,19 +120,127 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
             Chat
           </button>
         </div>
-      </div>
-
-      {mode === 'listen' ? (
-        !audioUrl ? (
+      </CardHeader>
+      <CardContent>
+        {mode === 'listen' ? (
+          !audioUrl ? (
+            <div className="space-y-4">
+              <p className="text-gray-500 dark:text-gray-400 text-sm">
+                Generate an AI voice narration for this chapter.
+              </p>
+              <div className="flex items-center gap-3">
+                <select
+                  value={voice}
+                  onChange={(e) => setVoice(e.target.value)}
+                  className="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm"
+                >
+                  {VOICES.map((v) => (
+                    <option key={v.id} value={v.id}>
+                      {v.name}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  onClick={generateAudio}
+                  disabled={loading}
+                  className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 disabled:opacity-50 text-sm"
+                >
+                  {loading ? 'Generating...' : 'Generate Audio'}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <audio
+                ref={audioRef}
+                src={audioUrl}
+                onEnded={() => setPlaying(false)}
+                className="w-full"
+                controls
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setPlaying(!playing)}
+                  className="inline-flex items-center gap-2 bg-primary text-white px-3 py-1.5 rounded-md text-sm"
+                >
+                  {playing ? <HiPause className="h-4 w-4" /> : <HiPlay className="h-4 w-4" />}
+                  {playing ? 'Pause' : 'Play'}
+                </button>
+                <button
+                  onClick={() => {
+                    setAudioUrl(null);
+                    setPlaying(false);
+                  }}
+                  className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                >
+                  Regenerate
+                </button>
+              </div>
+            </div>
+          )
+        ) : (
           <div className="space-y-4">
-            <p className="text-gray-500 dark:text-gray-400 text-sm">
-              Generate an AI voice narration for this chapter.
-            </p>
-            <div className="flex items-center gap-3">
+            <div className="h-64 overflow-y-auto space-y-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              {chatHistory.length === 0 && (
+                <p className="text-gray-400 dark:text-gray-500 text-sm text-center mt-8">
+                  Ask a question about "{chapterName}"
+                </p>
+              )}
+              {chatHistory.map((msg, i) => (
+                <div
+                  key={i}
+                  className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${
+                      msg.role === 'user'
+                        ? 'bg-primary text-white'
+                        : 'bg-white dark:bg-gray-700 dark:text-gray-200'
+                    }`}
+                  >
+                    <p>{msg.content}</p>
+                    {msg.audio && <audio src={msg.audio} controls className="mt-2 w-full" />}
+                  </div>
+                </div>
+              ))}
+              {chatLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm">
+                    <div className="flex gap-1">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100" />
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200" />
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={chatEndRef} />
+            </div>
+
+            <form onSubmit={handleChatSubmit} className="flex gap-2">
+              <input
+                type="text"
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                placeholder="Ask about this chapter..."
+                className="flex-1 h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm"
+                disabled={chatLoading}
+              />
+              <button
+                type="submit"
+                disabled={chatLoading || !chatInput.trim()}
+                className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 disabled:opacity-50 text-sm"
+              >
+                {chatLoading ? '...' : 'Ask'}
+              </button>
+            </form>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-400">Voice:</span>
               <select
                 value={voice}
                 onChange={(e) => setVoice(e.target.value)}
-                className="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm"
+                className="h-7 rounded border border-input bg-transparent px-2 text-xs"
               >
                 {VOICES.map((v) => (
                   <option key={v.id} value={v.id}>
@@ -141,117 +248,10 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
                   </option>
                 ))}
               </select>
-              <button
-                onClick={generateAudio}
-                disabled={loading}
-                className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 disabled:opacity-50 text-sm"
-              >
-                {loading ? 'Generating...' : 'Generate Audio'}
-              </button>
             </div>
           </div>
-        ) : (
-          <div className="space-y-3">
-            <audio
-              ref={audioRef}
-              src={audioUrl}
-              onEnded={() => setPlaying(false)}
-              className="w-full"
-              controls
-            />
-            <div className="flex gap-2">
-              <button
-                onClick={() => setPlaying(!playing)}
-                className="inline-flex items-center gap-2 bg-primary text-white px-3 py-1.5 rounded-md text-sm"
-              >
-                {playing ? <HiPause className="h-4 w-4" /> : <HiPlay className="h-4 w-4" />}
-                {playing ? 'Pause' : 'Play'}
-              </button>
-              <button
-                onClick={() => {
-                  setAudioUrl(null);
-                  setPlaying(false);
-                }}
-                className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-              >
-                Regenerate
-              </button>
-            </div>
-          </div>
-        )
-      ) : (
-        <div className="space-y-4">
-          <div className="h-64 overflow-y-auto space-y-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-            {chatHistory.length === 0 && (
-              <p className="text-gray-400 dark:text-gray-500 text-sm text-center mt-8">
-                Ask a question about "{chapterName}"
-              </p>
-            )}
-            {chatHistory.map((msg, i) => (
-              <div
-                key={i}
-                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div
-                  className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${
-                    msg.role === 'user'
-                      ? 'bg-primary text-white'
-                      : 'bg-white dark:bg-gray-700 dark:text-gray-200'
-                  }`}
-                >
-                  <p>{msg.content}</p>
-                  {msg.audio && <audio src={msg.audio} controls className="mt-2 w-full" />}
-                </div>
-              </div>
-            ))}
-            {chatLoading && (
-              <div className="flex justify-start">
-                <div className="bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm">
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100" />
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200" />
-                  </div>
-                </div>
-              </div>
-            )}
-            <div ref={chatEndRef} />
-          </div>
-
-          <form onSubmit={handleChatSubmit} className="flex gap-2">
-            <input
-              type="text"
-              value={chatInput}
-              onChange={(e) => setChatInput(e.target.value)}
-              placeholder="Ask about this chapter..."
-              className="flex-1 h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm"
-              disabled={chatLoading}
-            />
-            <button
-              type="submit"
-              disabled={chatLoading || !chatInput.trim()}
-              className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 disabled:opacity-50 text-sm"
-            >
-              {chatLoading ? '...' : 'Ask'}
-            </button>
-          </form>
-
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-400">Voice:</span>
-            <select
-              value={voice}
-              onChange={(e) => setVoice(e.target.value)}
-              className="h-7 rounded border border-input bg-transparent px-2 text-xs"
-            >
-              {VOICES.map((v) => (
-                <option key={v.id} value={v.id}>
-                  {v.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      )}
-    </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }

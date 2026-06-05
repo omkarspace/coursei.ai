@@ -4,6 +4,7 @@ import { Chapters, CourseList } from '@/server/db/schema';
 import { and, eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 import CourseStartClient from './_components/CourseStartClient';
+import { Skeleton } from '@/components/ui/skeleton';
 
 async function getCourse(courseId) {
   const result = await db.select().from(CourseList).where(eq(CourseList.courseId, courseId));
@@ -54,17 +55,17 @@ function CourseStartSkeleton() {
     <div className="min-h-screen dark:bg-gray-950">
       <div className="fixed md:w-64 h-screen bg-white dark:bg-gray-900 border-r dark:border-gray-700">
         <div className="p-4 border-b dark:border-gray-700">
-          <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-3/4" />
+          <Skeleton className="h-5 w-3/4" />
         </div>
         {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} className="p-4 border-b dark:border-gray-800">
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+            <Skeleton className="h-4" />
           </div>
         ))}
       </div>
       <div className="md:ml-64 p-6">
-        <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-1/3 mb-4" />
-        <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+        <Skeleton className="h-8 w-1/3 mb-4" />
+        <Skeleton className="h-64" />
       </div>
     </div>
   );

@@ -1,18 +1,20 @@
 import React from 'react';
 import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-} from '@/components/ui/alert-dialog';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import Image from 'next/image';
 
 function LoadingDialog({ loading }) {
   return (
-    <AlertDialog open={loading}>
-      <AlertDialogContent className="max-w-sm sm:max-w-md lg:max-w-lg mx-auto px-4 py-6 sm:py-10">
-        <AlertDialogHeader>
-          <AlertDialogDescription>
+    <Dialog open={loading}>
+      <DialogContent className="max-w-sm sm:max-w-md lg:max-w-lg mx-auto px-4 py-6 sm:py-10">
+        <DialogHeader>
+          <DialogTitle className="sr-only">Generating your course</DialogTitle>
+          <DialogDescription>
             <div className="flex flex-col items-center py-6 sm:py-8">
               <Image
                 src={'/loader.gif'}
@@ -25,10 +27,10 @@ function LoadingDialog({ loading }) {
                 Please wait... AI is working on your course
               </h2>
             </div>
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-      </AlertDialogContent>
-    </AlertDialog>
+          </DialogDescription>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
   );
 }
 
