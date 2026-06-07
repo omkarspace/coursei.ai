@@ -3,6 +3,7 @@ import {
   integer,
   json,
   pgTable,
+  real,
   serial,
   text,
   timestamp,
@@ -43,6 +44,21 @@ export interface QuizQuestion {
 export interface Flashcard {
   front: string;
   back: string;
+}
+
+export type CardStateValue = 0 | 1 | 2 | 3;
+export type ReviewRating = 1 | 2 | 3 | 4;
+
+export interface CardState {
+  due: string;
+  stability: number;
+  difficulty: number;
+  elapsedDays: number;
+  scheduledDays: number;
+  reps: number;
+  lapses: number;
+  state: CardStateValue;
+  lastReview: string | null;
 }
 
 export interface StudyNotes {
@@ -108,6 +124,25 @@ export const Flashcards = pgTable('flashcards', {
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 
+export const FlashcardReviews = pgTable('flashcard_reviews', {
+  id: serial('id').primaryKey(),
+  userId: varchar('userId').notNull(),
+  courseId: varchar('courseId').notNull(),
+  chapterId: integer('chapterId').notNull(),
+  cardIndex: integer('cardIndex').notNull(),
+  due: timestamp('due').notNull().defaultNow(),
+  stability: real('stability').notNull().default(0),
+  difficulty: real('difficulty').notNull().default(0),
+  elapsedDays: integer('elapsedDays').notNull().default(0),
+  scheduledDays: integer('scheduledDays').notNull().default(0),
+  reps: integer('reps').notNull().default(0),
+  lapses: integer('lapses').notNull().default(0),
+  state: integer('state').notNull().default(0),
+  lastReview: timestamp('lastReview'),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+  updatedAt: timestamp('updatedAt').defaultNow().notNull(),
+});
+
 export const StudyNotesTable = pgTable('study_notes', {
   id: serial('id').primaryKey(),
   courseId: varchar('courseId').notNull(),
@@ -163,6 +198,13 @@ export const quizzesRelations = relations(Quizzes, ({ one }) => ({
 export const flashcardsRelations = relations(Flashcards, ({ one }) => ({
   course: one(CourseList, {
     fields: [Flashcards.courseId],
+    references: [CourseList.courseId],
+  }),
+}));
+
+export const flashcardReviewsRelations = relations(FlashcardReviews, ({ one }) => ({
+  course: one(CourseList, {
+    fields: [FlashcardReviews.courseId],
     references: [CourseList.courseId],
   }),
 }));
