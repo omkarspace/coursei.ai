@@ -30,6 +30,7 @@ const StudyNotes = dynamic(() => import('@/app/_components/StudyNotes'), {
 
 import AudioPlayer from '@/app/_components/AudioPlayer';
 import WikipediaSidebar from '@/app/_components/WikipediaSidebar';
+import CourseChat from '@/app/_components/CourseChat';
 
 export default function CourseStartClient({ course, initialChapterContent }) {
   const [selectedChapter, setSelectedChapter] = useState(
@@ -121,6 +122,7 @@ export default function CourseStartClient({ course, initialChapterContent }) {
     { id: 'flashcards', label: 'Flashcards' },
     { id: 'notes', label: 'Study Notes' },
     { id: 'audio', label: 'Audio' },
+    { id: 'chat', label: 'Chat' },
   ];
 
   return (
@@ -340,6 +342,12 @@ export default function CourseStartClient({ course, initialChapterContent }) {
                           chapterName={selectedChapter?.name}
                         />
                       )}
+                    </TabsContent>
+                    <TabsContent value="chat">
+                      <CourseChat
+                        courseId={course?.courseId}
+                        courseName={course?.courseOutput?.course?.name}
+                      />
                     </TabsContent>
                   </>
                 )}

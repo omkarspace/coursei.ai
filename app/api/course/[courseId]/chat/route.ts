@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { db } from '@/server/db';
-import { Chapters, CourseList, Flashcards, Quizzes, StudyNotesTable } from '@/server/db/schema';
+import { Chapters, CourseList, Flashcards, Quizzes } from '@/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { streamText, type UIMessage } from 'ai';
 import { getModel } from '@/server/ai/models';
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest, { params }: RouteContext) {
     .join('\n');
 
   const system = `You are a friendly, expert tutor for the course "${course.name}".
-Course description: ${(course.courseOutput as any)?.course?.description ?? ''}
+Course description: ${(course.courseOutput as { course?: { description?: string } })?.course?.description ?? ''}
 
 Your job: answer the student's questions using ONLY the course material below. Be concise, give examples from the content, and reference chapters by name when relevant (e.g. "In chapter 3, you'll see…").
 
@@ -77,12 +77,14 @@ This course has:
     system,
     messages: messages.map((m) => ({
       role: m.role,
-      content: m.parts
-        ?.filter((p) => p.type === 'text')
-        .map((p) => (p as any).text)
-        .join('\n') ?? '',
-    })) as any,
-  });
+      content:
+        m.parts
+          ?.filter((p) => p.type === 'text')
+          .map((p: { text: string }) => p.text)
+          .join('\n') ?? '',
+    })),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any);
 
   return result.toUIMessageStreamResponse();
 }

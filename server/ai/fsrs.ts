@@ -18,7 +18,9 @@ const W = [
   0.4072, 1.1829, 3.1262, 15.4722, 7.2102, 0.5316, 1.0651, 0.0234, 1.616, 0.1544,
   1.0824, 1.9813, 0.0953, 0.2975, 2.2042, 0.2407, 2.9466, 0.5034, 0.6567, 0.0,
   1.1986, 0.1464, 0.1045, 0.0824, 0.0831,
-];
+] as const;
+
+const w = (i: number) => W[i] ?? 0;
 
 const RATING: Record<ReviewRating, number> = { 1: 1, 2: 2, 3: 3, 4: 4 };
 
@@ -37,36 +39,36 @@ function nextInterval(s: number, elapsedDays: number, desiredRetention = 0.9): n
 }
 
 function nextDifficulty(d: number, rating: number): number {
-  return clamp(d - W[6] * (rating - 3), 1, 10);
+  return clamp(d - w(6) * (rating - 3), 1, 10);
 }
 
 function nextRecallStability(d: number, s: number, r: number): number {
   return (
     s *
     (1 +
-      Math.exp(W[8]) *
+      Math.exp(w(8)) *
         (11 - d) *
-        Math.pow(s, -W[9]) *
-        (Math.exp((1 - r) * W[10]) - 1))
+        Math.pow(s, -w(9)) *
+        (Math.exp((1 - r) * w(10)) - 1))
   );
 }
 
 function nextForgetStability(d: number, s: number, r: number): number {
   return (
-    W[11] * Math.pow(d, -W[12]) * (Math.pow(s + 1, W[13]) - 1) * Math.exp((1 - r) * W[14])
+    w(11) * Math.pow(d, -w(12)) * (Math.pow(s + 1, w(13)) - 1) * Math.exp((1 - r) * w(14))
   );
 }
 
 function initStability(r: number): number {
-  return Math.max(W[0], (W[1] * Math.pow(r, -W[2]) * Math.exp(W[3] * 1)) || W[0]);
+  return Math.max(w(0), (w(1) * Math.pow(r, -w(2)) * Math.exp(w(3) * 1)) || w(0));
 }
 
 function initDifficulty(r: number): number {
-  return clamp(W[4] - Math.exp(W[5] * 1) * (r - 1) + 1, 1, 10);
+  return clamp(w(4) - Math.exp(w(5) * 1) * (r - 1) + 1, 1, 10);
 }
 
 function shortTermStability(s: number, r: number): number {
-  return s * Math.exp(W[17] * (r - 3 + W[18]));
+  return s * Math.exp(w(17) * (r - 3 + w(18)));
 }
 
 export function createEmptyCardState(): FSRSState {
