@@ -8,6 +8,7 @@ import {
   getChapterContentAction,
   getUserProgressAction,
 } from '@/app/actions/course';
+import { ensureFlashcardsEnrolledAction, getDueFlashcardsAction } from '@/app/actions/fsrs';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -47,6 +48,26 @@ export default function CourseStartClient({ course, initialChapterContent }) {
   useEffect(() => {
     fetchProgress();
   }, []);
+
+  useEffect(() => {
+    if (activeTab !== 'flashcards') return;
+    const chapterIndex = course?.courseOutput?.course?.chapters.indexOf(selectedChapter);
+    if (chapterIndex === undefined || chapterIndex < 0) return;
+    (async () => {
+      try {
+        const due = await getDueFlashcardsAction(course.courseId);
+        const existsForChapter = due.some(
+          (d) => d.courseId === course.courseId && d.chapterId === chapterIndex
+        );
+        if (!existsForChapter) {
+          await ensureFlashcardsEnrolledAction(course.courseId, chapterIndex, 10);
+        }
+      } catch (error) {
+        // Non-fatal: enrollment is best-effort
+        console.error('FSRS enrollment failed:', error);
+      }
+    })();
+  }, [activeTab, selectedChapter, course]);
 
   const fetchProgress = async () => {
     try {
