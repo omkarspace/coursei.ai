@@ -1,35 +1,12 @@
 import { generateObject } from 'ai';
 import { aiModel } from './models';
 import {
-  CourseLayoutSchema,
   ChapterContentSchema,
   QuizSchema,
   FlashcardsSchema,
   StudyNotesSchema,
 } from './schemas';
-import type { CourseLayout, ChapterContent, Quiz, Flashcards, StudyNotes } from './schemas';
-
-// ===== Generate Course Layout =====
-export async function generateCourseLayout(
-  category: string,
-  topic: string,
-  level: string,
-  duration: string,
-  numChapters: number
-): Promise<CourseLayout> {
-  const { object } = await generateObject({
-    model: aiModel,
-    schema: CourseLayoutSchema,
-    prompt: `Generate A Course Tutorial on Following Detail With field as Course Name, Description, Along with Chapter Name, about, Duration:
-Category: ${category},
-Topic: ${topic},
-Level: ${level},
-Duration: ${duration},
-NoOf Chapters: ${numChapters}`,
-  });
-
-  return object;
-}
+import type { ChapterContent, Quiz, Flashcards, StudyNotes } from './schemas';
 
 // ===== Generate Chapter Content =====
 export async function generateChapterContent(
