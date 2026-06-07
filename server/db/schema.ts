@@ -171,6 +171,21 @@ export const CourseRatings = pgTable('course_ratings', {
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 
+export const UserFSRSWeights = pgTable('user_fsrs_weights', {
+  id: serial('id').primaryKey(),
+  userId: varchar('userId').notNull(),
+  courseId: varchar('courseId').notNull(),
+  weights: real('weights').array().notNull().default([
+    0.4072, 1.1829, 3.1262, 15.4722, 7.2102, 0.5316, 1.0651, 0.0234, 1.616, 0.1544,
+    1.0824, 1.9813, 0.0953, 0.2975, 2.2042, 0.2407, 2.9466, 0.5034, 0.6567, 0.0,
+    1.1986, 0.1464, 0.1045, 0.0824, 0.0831,
+  ]),
+  optimizedAt: timestamp('optimizedAt'),
+  reviewCount: integer('reviewCount').notNull().default(0),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+  updatedAt: timestamp('updatedAt').defaultNow().notNull(),
+});
+
 // ===== Relations =====
 
 export const courseListRelations = relations(CourseList, ({ many }) => ({
@@ -227,6 +242,13 @@ export const userProgressRelations = relations(UserProgress, ({ one }) => ({
 export const courseRatingsRelations = relations(CourseRatings, ({ one }) => ({
   course: one(CourseList, {
     fields: [CourseRatings.courseId],
+    references: [CourseList.courseId],
+  }),
+}));
+
+export const userFSRSWeightsRelations = relations(UserFSRSWeights, ({ one }) => ({
+  course: one(CourseList, {
+    fields: [UserFSRSWeights.courseId],
     references: [CourseList.courseId],
   }),
 }));
