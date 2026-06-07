@@ -138,7 +138,6 @@ Each test file sets the four required env vars in `beforeEach` so `lib/env.ts` (
 - Clerk email lookup is the canonical ownership check. The pattern `await (await clerkClient()).users.getUser((await auth()).userId!)` is everywhere; if you add a new action, copy it.
 - PowerShell-only environment notes: no `&&` chain (use `; if ($?)`), no `rg` (use the `grep`/`glob` tools), wrap paths with brackets in single quotes for `git add`.
 - The `.kilo/` and `.opencode/` directories at the repo root are agent workspace dirs, not user code — leave them alone.
-- Build/test/lint transcripts (`build-output.txt`, `test-output.txt`, `lint-output.txt`) live in the root and are not in `.gitignore`. Delete them or add to `.gitignore` if they bother you.
 
 ## Verification Order
 
