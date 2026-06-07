@@ -47,3 +47,5 @@ lint-output.txt
 .env.local
 
 .env
+
+/graphify-out
