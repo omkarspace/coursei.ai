@@ -71,6 +71,7 @@ export interface StudyNotes {
 export type CourseStatus =
   | 'draft'
   | 'generating_outline'
+  | 'outline_ready'
   | 'generating_chapters'
   | 'complete'
   | 'failed';
