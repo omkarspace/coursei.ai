@@ -73,6 +73,39 @@ export async function getDueCountAction(userId: string): Promise<number> {
   return Number(rows[0]?.count ?? 0);
 }
 
+export async function getReviewStreakAction(userId: string): Promise<number> {
+  const rows = await db
+    .select({ day: sql<string>`to_char(${FlashcardReviews.lastReview}, 'YYYY-MM-DD')` })
+    .from(FlashcardReviews)
+    .where(and(eq(FlashcardReviews.userId, userId), sql`${FlashcardReviews.lastReview} IS NOT NULL`))
+    .groupBy(sql`to_char(${FlashcardReviews.lastReview}, 'YYYY-MM-DD')`)
+    .orderBy(sql`to_char(${FlashcardReviews.lastReview}, 'YYYY-MM-DD') DESC`)
+    .limit(365);
+
+  if (rows.length === 0) return 0;
+
+  const days = new Set(rows.map((r) => r.day));
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  const todayStr = today.toISOString().slice(0, 10);
+
+  const yesterday = new Date(today);
+  yesterday.setUTCDate(yesterday.getUTCDate() - 1);
+  const yesterdayStr = yesterday.toISOString().slice(0, 10);
+
+  let cursor: Date;
+  if (days.has(todayStr)) cursor = today;
+  else if (days.has(yesterdayStr)) cursor = yesterday;
+  else return 0;
+
+  let streak = 0;
+  while (days.has(cursor.toISOString().slice(0, 10))) {
+    streak++;
+    cursor.setUTCDate(cursor.getUTCDate() - 1);
+  }
+  return streak;
+}
+
 export async function submitFlashcardReviewAction(
   reviewId: number,
   rating: ReviewRating

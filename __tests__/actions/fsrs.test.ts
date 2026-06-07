@@ -62,4 +62,23 @@ describe('FSRS server actions', () => {
     const count = await getDueCountAction('user_123');
     expect(count).toBe(5);
   });
+
+  it('getReviewStreakAction returns 0 when user has no reviews', async () => {
+    const db = (await import('@/server/db')).db;
+    (db.select as any).mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockReturnValue({
+          groupBy: vi.fn().mockReturnValue({
+            orderBy: vi.fn().mockReturnValue({
+              limit: vi.fn().mockResolvedValue([]),
+            }),
+          }),
+        }),
+      }),
+    });
+
+    const { getReviewStreakAction } = await import('@/app/actions/fsrs');
+    const streak = await getReviewStreakAction('user_123');
+    expect(streak).toBe(0);
+  });
 });
