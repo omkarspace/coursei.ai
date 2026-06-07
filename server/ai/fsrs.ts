@@ -1,0 +1,208 @@
+import type { CardStateValue, ReviewRating } from '@/server/db/schema';
+
+export type FSRSState = {
+  due: string;
+  stability: number;
+  difficulty: number;
+  elapsedDays: number;
+  scheduledDays: number;
+  reps: number;
+  lapses: number;
+  state: CardStateValue;
+  lastReview: string | null;
+};
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+const W = [
+  0.4072, 1.1829, 3.1262, 15.4722, 7.2102, 0.5316, 1.0651, 0.0234, 1.616, 0.1544,
+  1.0824, 1.9813, 0.0953, 0.2975, 2.2042, 0.2407, 2.9466, 0.5034, 0.6567, 0.0,
+  1.1986, 0.1464, 0.1045, 0.0824, 0.0831,
+];
+
+const RATING: Record<ReviewRating, number> = { 1: 1, 2: 2, 3: 3, 4: 4 };
+
+function clamp(x: number, lo: number, hi: number): number {
+  return Math.min(hi, Math.max(lo, x));
+}
+
+function forgettingCurve(elapsedDays: number, stability: number): number {
+  if (stability <= 0) return 0;
+  return Math.pow(1 + elapsedDays / (9 * stability), -1);
+}
+
+function nextInterval(s: number, elapsedDays: number, desiredRetention = 0.9): number {
+  if (s <= 0) return 1;
+  return Math.max(1, Math.round((s / 9) * (Math.pow(desiredRetention, -1 / 9) - 1) - elapsedDays));
+}
+
+function nextDifficulty(d: number, rating: number): number {
+  return clamp(d - W[6] * (rating - 3), 1, 10);
+}
+
+function nextRecallStability(d: number, s: number, r: number): number {
+  return (
+    s *
+    (1 +
+      Math.exp(W[8]) *
+        (11 - d) *
+        Math.pow(s, -W[9]) *
+        (Math.exp((1 - r) * W[10]) - 1))
+  );
+}
+
+function nextForgetStability(d: number, s: number, r: number): number {
+  return (
+    W[11] * Math.pow(d, -W[12]) * (Math.pow(s + 1, W[13]) - 1) * Math.exp((1 - r) * W[14])
+  );
+}
+
+function initStability(r: number): number {
+  return Math.max(W[0], (W[1] * Math.pow(r, -W[2]) * Math.exp(W[3] * 1)) || W[0]);
+}
+
+function initDifficulty(r: number): number {
+  return clamp(W[4] - Math.exp(W[5] * 1) * (r - 1) + 1, 1, 10);
+}
+
+function shortTermStability(s: number, r: number): number {
+  return s * Math.exp(W[17] * (r - 3 + W[18]));
+}
+
+export function createEmptyCardState(): FSRSState {
+  return {
+    due: new Date().toISOString(),
+    stability: 0,
+    difficulty: 0,
+    elapsedDays: 0,
+    scheduledDays: 0,
+    reps: 0,
+    lapses: 0,
+    state: 0,
+    lastReview: null,
+  };
+}
+
+export function scheduleCard(prev: FSRSState, rating: ReviewRating, now: FSRSState): FSRSState {
+  const elapsedDays = prev.lastReview
+    ? Math.max(
+        0,
+        Math.round(
+          (new Date(now.due).getTime() - new Date(prev.lastReview).getTime()) / DAY_MS
+        )
+      )
+    : 0;
+  const r = RATING[rating];
+
+  if (prev.state === 0) {
+    const difficulty = prev.difficulty > 0 ? prev.difficulty : initDifficulty(r);
+    const stability = prev.stability > 0 ? prev.stability : initStability(r);
+
+    if (rating === 1) {
+      return {
+        ...prev,
+        difficulty,
+        stability,
+        state: 1,
+        reps: prev.reps + 1,
+        lastReview: now.due,
+        due: new Date(Date.now() + 60_000).toISOString(),
+        elapsedDays: 0,
+        scheduledDays: 0,
+      };
+    }
+    if (rating === 2 || rating === 3) {
+      const minutes = rating === 2 ? 5 : 10;
+      return {
+        ...prev,
+        difficulty,
+        stability,
+        state: 1,
+        reps: prev.reps + 1,
+        lastReview: now.due,
+        due: new Date(Date.now() + minutes * 60_000).toISOString(),
+        elapsedDays: 0,
+        scheduledDays: 0,
+      };
+    }
+    const s = shortTermStability(stability, r);
+    return {
+      ...prev,
+      difficulty,
+      stability: s,
+      state: 2,
+      reps: prev.reps + 1,
+      lastReview: now.due,
+      scheduledDays: nextInterval(s, 0),
+      due: new Date(Date.now() + nextInterval(s, 0) * DAY_MS).toISOString(),
+      elapsedDays: 0,
+    };
+  }
+
+  if (prev.state === 1 || prev.state === 3) {
+    if (rating === 1) {
+      return {
+        ...prev,
+        state: prev.state,
+        reps: prev.reps + 1,
+        lapses: prev.state === 3 ? prev.lapses + 1 : prev.lapses,
+        lastReview: now.due,
+        due: new Date(Date.now() + 60_000).toISOString(),
+      };
+    }
+    if (rating === 2 || rating === 3) {
+      const s = shortTermStability(prev.stability || 1, r);
+      return {
+        ...prev,
+        stability: s,
+        state: 2,
+        reps: prev.reps + 1,
+        lastReview: now.due,
+        scheduledDays: nextInterval(s, 0),
+        due: new Date(Date.now() + nextInterval(s, 0) * DAY_MS).toISOString(),
+        elapsedDays: 0,
+      };
+    }
+    const s = shortTermStability(prev.stability || 1, r) * 1.3;
+    return {
+      ...prev,
+      stability: s,
+      state: 2,
+      reps: prev.reps + 1,
+      lastReview: now.due,
+      scheduledDays: nextInterval(s, 0),
+      due: new Date(Date.now() + nextInterval(s, 0) * DAY_MS).toISOString(),
+      elapsedDays: 0,
+    };
+  }
+
+  const recall = forgettingCurve(elapsedDays, prev.stability || 1);
+  if (rating === 1) {
+    const s = nextForgetStability(prev.difficulty, prev.stability, recall);
+    return {
+      ...prev,
+      stability: s,
+      state: 3,
+      lapses: prev.lapses + 1,
+      reps: prev.reps + 1,
+      lastReview: now.due,
+      due: new Date(Date.now() + 10 * 60_000).toISOString(),
+      scheduledDays: 0,
+      elapsedDays,
+    };
+  }
+  const newDifficulty = nextDifficulty(prev.difficulty, r);
+  const newStability = nextRecallStability(newDifficulty, prev.stability, recall);
+  const interval = nextInterval(newStability, elapsedDays);
+  return {
+    ...prev,
+    stability: newStability,
+    difficulty: newDifficulty,
+    state: 2,
+    reps: prev.reps + 1,
+    lastReview: now.due,
+    scheduledDays: interval,
+    due: new Date(Date.now() + interval * DAY_MS).toISOString(),
+    elapsedDays,
+  };
+}
