@@ -76,15 +76,14 @@ This course has:
     model: getModel('gemini-1.5-flash'),
     system,
     messages: messages.map((m) => ({
-      role: m.role,
+      role: m.role as 'user' | 'assistant' | 'system',
       content:
         m.parts
-          ?.filter((p) => p.type === 'text')
-          .map((p: { text: string }) => p.text)
+          ?.filter((p): p is { type: 'text'; text: string } => p.type === 'text')
+          .map((p) => p.text)
           .join('\n') ?? '',
     })),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } as any);
+  });
 
   return result.toUIMessageStreamResponse();
 }

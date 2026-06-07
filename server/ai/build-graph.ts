@@ -30,6 +30,8 @@ export const buildCourseGraphFunction = inngest.createFunction(
         .where(eq(Chapters.courseId, courseId))
         .orderBy(Chapters.chapterId);
 
+      const courseOutput = course.courseOutput as { course: { chapters: { name: string }[] } };
+
       return {
         courseId: course.courseId,
         name: course.name,
@@ -37,7 +39,7 @@ export const buildCourseGraphFunction = inngest.createFunction(
         level: course.level,
         chapters: chapters.map((ch) => ({
           name:
-            (course.courseOutput as any)?.course?.chapters?.[ch.chapterId]?.name ||
+            courseOutput?.course?.chapters?.[ch.chapterId]?.name ||
             `Chapter ${ch.chapterId}`,
           content: Array.isArray(ch.content) ? ch.content : [],
         })),

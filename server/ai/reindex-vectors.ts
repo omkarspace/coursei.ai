@@ -30,8 +30,8 @@ export const reindexCourseVectors = inngest.createFunction(
 
     // Step 3: Re-index vector with enriched data
     await step.run('upsert-vector', async () => {
-      const courseOutput = course.courseOutput as any;
-      const chapterData = (courseOutput.course.chapters || []).map((ch: any) => ({
+      const courseOutput = course.courseOutput as { course: { name: string; description: string; chapters: { name: string; about?: string }[] } };
+      const chapterData = (courseOutput.course.chapters || []).map((ch) => ({
         name: ch.name,
         about: ch.about || '',
       }));

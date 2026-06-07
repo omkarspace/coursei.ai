@@ -69,7 +69,7 @@ export async function* streamAudioResponse(
 
       ws.onmessage = (event) => {
         if (typeof event.data === 'string') {
-          const msg = JSON.parse(event.data);
+          const msg = JSON.parse(event.data) as { isFinal?: boolean; error?: string };
           if (msg.isFinal) {
             ws.close();
             resolve();
