@@ -195,6 +195,7 @@ export const courseListRelations = relations(CourseList, ({ many }) => ({
   studyNotes: many(StudyNotesTable),
   progress: many(UserProgress),
   ratings: many(CourseRatings),
+  userFSRSWeights: many(UserFSRSWeights),
 }));
 
 export const chaptersRelations = relations(Chapters, ({ one }) => ({
