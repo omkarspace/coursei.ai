@@ -39,6 +39,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# build/test/lint transcripts from local runs
+build-output.txt
+test-output.txt
+lint-output.txt
+
 .env.local
 
 .env
