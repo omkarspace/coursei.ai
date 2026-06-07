@@ -106,15 +106,20 @@ export async function createCourse(courseData: {
   category: string;
   level: string;
   includeVideo: string;
-  courseOutput: CourseOutput;
+  courseOutput?: CourseOutput;
 }) {
   const email = await getUserEmail();
   const user = await (await clerkClient()).users.getUser((await auth()).userId!);
+
+  const emptyOutput: CourseOutput = {
+    course: { name: courseData.name, description: '', noOfChapters: 0, duration: '', chapters: [] },
+  };
 
   const result = await db
     .insert(CourseList)
     .values({
       ...courseData,
+      courseOutput: courseData.courseOutput ?? emptyOutput,
       createdBy: email,
       userName: user.fullName,
       userProfileImage: user.imageUrl,
@@ -127,7 +132,7 @@ export async function createCourse(courseData: {
 
 export async function updateCourseStatus(
   courseId: string,
-  status: 'draft' | 'generating_outline' | 'generating_chapters' | 'complete' | 'failed',
+  status: 'draft' | 'generating_outline' | 'outline_ready' | 'generating_chapters' | 'complete' | 'failed',
   progress: number,
   currentStep?: string,
   error?: string

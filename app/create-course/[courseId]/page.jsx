@@ -19,6 +19,12 @@ function CourseLayout({ params }) {
     params && GetCourse();
   }, [params, user]);
 
+  useEffect(() => {
+    if (course?.courseId && course?.status === 'outline_ready') {
+      router.replace(`/create-course/${course.courseId}/outline`);
+    }
+  }, [course?.courseId, course?.status, router]);
+
   const GetCourse = async () => {
     const result = await getCourseById(params?.courseId);
     setCourse(result);

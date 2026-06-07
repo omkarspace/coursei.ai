@@ -6,7 +6,7 @@ import SelectCategory from './_components/SelectCategory';
 import TopicDescription from './_components/TopicDescription';
 import SelectOption from './_components/SelectOption';
 import { UserInputContext } from '../_context/UserInputContext';
-import { generateCourseLayoutAction } from '@/app/actions/ai';
+import { generateOutlineAction } from '@/app/actions/outline';
 import LoadingDialog from './_components/LoadingDialog';
 import uuid4 from 'uuid4';
 import { useRouter } from 'next/navigation';
@@ -56,15 +56,23 @@ function CreateCourse() {
     setError(null);
 
     try {
-      const courseLayout = await generateCourseLayoutAction(
-        userCourseInput?.category,
-        userCourseInput?.topic,
-        userCourseInput?.level,
-        userCourseInput?.duration,
-        userCourseInput?.noOfChapter || 5
-      );
-
-      await SaveCourseLayoutInDb(courseLayout);
+      const courseId = uuid4();
+      await createCourse({
+        courseId,
+        name: userCourseInput?.topic,
+        level: userCourseInput?.level,
+        category: userCourseInput?.category,
+        includeVideo: userCourseInput?.displayVideo || 'Yes',
+      });
+      await generateOutlineAction({
+        courseId,
+        category: userCourseInput?.category,
+        topic: userCourseInput?.topic,
+        level: userCourseInput?.level,
+        duration: userCourseInput?.duration,
+        numChapters: userCourseInput?.noOfChapter || 5,
+      });
+      router.replace('/create-course/' + courseId + '/outline');
     } catch (err) {
       console.error('Course generation error:', err);
       const errorMessage =
@@ -73,25 +81,6 @@ function CreateCourse() {
       toast.error(errorMessage);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const SaveCourseLayoutInDb = async (courseLayout) => {
-    const id = uuid4();
-    try {
-      await createCourse({
-        courseId: id,
-        name: userCourseInput?.topic,
-        level: userCourseInput?.level,
-        category: userCourseInput?.category,
-        courseOutput: courseLayout,
-        includeVideo: userCourseInput?.displayVideo || 'Yes',
-      });
-      router.replace('/create-course/' + id);
-    } catch (error) {
-      console.error('Error saving course layout:', error);
-      toast.error('Failed to save course. Please try again.');
-      throw error;
     }
   };
 
