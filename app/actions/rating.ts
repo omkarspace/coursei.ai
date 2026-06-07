@@ -68,6 +68,7 @@ export async function submitRating(courseId: string, rating: number, review?: st
   }
 
   revalidatePath(`/course/${courseId}`);
+  revalidatePath('/dashboard');
   revalidatePath('/dashboard/explore');
   await invalidateCache(`rating:${courseId}`);
   return { success: true };
@@ -80,6 +81,8 @@ export async function deleteRating(courseId: string) {
     .delete(CourseRatings)
     .where(and(eq(CourseRatings.courseId, courseId), eq(CourseRatings.userId, userId)));
   revalidatePath(`/course/${courseId}`);
+  revalidatePath('/dashboard');
+  revalidatePath('/dashboard/explore');
   await invalidateCache(`rating:${courseId}`);
   return { success: true };
 }

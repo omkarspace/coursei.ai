@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import CourseShell from './_components/CourseShell';
 import CourseRating from './_components/CourseRating';
 import CourseForkButton from './_components/CourseForkButton';
+import ReviewsList from './_components/ReviewsList';
+import ReviewsListSkeleton from './_components/ReviewsListSkeleton';
 import ChapterList from '@/app/create-course/[courseId]/_components/ChapterList';
 import Header from '@/app/dashboard/_components/Header';
 import ConceptCanvasWrapper from './_components/ConceptCanvasWrapper';
@@ -69,6 +71,9 @@ export default async function Course({ params }) {
           </div>
           <Suspense fallback={<RatingSkeleton />}>
             <CourseRating courseId={courseId} />
+          </Suspense>
+          <Suspense fallback={<ReviewsListSkeleton />}>
+            <ReviewsList courseId={courseId} />
           </Suspense>
           <ChapterList course={course} />
 

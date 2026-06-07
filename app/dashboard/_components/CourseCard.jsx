@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 function CourseCard({ course, refreshData, displayUser = false }) {
   const handleOnDelete = async (e) => {
@@ -34,9 +35,46 @@ function CourseCard({ course, refreshData, displayUser = false }) {
   const getStatusBadge = () => {
     if (!course?.status || course.status === 'complete') {
       return course?.publish ? (
-        <span className="text-xs bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 px-2 py-0.5 rounded-full">
-          Published
-        </span>
+        <div className="flex flex-col gap-1 items-end">
+          <span className="text-xs bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 px-2 py-0.5 rounded-full">
+            Published
+          </span>
+          {course?.vectorIndexedAt ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="text-[10px] bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 px-2 py-0.5 rounded-full flex items-center gap-1 cursor-help">
+                  <svg
+                    className="w-2.5 h-2.5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Indexed
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                Indexed for semantic search on {new Date(course.vectorIndexedAt).toLocaleString()}
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="text-[10px] bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400 px-2 py-0.5 rounded-full cursor-help">
+                  Indexing...
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                This course is queued for vector search indexing. Refresh in a few seconds.
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </div>
       ) : (
         <span className="text-xs bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400 px-2 py-0.5 rounded-full">
           Draft

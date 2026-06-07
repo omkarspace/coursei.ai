@@ -1,6 +1,10 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
-import { generateChapterAudioAction, generateAudioResponseAction } from '@/app/actions/audio';
+import {
+  generateChapterAudioAction,
+  generateAudioResponseAction,
+  getVoiceOptions,
+} from '@/app/actions/audio';
 import {
   HiOutlineSpeakerWave,
   HiPlay,
@@ -14,12 +18,27 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
   const [loading, setLoading] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [voice, setVoice] = useState('Rachel');
+  const [voices, setVoices] = useState([]);
   const [mode, setMode] = useState('listen'); // "listen" | "chat"
   const [chatInput, setChatInput] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
   const [chatLoading, setChatLoading] = useState(false);
   const audioRef = useRef(null);
   const chatEndRef = useRef(null);
+
+  useEffect(() => {
+    let mounted = true;
+    getVoiceOptions()
+      .then((list) => {
+        if (mounted) setVoices(list || []);
+      })
+      .catch((err) => {
+        console.error('Failed to load voice options:', err);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const generateAudio = async () => {
     setLoading(true);
@@ -83,12 +102,18 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
     }
   };
 
-  const VOICES = [
-    { id: 'Rachel', name: 'Rachel (Female)' },
-    { id: 'Antoni', name: 'Antoni (Male)' },
-    { id: 'Josh', name: 'Josh (Deep Male)' },
-    { id: 'Bella', name: 'Bella (Soft Female)' },
-  ];
+  const VOICES = voices.length > 0 ? voices : null;
+
+  const renderVoiceOptions = () => {
+    if (!VOICES) {
+      return <option value="Rachel">Rachel</option>;
+    }
+    return VOICES.map((v) => (
+      <option key={v.id} value={v.id} title={v.description}>
+        {v.name}
+      </option>
+    ));
+  };
 
   return (
     <Card className="mt-4">
@@ -134,11 +159,7 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
                   onChange={(e) => setVoice(e.target.value)}
                   className="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm"
                 >
-                  {VOICES.map((v) => (
-                    <option key={v.id} value={v.id}>
-                      {v.name}
-                    </option>
-                  ))}
+                  {renderVoiceOptions()}
                 </select>
                 <button
                   onClick={generateAudio}
@@ -242,11 +263,7 @@ export default function AudioPlayer({ courseId, chapterId, chapterContent, chapt
                 onChange={(e) => setVoice(e.target.value)}
                 className="h-7 rounded border border-input bg-transparent px-2 text-xs"
               >
-                {VOICES.map((v) => (
-                  <option key={v.id} value={v.id}>
-                    {v.name}
-                  </option>
-                ))}
+                {renderVoiceOptions()}
               </select>
             </div>
           </div>

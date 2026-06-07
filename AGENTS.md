@@ -20,14 +20,13 @@ Next.js 15 App Router + Drizzle ORM + Neon PostgreSQL + Clerk auth + Gemini AI.
 | ------------------- | ------------------------------------------------------------ |
 | `app/`              | App Router pages, server actions, API routes                 |
 | `app/actions/`      | Server actions (`"use server"`) for DB mutations             |
-| `app/api/`          | API routes (search, inngest, health, transcribe, verify)     |
+| `app/api/`          | API routes (search, inngest, health, transcribe, course status) |
 | `app/_components/`  | Shared UI components (`.jsx` files)                          |
 | `server/db/`        | Drizzle schema (`schema.ts`) and DB client (`index.ts`)      |
 | `server/ai/`        | AI generation functions, schemas, and multi-agent system     |
 | `server/ai/agents/` | Curriculum designer, fact checker, pedagogical expert        |
 | `server/services/`  | External service integrations (vector, cache, storage, etc.) |
 | `components/ui/`    | shadcn/ui components                                         |
-| `configs/`          | Legacy Gemini chat configs (being phased out)                |
 
 ### Key Files
 
@@ -77,7 +76,7 @@ These are all optional — the app runs without them (graceful fallback):
 
 ## Gotchas
 
-- The `configs/AiModel.jsx` file uses legacy `@google/generative-ai` SDK. New AI code should use `server/ai/models.ts` which uses `@ai-sdk/google`.
+- AI model factory: `server/ai/models.ts` (Vercel AI SDK + `@ai-sdk/google`). All AI calls go through this — never use the raw Gemini SDK.
 - `courseId` format is `course_{timestamp}_{random}` — generated in `app/actions/course.ts`.
 - Auth checks use Clerk's `auth()` which returns `userId`. Most actions also fetch the user's email via `clerkClient().users.getUser()` for ownership checks.
 - The app mixes `.jsx` and `.tsx` — don't "fix" this, follow the pattern of the directory you're editing.

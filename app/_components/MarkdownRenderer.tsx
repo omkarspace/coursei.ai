@@ -19,7 +19,7 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
         rehypePlugins={[rehypeKatex]}
         components={{
           // Custom code block renderer for Mermaid and code
-          code({ node, className, children, ...props }) {
+          code({ className, children, ...props }) {
             const match = /language-(\w+)/.exec(className || '');
             const language = match ? match[1] : '';
             const codeString = String(children).replace(/\n$/, '');
@@ -120,10 +120,11 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
             );
           },
 
-          // Enhanced images
+          // Enhanced images (markdown source — dimensions unknown, raw <img> is intentional)
           img({ src, alt }) {
             return (
               <figure className="my-4">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={src} alt={alt} className="rounded-lg shadow-md max-w-full" />
                 {alt && (
                   <figcaption className="text-center text-sm text-gray-500 mt-2">{alt}</figcaption>

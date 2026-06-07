@@ -21,7 +21,7 @@ export function MathFormula({ formula, display = false, className = '' }: MathFo
           throwOnError: false,
           trust: true,
         });
-      } catch (error) {
+      } catch {
         if (ref.current) {
           ref.current.textContent = formula;
         }

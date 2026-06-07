@@ -5,7 +5,6 @@ import { sql } from 'drizzle-orm';
 
 export async function GET() {
   const checks: Record<string, { status: string; latency?: number }> = {};
-  const startTime = Date.now();
 
   // Database check
   try {
@@ -15,7 +14,7 @@ export async function GET() {
       status: 'healthy',
       latency: Date.now() - dbStart,
     };
-  } catch (error) {
+  } catch {
     checks.database = {
       status: 'unhealthy',
     };

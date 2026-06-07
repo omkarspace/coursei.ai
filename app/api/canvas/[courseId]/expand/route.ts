@@ -10,7 +10,7 @@ export async function POST(
 ) {
   try {
     const { courseId } = await params;
-    const { conceptName, chapterIndex } = await request.json();
+    const { conceptName } = await request.json();
 
     if (!conceptName) {
       return NextResponse.json({ error: 'conceptName is required' }, { status: 400 });

@@ -1,5 +1,5 @@
 'use client';
-import { getAllPublishedCourses, getPublishedCoursesWithFilters } from '@/app/actions/course';
+import { getPublishedCoursesWithFilters } from '@/app/actions/course';
 import React, { useEffect, useState, useCallback } from 'react';
 import CourseCard from '../_components/CourseCard';
 import CourseFilters from '../_components/CourseFilters';
@@ -49,6 +49,7 @@ function Explore() {
     } else {
       GetAllCourse();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageIndex, debouncedQuery, selectedCategory, selectedLevel]);
 
   const GetAllCourse = async () => {

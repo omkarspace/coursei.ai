@@ -16,7 +16,11 @@ export async function getWikipediaContent(topic: string) {
 }
 
 export async function searchWikipediaContent(query: string) {
-  return searchWikipedia(query, 5);
+  const results = await searchWikipedia(query, 5);
+  return results.map((r) => ({
+    ...r,
+    snippet: r.snippet.replace(/<[^>]*>/g, ''),
+  }));
 }
 
 export async function verifyContent(query: string) {

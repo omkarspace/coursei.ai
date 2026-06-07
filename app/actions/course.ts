@@ -18,7 +18,6 @@ import { inngest } from '@/server/services/inngest';
 import type {
   CourseOutput,
   Chapter,
-  ChapterContent,
   QuizQuestion,
   Flashcard,
   StudyNotes,
@@ -31,12 +30,6 @@ async function getUserEmail(): Promise<string> {
   const email = user.emailAddresses[0]?.emailAddress;
   if (!email) throw new Error('No email found');
   return email;
-}
-
-export async function getUserCourses() {
-  const email = await getUserEmail();
-  const courses = await db.select().from(CourseList).where(eq(CourseList.createdBy, email));
-  return courses;
 }
 
 export async function getUserCoursesWithProgress() {
@@ -107,15 +100,6 @@ export async function getPublishedCourseById(courseId: string) {
   return courses[0] || null;
 }
 
-export async function getAllPublishedCourses(page = 0, limit = 9) {
-  const courses = await db
-    .select()
-    .from(CourseList)
-    .limit(limit)
-    .offset(page * limit);
-  return courses;
-}
-
 export async function createCourse(courseData: {
   courseId: string;
   name: string;
@@ -138,23 +122,6 @@ export async function createCourse(courseData: {
     .returning({ id: CourseList.id, courseId: CourseList.courseId });
 
   revalidatePath('/dashboard');
-  return result[0];
-}
-
-export async function updateCourse(
-  courseId: string,
-  updates: Partial<typeof CourseList.$inferInsert>
-) {
-  const email = await getUserEmail();
-  const result = await db
-    .update(CourseList)
-    .set(updates)
-    .where(and(eq(CourseList.courseId, courseId), eq(CourseList.createdBy, email)))
-    .returning({ id: CourseList.id });
-
-  revalidatePath('/dashboard');
-  revalidatePath(`/course/${courseId}`);
-  await invalidateCourseCache(courseId);
   return result[0];
 }
 
@@ -202,6 +169,7 @@ export async function deleteCourse(courseId: string) {
   }
 
   revalidatePath('/dashboard');
+  revalidatePath('/dashboard/explore');
   await invalidateCourseCache(courseId);
   return result[0];
 }
@@ -250,7 +218,7 @@ export async function publishCourse(courseId: string) {
   }
 
   revalidatePath('/dashboard');
-  revalidatePath('/explore');
+  revalidatePath('/dashboard/explore');
   revalidatePath(`/course/${courseId}`);
   await invalidateCourseCache(courseId);
 
@@ -259,26 +227,6 @@ export async function publishCourse(courseId: string) {
     name: 'course.build_graph',
     data: { courseId },
   });
-}
-
-export async function getCourseChapters(courseId: string) {
-  const chapters = await db
-    .select()
-    .from(Chapters)
-    .where(eq(Chapters.courseId, courseId))
-    .orderBy(Chapters.chapterId);
-  return chapters;
-}
-
-export async function createChapter(chapterData: {
-  courseId: string;
-  chapterId: number;
-  content: ChapterContent[];
-  videoId?: string;
-}) {
-  await getUserEmail();
-  await db.insert(Chapters).values(chapterData);
-  revalidatePath(`/course/${chapterData.courseId}/start`);
 }
 
 export async function updateCourseNameAndDescription(

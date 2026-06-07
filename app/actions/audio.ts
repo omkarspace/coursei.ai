@@ -1,7 +1,6 @@
 'use server';
 
 import { generateChapterAudio, VOICE_OPTIONS } from '@/server/services/tts';
-import { transcribeAndWait } from '@/server/services/transcription';
 import { generateStaticAudio } from '@/server/services/audio-stream';
 
 interface ChapterSection {
@@ -25,11 +24,6 @@ export async function generateChapterAudioAction(
 
 export async function getVoiceOptions() {
   return VOICE_OPTIONS;
-}
-
-export async function transcribeAudioAction(audioUrl: string) {
-  const result = await transcribeAndWait(audioUrl);
-  return result;
 }
 
 /**

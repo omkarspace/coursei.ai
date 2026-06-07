@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
 
+/** @type {React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>>} */
 const Pagination = ({ className, ...props }) => (
   <nav
     role="navigation"
@@ -14,16 +15,19 @@ const Pagination = ({ className, ...props }) => (
 );
 Pagination.displayName = 'Pagination';
 
+/** @type {React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLUListElement> & React.RefAttributes<HTMLUListElement>>} */
 const PaginationContent = React.forwardRef(({ className, ...props }, ref) => (
   <ul ref={ref} className={cn('flex flex-row items-center gap-1', className)} {...props} />
 ));
 PaginationContent.displayName = 'PaginationContent';
 
+/** @type {React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLLIElement> & React.RefAttributes<HTMLLIElement>>} */
 const PaginationItem = React.forwardRef(({ className, ...props }, ref) => (
   <li ref={ref} className={cn('', className)} {...props} />
 ));
 PaginationItem.displayName = 'PaginationItem';
 
+/** @type {React.ForwardRefExoticComponent<React.AnchorHTMLAttributes<HTMLAnchorElement> & {isActive?: boolean} & React.RefAttributes<HTMLAnchorElement>>} */
 const PaginationLink = ({ className, isActive, size = 'icon', ...props }) => (
   <a
     aria-current={isActive ? 'page' : undefined}

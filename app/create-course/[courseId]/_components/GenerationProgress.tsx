@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
 interface GenerationStatus {
@@ -19,7 +20,7 @@ interface GenerationProgressProps {
 
 export function GenerationProgress({ courseId, onComplete }: GenerationProgressProps) {
   const [status, setStatus] = useState<GenerationStatus | null>(null);
-  const [delay, setDelay] = useState(2000); // Start at 2s
+  const [delay, setDelay] = useState(2000);
   const router = useRouter();
 
   const checkStatus = useCallback(async () => {
@@ -40,11 +41,9 @@ export function GenerationProgress({ courseId, onComplete }: GenerationProgressP
         return;
       }
 
-      // Linear backoff: increase delay up to 6s max
       setDelay((prev) => Math.min(prev + 1000, 6000));
-    } catch (error) {
-      console.error('Status check error:', error);
-      setDelay(5000); // On error, wait 5s before retrying
+    } catch {
+      setDelay(5000);
     }
   }, [courseId, onComplete, router]);
 
@@ -123,8 +122,14 @@ export function GenerationProgress({ courseId, onComplete }: GenerationProgressP
     }
   };
 
+  const isFailed = status.status === 'failed';
+
   return (
-    <Card className="my-6 shadow-lg border-gray-200 dark:border-gray-700">
+    <Card
+      className={`my-6 shadow-lg border-gray-200 dark:border-gray-700 ${
+        isFailed ? 'border-red-300 dark:border-red-800' : ''
+      }`}
+    >
       <CardContent className="p-6">
         <div className="flex items-center gap-3 mb-4">
           <div className={getStatusColor()}>{getStatusIcon()}</div>
@@ -136,17 +141,64 @@ export function GenerationProgress({ courseId, onComplete }: GenerationProgressP
           </h3>
         </div>
 
-        {status.currentStep && (
+        {status.currentStep && !isFailed && (
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{status.currentStep}</p>
         )}
 
-        <Progress value={status.progress} className="h-2" />
+        {!isFailed && <Progress value={status.progress} className="h-2" />}
 
-        <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">{status.progress}% complete</p>
+        {!isFailed && (
+          <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">{status.progress}% complete</p>
+        )}
 
-        {status.generationError && (
-          <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded">
-            <p className="text-sm text-red-600 dark:text-red-400">{status.generationError}</p>
+        {isFailed && (
+          <div
+            role="alert"
+            className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
+          >
+            <div className="flex items-start gap-3">
+              <svg
+                className="h-5 w-5 text-red-600 dark:text-red-400 mt-0.5 shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+              <div className="flex-1 space-y-2">
+                <h4 className="text-sm font-semibold text-red-700 dark:text-red-300">
+                  Something went wrong while generating this course
+                </h4>
+                <p className="text-sm text-red-600 dark:text-red-400">
+                  {status.generationError ||
+                    'An unexpected error occurred. Please try generating the course again.'}
+                </p>
+                <div className="flex gap-2 pt-1">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => router.push('/create-course')}
+                    className="border-red-300 dark:border-red-700 text-red-700 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30"
+                  >
+                    Try Again
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => router.push('/dashboard')}
+                    className="text-red-700 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30"
+                  >
+                    Back to Dashboard
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </CardContent>

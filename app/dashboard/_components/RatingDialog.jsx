@@ -7,12 +7,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { submitRating, getUserCourseRating } from '@/app/actions/rating';
+import { submitRating, getUserCourseRating, deleteRating } from '@/app/actions/rating';
 import { toast } from 'sonner';
-import { HiOutlineStar, HiStar } from 'react-icons/hi2';
+import { HiOutlineStar, HiStar, HiOutlineTrash } from 'react-icons/hi2';
 
 export default function RatingDialog({ courseId, children }) {
   const [open, setOpen] = useState(false);
@@ -21,6 +31,8 @@ export default function RatingDialog({ courseId, children }) {
   const [review, setReview] = useState('');
   const [existingRating, setExistingRating] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (open && courseId) {
@@ -29,6 +41,10 @@ export default function RatingDialog({ courseId, children }) {
           setExistingRating(r);
           setRating(r.rating);
           setReview(r.review || '');
+        } else {
+          setExistingRating(null);
+          setRating(0);
+          setReview('');
         }
       });
     }
@@ -54,65 +70,128 @@ export default function RatingDialog({ courseId, children }) {
     }
   };
 
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      await deleteRating(courseId);
+      toast.success('Rating removed');
+      setOpen(false);
+      setConfirmDelete(false);
+      setExistingRating(null);
+      setRating(0);
+      setReview('');
+    } catch {
+      toast.error('Failed to remove rating');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{existingRating ? 'Update Rating' : 'Rate this Course'}</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label id="rating-label">Your rating</Label>
-            <div
-              className="flex gap-1"
-              role="radiogroup"
-              aria-labelledby="rating-label"
-            >
-              {[1, 2, 3, 4, 5].map((star) => (
-                <button
-                  key={star}
-                  type="button"
-                  role="radio"
-                  aria-checked={rating === star}
-                  onMouseEnter={() => setHoveredRating(star)}
-                  onMouseLeave={() => setHoveredRating(0)}
-                  onClick={() => setRating(star)}
-                  className="text-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
-                  aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
+    <>
+      <Dialog
+        open={open}
+        onOpenChange={(o) => {
+          setOpen(o);
+          if (!o) {
+            setExistingRating(null);
+            setRating(0);
+            setReview('');
+            setConfirmDelete(false);
+          }
+        }}
+      >
+        <DialogTrigger asChild>{children}</DialogTrigger>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{existingRating ? 'Update Rating' : 'Rate this Course'}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label id="rating-label">Your rating</Label>
+              <div className="flex gap-1" role="radiogroup" aria-labelledby="rating-label">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    role="radio"
+                    aria-checked={rating === star}
+                    onMouseEnter={() => setHoveredRating(star)}
+                    onMouseLeave={() => setHoveredRating(0)}
+                    onClick={() => setRating(star)}
+                    className="text-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+                    aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
+                  >
+                    {star <= (hoveredRating || rating) ? (
+                      <HiStar className="text-yellow-500" />
+                    ) : (
+                      <HiOutlineStar className="text-gray-300 dark:text-gray-600" />
+                    )}
+                  </button>
+                ))}
+                {rating > 0 && (
+                  <span className="text-sm text-gray-500 ml-2 self-center">{rating}/5</span>
+                )}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="rating-review">Review</Label>
+              <Textarea
+                id="rating-review"
+                placeholder="Write a review (optional)"
+                value={review}
+                onChange={(e) => setReview(e.target.value)}
+                rows={3}
+              />
+            </div>
+            <div className="flex justify-between items-center pt-2">
+              {existingRating ? (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setConfirmDelete(true)}
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
                 >
-                  {star <= (hoveredRating || rating) ? (
-                    <HiStar className="text-yellow-500" />
-                  ) : (
-                    <HiOutlineStar className="text-gray-300 dark:text-gray-600" />
-                  )}
-                </button>
-              ))}
-              {rating > 0 && (
-                <span className="text-sm text-gray-500 ml-2 self-center">{rating}/5</span>
+                  <HiOutlineTrash className="h-4 w-4 mr-1" aria-hidden="true" />
+                  Remove my rating
+                </Button>
+              ) : (
+                <span />
               )}
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => setOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleSubmit} disabled={submitting}>
+                  {submitting ? 'Submitting...' : existingRating ? 'Update' : 'Submit'}
+                </Button>
+              </div>
             </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="rating-review">Review</Label>
-            <Textarea
-              id="rating-review"
-              placeholder="Write a review (optional)"
-              value={review}
-              onChange={(e) => setReview(e.target.value)}
-              rows={3}
-            />
-          </div>
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleSubmit} disabled={submitting}>
-              {submitting ? 'Submitting...' : existingRating ? 'Update' : 'Submit'}
-            </Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove your rating?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently remove your rating and review for this course. You can submit
+              a new one at any time.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={deleting}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {deleting ? 'Removing...' : 'Remove rating'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
