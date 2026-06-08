@@ -1,7 +1,7 @@
 'use server';
 import { auth } from '@clerk/nextjs/server';
 import { db } from '@/server/db';
-import { FlashcardReviews, Flashcards, UserFSRSWeights, type ReviewRating } from '@/server/db/schema';
+import { FlashcardReviews, Flashcards, UserFSRSWeights, QuizAttempts, QuizReviews, Quizzes, type ReviewRating } from '@/server/db/schema';
 import { and, eq, lte, sql } from 'drizzle-orm';
 import { createEmptyCardState, scheduleCard, type FSRSState, optimizeWeights, DEFAULT_WEIGHTS } from '@/server/ai/fsrs';
 import { invalidateCache } from '@/server/services/cache';
@@ -285,4 +285,237 @@ export async function optimizeWeightsAction(
   }
 
   return { optimized: true, reviewCount };
+}
+
+export async function saveQuizAttemptAction(
+  courseId: string,
+  chapterId: number,
+  score: number,
+  totalQuestions: number,
+  answers: { questionIndex: number; selectedAnswer: number; isCorrect: boolean }[]
+): Promise<{ attemptId: number }> {
+  const { userId } = await auth();
+  if (!userId) throw new Error('Unauthorized');
+
+  const [attempt] = await db
+    .insert(QuizAttempts)
+    .values({ userId, courseId, chapterId, score, totalQuestions, answers })
+    .returning({ id: QuizAttempts.id });
+
+  for (const answer of answers) {
+    const rating: ReviewRating = answer.isCorrect ? 3 : 1;
+    const existing = await db
+      .select()
+      .from(QuizReviews)
+      .where(
+        and(
+          eq(QuizReviews.userId, userId),
+          eq(QuizReviews.courseId, courseId),
+          eq(QuizReviews.chapterId, chapterId),
+          eq(QuizReviews.questionIndex, answer.questionIndex)
+        )
+      );
+
+    if (existing.length > 0 && existing[0]) {
+      const prev = existing[0];
+      const prevState: FSRSState = {
+        due: prev.due.toISOString(),
+        stability: prev.stability,
+        difficulty: prev.difficulty,
+        elapsedDays: 0,
+        scheduledDays: 0,
+        reps: prev.reps,
+        lapses: prev.lapses,
+        state: prev.state as 0 | 1 | 2 | 3,
+        lastReview: prev.lastReview ? prev.lastReview.toISOString() : null,
+      };
+      const now = createEmptyCardState();
+      const next = scheduleCard(prevState, rating, now);
+      await db
+        .update(QuizReviews)
+        .set({
+          due: new Date(next.due),
+          stability: next.stability,
+          difficulty: next.difficulty,
+          reps: next.reps,
+          lapses: next.lapses,
+          state: next.state,
+          lastReview: next.lastReview ? new Date(next.lastReview) : null,
+          updatedAt: new Date(),
+        })
+        .where(eq(QuizReviews.id, prev.id));
+    } else {
+      const initState = createEmptyCardState();
+      const next = scheduleCard(initState, rating, initState);
+      await db.insert(QuizReviews).values({
+        userId, courseId, chapterId,
+        questionIndex: answer.questionIndex,
+        state: next.state,
+        stability: next.stability,
+        difficulty: next.difficulty,
+        due: new Date(next.due),
+        reps: next.reps,
+        lapses: next.lapses,
+        lastReview: next.lastReview ? new Date(next.lastReview) : null,
+      });
+    }
+  }
+
+  revalidatePath('/dashboard');
+  return { attemptId: attempt?.id ?? 0 };
+}
+
+export interface DueQuizQuestion {
+  questionIndex: number;
+  question: string;
+  options: string[];
+  explanation: string;
+}
+
+export async function getDueQuizQuestionsAction(
+  courseId: string,
+  chapterId: number
+): Promise<DueQuizQuestion[]> {
+  const { userId } = await auth();
+  if (!userId) throw new Error('Unauthorized');
+
+  const now = new Date();
+  const dueReviews = await db
+    .select()
+    .from(QuizReviews)
+    .where(
+      and(
+        eq(QuizReviews.userId, userId),
+        eq(QuizReviews.courseId, courseId),
+        eq(QuizReviews.chapterId, chapterId),
+        lte(QuizReviews.due, now)
+      )
+    )
+    .orderBy(QuizReviews.due)
+    .limit(20);
+
+  if (dueReviews.length === 0) return [];
+
+  const quizRows = await db
+    .select()
+    .from(Quizzes)
+    .where(and(eq(Quizzes.courseId, courseId), eq(Quizzes.chapterId, chapterId)));
+
+  const quiz = quizRows[0];
+  if (!quiz) return [];
+
+  return dueReviews
+    .map((review) => {
+      const q = (quiz.questions as { question: string; options: string[]; explanation: string }[])[
+        review.questionIndex
+      ];
+      if (!q) return null;
+      return {
+        questionIndex: review.questionIndex,
+        question: q.question,
+        options: q.options,
+        explanation: q.explanation,
+      };
+    })
+    .filter(Boolean) as DueQuizQuestion[];
+}
+
+export async function submitQuizReviewAction(
+  courseId: string,
+  chapterId: number,
+  questionIndex: number,
+  rating: ReviewRating
+): Promise<{ nextDue: string; state: number }> {
+  const { userId } = await auth();
+  if (!userId) throw new Error('Unauthorized');
+
+  const rows = await db
+    .select()
+    .from(QuizReviews)
+    .where(
+      and(
+        eq(QuizReviews.userId, userId),
+        eq(QuizReviews.courseId, courseId),
+        eq(QuizReviews.chapterId, chapterId),
+        eq(QuizReviews.questionIndex, questionIndex)
+      )
+    );
+
+  const prev = rows[0];
+  if (!prev) throw new Error('Quiz review not found');
+
+  const prevState: FSRSState = {
+    due: prev.due.toISOString(),
+    stability: prev.stability,
+    difficulty: prev.difficulty,
+    elapsedDays: 0,
+    scheduledDays: 0,
+    reps: prev.reps,
+    lapses: prev.lapses,
+    state: prev.state as 0 | 1 | 2 | 3,
+    lastReview: prev.lastReview ? prev.lastReview.toISOString() : null,
+  };
+  const now = createEmptyCardState();
+  const next = scheduleCard(prevState, rating, now);
+
+  await db
+    .update(QuizReviews)
+    .set({
+      due: new Date(next.due),
+      stability: next.stability,
+      difficulty: next.difficulty,
+      reps: next.reps,
+      lapses: next.lapses,
+      state: next.state,
+      lastReview: next.lastReview ? new Date(next.lastReview) : null,
+      updatedAt: new Date(),
+    })
+    .where(eq(QuizReviews.id, prev.id));
+
+  revalidatePath('/dashboard');
+  return { nextDue: next.due, state: next.state };
+}
+
+export async function getQuizAttemptHistoryAction(
+  courseId: string,
+  chapterId: number
+): Promise<{ id: number; score: number; totalQuestions: number; createdAt: Date }[]> {
+  const { userId } = await auth();
+  if (!userId) throw new Error('Unauthorized');
+
+  return db
+    .select({
+      id: QuizAttempts.id,
+      score: QuizAttempts.score,
+      totalQuestions: QuizAttempts.totalQuestions,
+      createdAt: QuizAttempts.createdAt,
+    })
+    .from(QuizAttempts)
+    .where(
+      and(
+        eq(QuizAttempts.userId, userId),
+        eq(QuizAttempts.courseId, courseId),
+        eq(QuizAttempts.chapterId, chapterId)
+      )
+    )
+    .orderBy(sql`${QuizAttempts.createdAt} DESC`)
+    .limit(20);
+}
+
+export async function getDueQuizCountAction(courseId?: string): Promise<number> {
+  const { userId } = await auth();
+  if (!userId) throw new Error('Unauthorized');
+
+  const now = new Date();
+  const rows = await db
+    .select({ count: sql<string>`count(*)::text` })
+    .from(QuizReviews)
+    .where(
+      and(
+        eq(QuizReviews.userId, userId),
+        lte(QuizReviews.due, now),
+        courseId ? eq(QuizReviews.courseId, courseId) : sql`true`
+      )
+    );
+  return Number(rows[0]?.count ?? 0);
 }
