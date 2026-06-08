@@ -32,12 +32,7 @@ export default async function ContinueLearning() {
     const course = courseRows[0];
     if (!course) return null;
 
-    const output = course.courseOutput as {
-      course: {
-        name: string;
-        chapters: { name: string; prerequisites?: string[] }[];
-      };
-    };
+    const output = course.courseOutput;
 
     const progress = await db
       .select()

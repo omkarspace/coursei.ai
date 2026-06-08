@@ -42,7 +42,7 @@ export default async function CourseStart({ params }) {
   if (!course) notFound();
 
   // Sort chapters by orderIndex if available
-  const sortedChapters = [...(course.courseOutput?.course?.chapters || [])].sort((a: any, b: any) => {
+  const sortedChapters = [...(course.courseOutput?.course?.chapters || [])].sort((a, b) => {
     const aIndex = a.orderIndex ?? 0;
     const bIndex = b.orderIndex ?? 0;
     return aIndex - bIndex;

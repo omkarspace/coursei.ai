@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { HiPencil, HiTrash, HiCheck, HiX, HiSparkles, HiPlus, HiBars6 } from 'react-icons/hi2';
+import { HiPencil, HiTrash, HiCheck, HiXMark, HiSparkles, HiPlus, HiBars3 } from 'react-icons/hi2';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { saveOutlineAction } from '@/app/actions/outline';
@@ -46,7 +46,7 @@ function SortableChapter({ ch, index, editingIndex, draftName, draftAbout, begin
             className="mt-1 cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
             aria-label="Drag to reorder"
           >
-            <HiBars6 className="h-5 w-5" />
+            <HiBars3 className="h-5 w-5" />
           </button>
           <div className="flex-1">
             {editingIndex === index ? (
@@ -73,7 +73,7 @@ function SortableChapter({ ch, index, editingIndex, draftName, draftAbout, begin
                 <HiCheck className="h-4 w-4 text-green-600" />
               </Button>
               <Button size="icon" variant="ghost" onClick={cancelEdit} aria-label="Cancel">
-                <HiX className="h-4 w-4" />
+                <HiXMark className="h-4 w-4" />
               </Button>
             </>
           ) : (
