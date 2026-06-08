@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { HiOutlineAcademicCap, HiCheckCircle, HiXCircle } from 'react-icons/hi2';
 import { generateQuizAction } from '@/app/actions/ai';
 import { saveQuiz, getQuiz } from '@/app/actions/course';
+import { saveQuizAttemptAction } from '@/app/actions/fsrs';
 import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -14,6 +15,7 @@ function QuizGenerator({ courseId, chapterId, chapterName, chapterContent }) {
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
   const [completed, setCompleted] = useState(false);
+  const [answers, setAnswers] = useState([]);
 
   useEffect(() => {
     loadQuiz();
@@ -51,15 +53,36 @@ function QuizGenerator({ courseId, chapterId, chapterName, chapterContent }) {
     if (answerIndex === quiz[currentQuestion].correctAnswer) {
       setScore(score + 1);
     }
+    setAnswers((prev) => [
+      ...prev,
+      {
+        questionIndex: currentQuestion,
+        selectedAnswer: answerIndex,
+        isCorrect: answerIndex === quiz[currentQuestion].correctAnswer,
+      },
+    ]);
   };
 
-  const nextQuestion = () => {
+  const nextQuestion = async () => {
     if (currentQuestion < quiz.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
       setSelectedAnswer(null);
       setShowResult(false);
     } else {
       setCompleted(true);
+      try {
+        const currentScore = answers.filter((a) => a.isCorrect).length + (selectedAnswer === quiz[currentQuestion].correctAnswer ? 1 : 0);
+        await saveQuizAttemptAction(courseId, chapterId, currentScore, quiz.length, [
+          ...answers,
+          {
+            questionIndex: currentQuestion,
+            selectedAnswer,
+            isCorrect: selectedAnswer === quiz[currentQuestion].correctAnswer,
+          },
+        ]);
+      } catch (error) {
+        console.error('Failed to save quiz attempt:', error);
+      }
     }
   };
 
@@ -69,6 +92,7 @@ function QuizGenerator({ courseId, chapterId, chapterName, chapterContent }) {
     setShowResult(false);
     setScore(0);
     setCompleted(false);
+    setAnswers([]);
   };
 
   if (!quiz) {
