@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import React, { useContext, useState } from 'react';
-import { HiClipboardDocumentList, HiLightBulb, HiMiniSquares2X2 } from 'react-icons/hi2';
+import { HiClipboardDocumentList, HiLightBulb, HiMiniSquares2X2, HiExclamationTriangle, HiXMark } from 'react-icons/hi2';
 import SelectCategory from './_components/SelectCategory';
 import TopicDescription from './_components/TopicDescription';
 import SelectOption from './_components/SelectOption';
@@ -116,40 +116,22 @@ function CreateCourse() {
 
       {/* Error display */}
       {error && (
-        <div className="mx-10 md:mx-20 lg:mx-44 mt-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+        <div role="alert" aria-live="assertive" className="px-4 md:px-8 lg:px-12 max-w-7xl mx-auto mt-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
           <div className="flex items-center gap-3">
-            <svg
-              className="w-5 h-5 text-red-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
-              />
-            </svg>
-            <p className="text-red-700 dark:text-red-400 text-sm">{error}</p>
+            <HiExclamationTriangle className="w-5 h-5 text-red-500 shrink-0" aria-hidden="true" />
+            <p className="text-red-700 dark:text-red-400 text-sm flex-1">{error}</p>
             <button
               onClick={() => setError(null)}
-              className="ml-auto text-red-500 hover:text-red-700"
+              className="ml-auto p-1 text-red-500 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded"
+              aria-label="Dismiss error"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <HiXMark className="w-4 h-4" aria-hidden="true" />
             </button>
           </div>
         </div>
       )}
 
-      <div className="px-10 md:px-20 lg:px-44 mt-10">
+      <div className="px-4 md:px-8 lg:px-12 max-w-7xl mx-auto mt-10">
         {/* Mode Selector */}
         <div className="flex gap-2 mb-6">
           <button

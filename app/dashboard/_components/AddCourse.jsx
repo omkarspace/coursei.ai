@@ -12,7 +12,7 @@ function AddCourse() {
   return (
     <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 md:p-6 space-y-4 md:space-y-0">
       <div className="flex flex-col">
-        <h2 className="text-2xl md:text-3xl text-[#5F2A95] dark:text-purple-400">
+        <h2 className="text-2xl md:text-3xl text-primary dark:text-purple-400">
           Hello,
           <span className="font-bold"> {user?.fullName || 'there'} </span>
         </h2>
@@ -22,7 +22,7 @@ function AddCourse() {
       </div>
       <div className="self-stretch md:self-auto">
         <Link href="/create-course">
-          <Button className="w-full md:w-auto bg-[#5F2A95] dark:bg-purple-600">
+          <Button className="w-full md:w-auto">
             + Create AI Course
           </Button>
         </Link>

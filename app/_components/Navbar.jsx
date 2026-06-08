@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
-import { HiOutlineSparkles } from 'react-icons/hi2';
+import { HiOutlineSparkles, HiBars3, HiXMark } from 'react-icons/hi2';
 
 const navLinks = [
   { label: 'Features', href: '#features' },
@@ -46,31 +46,14 @@ export default function Navbar() {
           </Link>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+            className="md:hidden p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
           >
-            <svg
-              className="w-5 h-5 text-gray-700 dark:text-gray-300"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              {mobileOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
+            {mobileOpen ? (
+              <HiXMark className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+            ) : (
+              <HiBars3 className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+            )}
           </button>
         </div>
       </nav>

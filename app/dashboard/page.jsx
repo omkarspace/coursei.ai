@@ -10,7 +10,7 @@ function Dashboard() {
   return (
     <div className="min-h-screen dark:bg-gray-950">
       <AddCourse />
-      <div className="px-10 md:px-20 lg:px-44">
+      <div className="px-4 md:px-8 lg:px-12 max-w-7xl mx-auto">
         <ContinueLearning />
         <ReviewStreak />
         <DueFlashcardCount />

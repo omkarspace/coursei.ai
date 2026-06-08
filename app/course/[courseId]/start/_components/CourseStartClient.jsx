@@ -10,6 +10,7 @@ import {
 } from '@/app/actions/course';
 import { ensureFlashcardsEnrolledAction, getDueFlashcardsAction } from '@/app/actions/fsrs';
 import dynamic from 'next/dynamic';
+import { HiBars3, HiXMark, HiCheck, HiCheckCircle, HiArrowPath } from 'react-icons/hi2';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -140,23 +141,14 @@ export default function CourseStartClient({ course, initialChapterContent }) {
         </h2>
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="text-black dark:text-white focus:outline-none"
+          className="text-black dark:text-white p-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            className="w-8 h-8"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
+          {isMenuOpen ? (
+            <HiXMark className="w-6 h-6" />
+          ) : (
+            <HiBars3 className="w-6 h-6" />
+          )}
         </button>
       </div>
 
@@ -180,7 +172,7 @@ export default function CourseStartClient({ course, initialChapterContent }) {
           {course?.courseOutput?.course?.chapters.map((chapter, index) => (
             <div
               key={index}
-              className={`cursor-pointer hover:bg-purple-50 dark:hover:bg-purple-900/20 
+              className={`cursor-pointer hover:bg-purple-50 dark:hover:bg-purple-900/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset
                 ${selectedChapter?.name === chapter?.name ? 'bg-purple-100 dark:bg-purple-900/30' : ''}
               `}
               onClick={() => {
@@ -218,6 +210,9 @@ export default function CourseStartClient({ course, initialChapterContent }) {
       {/* Content section */}
       <div className={`md:ml-64 ${isMenuOpen ? 'ml-0' : ''} transition-all duration-300`}>
         <div className="p-6">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+            {course?.courseOutput?.course?.name}
+          </h1>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             {/* Tabs */}
             <TabsList className="mb-6 bg-transparent p-0 h-auto border-b dark:border-gray-700 rounded-none w-full justify-start overflow-x-auto">
@@ -239,14 +234,7 @@ export default function CourseStartClient({ course, initialChapterContent }) {
                   course?.courseOutput?.course?.chapters.indexOf(selectedChapter)
                 ) ? (
                   <span className="inline-flex items-center gap-2 text-green-600 dark:text-green-400 text-sm font-medium">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
+                    <HiCheckCircle className="h-5 w-5" aria-hidden="true" />
                     Completed
                   </span>
                 ) : (
@@ -257,38 +245,12 @@ export default function CourseStartClient({ course, initialChapterContent }) {
                   >
                     {markingComplete ? (
                       <>
-                        <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          />
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          />
-                        </svg>
+                        <HiArrowPath className="animate-spin w-4 h-4" aria-hidden="true" />
                         Saving...
                       </>
                     ) : (
                       <>
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
+                        <HiCheck className="w-4 h-4" aria-hidden="true" />
                         Mark as Complete
                       </>
                     )}
