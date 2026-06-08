@@ -234,3 +234,55 @@ export function scheduleCard(
     elapsedDays,
   };
 }
+
+export interface ReviewRecord {
+  rating: ReviewRating;
+  state: CardStateValue;
+  stability: number;
+  difficulty: number;
+  elapsedDays: number;
+}
+
+function computeRmse(weights: readonly number[], reviews: ReviewRecord[]): number {
+  let sumSquaredError = 0;
+  for (const review of reviews) {
+    const recall = forgettingCurve(review.elapsedDays, review.stability);
+    let predictedRetention: number;
+    if (review.state === 0 || review.state === 1 || review.state === 3) {
+      predictedRetention = review.rating >= 3 ? 0.9 : 0.3;
+    } else {
+      const newD = nextDifficulty(review.difficulty, review.rating, weights);
+      const newS = nextRecallStability(newD, review.stability, recall, weights);
+      predictedRetention = Math.min(1, newS / (review.stability || 1));
+    }
+    const actualRetention = review.rating >= 3 ? 1 : 0;
+    sumSquaredError += Math.pow(predictedRetention - actualRetention, 2);
+  }
+  return Math.sqrt(sumSquaredError / reviews.length);
+}
+
+export function optimizeWeights(reviews: ReviewRecord[]): number[] {
+  if (reviews.length < 5) return [...DEFAULT_WEIGHTS];
+
+  let bestWeights = [...DEFAULT_WEIGHTS];
+  let bestRmse = computeRmse(bestWeights, reviews);
+
+  const weightIndices = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
+
+  for (const idx of weightIndices) {
+    const original = bestWeights[idx]!;
+    const step = original * 0.1 || 0.01;
+
+    for (const delta of [-step, step]) {
+      const candidate = [...bestWeights];
+      candidate[idx] = original + delta;
+      const rmse = computeRmse(candidate, reviews);
+      if (rmse < bestRmse) {
+        bestRmse = rmse;
+        bestWeights = candidate;
+      }
+    }
+  }
+
+  return bestWeights;
+}
