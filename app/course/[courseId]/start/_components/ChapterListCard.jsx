@@ -24,6 +24,15 @@ function ChapterListCard({ chapter, index, isCompleted = false }) {
         <h2 className="flex items-center gap-2 text-xs sm:text-sm text-primary">
           <HiOutlineClock />
           {chapter?.duration}
+          {chapter.difficulty && (
+            <span className={`ml-2 text-xs px-1.5 py-0.5 rounded ${
+              chapter.difficulty === 'Easy' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' :
+              chapter.difficulty === 'Hard' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' :
+              'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300'
+            }`}>
+              {chapter.difficulty}
+            </span>
+          )}
         </h2>
       </div>
     </div>
