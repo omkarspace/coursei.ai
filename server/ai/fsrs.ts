@@ -12,15 +12,13 @@ export type FSRSState = {
   lastReview: string | null;
 };
 
-const DAY_MS = 24 * 60 * 60 * 1000;
+export const DAY_MS = 24 * 60 * 60 * 1000;
 
-const W = [
+export const DEFAULT_WEIGHTS = [
   0.4072, 1.1829, 3.1262, 15.4722, 7.2102, 0.5316, 1.0651, 0.0234, 1.616, 0.1544,
   1.0824, 1.9813, 0.0953, 0.2975, 2.2042, 0.2407, 2.9466, 0.5034, 0.6567, 0.0,
   1.1986, 0.1464, 0.1045, 0.0824, 0.0831,
 ] as const;
-
-const w = (i: number) => W[i] ?? 0;
 
 const RATING: Record<ReviewRating, number> = { 1: 1, 2: 2, 3: 3, 4: 4 };
 
@@ -28,21 +26,35 @@ function clamp(x: number, lo: number, hi: number): number {
   return Math.min(hi, Math.max(lo, x));
 }
 
-function forgettingCurve(elapsedDays: number, stability: number): number {
+export function forgettingCurve(elapsedDays: number, stability: number): number {
   if (stability <= 0) return 0;
   return Math.pow(1 + elapsedDays / (9 * stability), -1);
 }
 
-function nextInterval(s: number, elapsedDays: number, desiredRetention = 0.9): number {
+export function nextInterval(
+  s: number,
+  elapsedDays: number,
+  desiredRetention = 0.9
+): number {
   if (s <= 0) return 1;
-  return Math.max(1, Math.round((s / 9) * (Math.pow(desiredRetention, -1 / 9) - 1) - elapsedDays));
+  return Math.max(
+    1,
+    Math.round((s / 9) * (Math.pow(desiredRetention, -1 / 9) - 1) - elapsedDays)
+  );
 }
 
-function nextDifficulty(d: number, rating: number): number {
+export function nextDifficulty(d: number, rating: number, weights: readonly number[] = DEFAULT_WEIGHTS): number {
+  const w = (i: number) => weights[i] ?? 0;
   return clamp(d - w(6) * (rating - 3), 1, 10);
 }
 
-function nextRecallStability(d: number, s: number, r: number): number {
+export function nextRecallStability(
+  d: number,
+  s: number,
+  r: number,
+  weights: readonly number[] = DEFAULT_WEIGHTS
+): number {
+  const w = (i: number) => weights[i] ?? 0;
   return (
     s *
     (1 +
@@ -53,21 +65,30 @@ function nextRecallStability(d: number, s: number, r: number): number {
   );
 }
 
-function nextForgetStability(d: number, s: number, r: number): number {
+export function nextForgetStability(
+  d: number,
+  s: number,
+  r: number,
+  weights: readonly number[] = DEFAULT_WEIGHTS
+): number {
+  const w = (i: number) => weights[i] ?? 0;
   return (
     w(11) * Math.pow(d, -w(12)) * (Math.pow(s + 1, w(13)) - 1) * Math.exp((1 - r) * w(14))
   );
 }
 
-function initStability(r: number): number {
+function initStability(r: number, weights: readonly number[] = DEFAULT_WEIGHTS): number {
+  const w = (i: number) => weights[i] ?? 0;
   return Math.max(w(0), (w(1) * Math.pow(r, -w(2)) * Math.exp(w(3) * 1)) || w(0));
 }
 
-function initDifficulty(r: number): number {
+function initDifficulty(r: number, weights: readonly number[] = DEFAULT_WEIGHTS): number {
+  const w = (i: number) => weights[i] ?? 0;
   return clamp(w(4) - Math.exp(w(5) * 1) * (r - 1) + 1, 1, 10);
 }
 
-function shortTermStability(s: number, r: number): number {
+function shortTermStability(s: number, r: number, weights: readonly number[] = DEFAULT_WEIGHTS): number {
+  const w = (i: number) => weights[i] ?? 0;
   return s * Math.exp(w(17) * (r - 3 + w(18)));
 }
 
@@ -85,7 +106,12 @@ export function createEmptyCardState(): FSRSState {
   };
 }
 
-export function scheduleCard(prev: FSRSState, rating: ReviewRating, now: FSRSState): FSRSState {
+export function scheduleCard(
+  prev: FSRSState,
+  rating: ReviewRating,
+  now: FSRSState,
+  weights: readonly number[] = DEFAULT_WEIGHTS
+): FSRSState {
   const elapsedDays = prev.lastReview
     ? Math.max(
         0,
@@ -97,8 +123,8 @@ export function scheduleCard(prev: FSRSState, rating: ReviewRating, now: FSRSSta
   const r = RATING[rating];
 
   if (prev.state === 0) {
-    const difficulty = prev.difficulty > 0 ? prev.difficulty : initDifficulty(r);
-    const stability = prev.stability > 0 ? prev.stability : initStability(r);
+    const difficulty = prev.difficulty > 0 ? prev.difficulty : initDifficulty(r, weights);
+    const stability = prev.stability > 0 ? prev.stability : initStability(r, weights);
 
     if (rating === 1) {
       return {
@@ -127,7 +153,7 @@ export function scheduleCard(prev: FSRSState, rating: ReviewRating, now: FSRSSta
         scheduledDays: 0,
       };
     }
-    const s = shortTermStability(stability, r);
+    const s = shortTermStability(stability, r, weights);
     return {
       ...prev,
       difficulty,
@@ -153,7 +179,7 @@ export function scheduleCard(prev: FSRSState, rating: ReviewRating, now: FSRSSta
       };
     }
     if (rating === 2 || rating === 3) {
-      const s = shortTermStability(prev.stability || 1, r);
+      const s = shortTermStability(prev.stability || 1, r, weights);
       return {
         ...prev,
         stability: s,
@@ -165,7 +191,7 @@ export function scheduleCard(prev: FSRSState, rating: ReviewRating, now: FSRSSta
         elapsedDays: 0,
       };
     }
-    const s = shortTermStability(prev.stability || 1, r) * 1.3;
+    const s = shortTermStability(prev.stability || 1, r, weights) * 1.3;
     return {
       ...prev,
       stability: s,
@@ -180,7 +206,7 @@ export function scheduleCard(prev: FSRSState, rating: ReviewRating, now: FSRSSta
 
   const recall = forgettingCurve(elapsedDays, prev.stability || 1);
   if (rating === 1) {
-    const s = nextForgetStability(prev.difficulty, prev.stability, recall);
+    const s = nextForgetStability(prev.difficulty, prev.stability, recall, weights);
     return {
       ...prev,
       stability: s,
@@ -193,8 +219,8 @@ export function scheduleCard(prev: FSRSState, rating: ReviewRating, now: FSRSSta
       elapsedDays,
     };
   }
-  const newDifficulty = nextDifficulty(prev.difficulty, r);
-  const newStability = nextRecallStability(newDifficulty, prev.stability, recall);
+  const newDifficulty = nextDifficulty(prev.difficulty, r, weights);
+  const newStability = nextRecallStability(newDifficulty, prev.stability, recall, weights);
   const interval = nextInterval(newStability, elapsedDays);
   return {
     ...prev,
