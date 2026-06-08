@@ -121,6 +121,12 @@ export async function submitFlashcardReviewAction(
   if (!prev) throw new Error('Review not found');
   if (prev.userId !== userId) throw new Error('Forbidden');
 
+  const weightsRows = await db
+    .select()
+    .from(UserFSRSWeights)
+    .where(and(eq(UserFSRSWeights.userId, userId), eq(UserFSRSWeights.courseId, prev.courseId)));
+  const weights = (weightsRows[0]?.weights as number[] | undefined) ?? [...DEFAULT_WEIGHTS];
+
   const prevState: FSRSState = {
     due: prev.due.toISOString(),
     stability: prev.stability,
@@ -133,7 +139,7 @@ export async function submitFlashcardReviewAction(
     lastReview: prev.lastReview ? prev.lastReview.toISOString() : null,
   };
   const now = createEmptyCardState();
-  const next = scheduleCard(prevState, rating, now);
+  const next = scheduleCard(prevState, rating, now, weights);
 
   await db
     .update(FlashcardReviews)
@@ -150,6 +156,16 @@ export async function submitFlashcardReviewAction(
       updatedAt: new Date(),
     })
     .where(eq(FlashcardReviews.id, reviewId));
+
+  await db
+    .update(UserFSRSWeights)
+    .set({
+      reviewCount: sql`${UserFSRSWeights.reviewCount} + 1`,
+      updatedAt: new Date(),
+    })
+    .where(
+      and(eq(UserFSRSWeights.userId, userId), eq(UserFSRSWeights.courseId, prev.courseId))
+    );
 
   revalidatePath('/dashboard');
   return { nextDue: next.due, state: next.state };
@@ -174,8 +190,21 @@ export async function ensureFlashcardsEnrolledAction(
           cardIndex,
         });
     } catch {
-      // Duplicate (userId, courseId, chapterId, cardIndex) — ignore
+      // Duplicate — ignore
     }
+  }
+
+  const weightsRows = await db
+    .select()
+    .from(UserFSRSWeights)
+    .where(and(eq(UserFSRSWeights.userId, userId), eq(UserFSRSWeights.courseId, courseId)));
+
+  if (weightsRows.length === 0) {
+    await db.insert(UserFSRSWeights).values({
+      userId,
+      courseId,
+      weights: [...DEFAULT_WEIGHTS],
+    });
   }
 
   await invalidateCache(`fsrs:${userId}:${courseId}`);
