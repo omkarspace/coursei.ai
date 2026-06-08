@@ -41,6 +41,12 @@ export interface QuizQuestion {
   explanation: string;
 }
 
+export interface QuizAnswer {
+  questionIndex: number;
+  selectedAnswer: number;
+  isCorrect: boolean;
+}
+
 export interface Flashcard {
   front: string;
   back: string;
@@ -171,6 +177,34 @@ export const CourseRatings = pgTable('course_ratings', {
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 
+export const QuizAttempts = pgTable('quiz_attempts', {
+  id: serial('id').primaryKey(),
+  userId: varchar('userId').notNull(),
+  courseId: varchar('courseId').notNull(),
+  chapterId: integer('chapterId').notNull(),
+  score: integer('score').notNull(),
+  totalQuestions: integer('totalQuestions').notNull(),
+  answers: json('answers').notNull().$type<QuizAnswer[]>(),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+});
+
+export const QuizReviews = pgTable('quiz_reviews', {
+  id: serial('id').primaryKey(),
+  userId: varchar('userId').notNull(),
+  courseId: varchar('courseId').notNull(),
+  chapterId: integer('chapterId').notNull(),
+  questionIndex: integer('questionIndex').notNull(),
+  state: integer('state').notNull().default(0),
+  stability: real('stability').notNull().default(0),
+  difficulty: real('difficulty').notNull().default(0),
+  due: timestamp('due').notNull().defaultNow(),
+  reps: integer('reps').notNull().default(0),
+  lapses: integer('lapses').notNull().default(0),
+  lastReview: timestamp('lastReview'),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+  updatedAt: timestamp('updatedAt').defaultNow().notNull(),
+});
+
 export const UserFSRSWeights = pgTable('user_fsrs_weights', {
   id: serial('id').primaryKey(),
   userId: varchar('userId').notNull(),
@@ -196,6 +230,8 @@ export const courseListRelations = relations(CourseList, ({ many }) => ({
   progress: many(UserProgress),
   ratings: many(CourseRatings),
   userFSRSWeights: many(UserFSRSWeights),
+  quizAttempts: many(QuizAttempts),
+  quizReviews: many(QuizReviews),
 }));
 
 export const chaptersRelations = relations(Chapters, ({ one }) => ({
@@ -250,6 +286,20 @@ export const courseRatingsRelations = relations(CourseRatings, ({ one }) => ({
 export const userFSRSWeightsRelations = relations(UserFSRSWeights, ({ one }) => ({
   course: one(CourseList, {
     fields: [UserFSRSWeights.courseId],
+    references: [CourseList.courseId],
+  }),
+}));
+
+export const quizAttemptsRelations = relations(QuizAttempts, ({ one }) => ({
+  course: one(CourseList, {
+    fields: [QuizAttempts.courseId],
+    references: [CourseList.courseId],
+  }),
+}));
+
+export const quizReviewsRelations = relations(QuizReviews, ({ one }) => ({
+  course: one(CourseList, {
+    fields: [QuizReviews.courseId],
     references: [CourseList.courseId],
   }),
 }));
