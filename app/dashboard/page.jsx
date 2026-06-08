@@ -2,7 +2,7 @@ import React from 'react';
 import AddCourse from './_components/AddCourse';
 import UserCourseList from './_components/UserCourseList';
 import DueFlashcardCount from './_components/DueFlashcardCount';
-import DueQuizCount from '@/_components/DueQuizCount';
+import DueQuizCount from '@/app/_components/DueQuizCount';
 import ReviewStreak from './_components/ReviewStreak';
 
 function Dashboard() {
