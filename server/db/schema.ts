@@ -16,6 +16,9 @@ export interface Chapter {
   name: string;
   about: string;
   duration: string;
+  difficulty?: string;
+  learningObjectives?: string[];
+  prerequisites?: string[];
 }
 
 export interface CourseOutput {
@@ -110,6 +113,7 @@ export const Chapters = pgTable('chapters', {
   id: serial('id').primaryKey(),
   courseId: varchar('courseId').notNull(),
   chapterId: integer('chapterId').notNull(),
+  orderIndex: integer('orderIndex').notNull().default(0),
   content: json('content').notNull().$type<ChapterContent[]>(),
   videoId: varchar('videoId').notNull().default(''),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
