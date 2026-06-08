@@ -1,9 +1,9 @@
 'use server';
 import { auth } from '@clerk/nextjs/server';
 import { db } from '@/server/db';
-import { FlashcardReviews, Flashcards, type ReviewRating } from '@/server/db/schema';
+import { FlashcardReviews, Flashcards, UserFSRSWeights, type ReviewRating } from '@/server/db/schema';
 import { and, eq, lte, sql } from 'drizzle-orm';
-import { createEmptyCardState, scheduleCard, type FSRSState } from '@/server/ai/fsrs';
+import { createEmptyCardState, scheduleCard, type FSRSState, optimizeWeights, DEFAULT_WEIGHTS } from '@/server/ai/fsrs';
 import { invalidateCache } from '@/server/services/cache';
 import { revalidatePath } from 'next/cache';
 
@@ -179,4 +179,81 @@ export async function ensureFlashcardsEnrolledAction(
   }
 
   await invalidateCache(`fsrs:${userId}:${courseId}`);
+}
+
+export async function getWeightsAction(courseId: string): Promise<number[]> {
+  const { userId } = await auth();
+  if (!userId) throw new Error('Unauthorized');
+
+  const rows = await db
+    .select()
+    .from(UserFSRSWeights)
+    .where(and(eq(UserFSRSWeights.userId, userId), eq(UserFSRSWeights.courseId, courseId)));
+
+  if (rows.length > 0 && rows[0]) {
+    return rows[0].weights as number[];
+  }
+
+  await db.insert(UserFSRSWeights).values({
+    userId,
+    courseId,
+    weights: [...DEFAULT_WEIGHTS],
+  });
+
+  return [...DEFAULT_WEIGHTS];
+}
+
+export async function optimizeWeightsAction(
+  courseId: string
+): Promise<{ optimized: boolean; reviewCount: number }> {
+  const { userId } = await auth();
+  if (!userId) throw new Error('Unauthorized');
+
+  const rows = await db
+    .select()
+    .from(UserFSRSWeights)
+    .where(and(eq(UserFSRSWeights.userId, userId), eq(UserFSRSWeights.courseId, courseId)));
+
+  const userWeights = rows[0];
+  const reviewCount = userWeights?.reviewCount ?? 0;
+
+  if (reviewCount < 10) {
+    return { optimized: false, reviewCount };
+  }
+
+  const reviews = await db
+    .select()
+    .from(FlashcardReviews)
+    .where(and(eq(FlashcardReviews.userId, userId), eq(FlashcardReviews.courseId, courseId)));
+
+  const records = reviews.map((r) => ({
+    rating: r.state === 0 ? (3 as ReviewRating) : r.reps > 0 ? (3 as ReviewRating) : (3 as ReviewRating),
+    state: r.state as 0 | 1 | 2 | 3,
+    stability: r.stability,
+    difficulty: r.difficulty,
+    elapsedDays: r.elapsedDays,
+  }));
+
+  const optimized = optimizeWeights(records);
+
+  if (userWeights) {
+    await db
+      .update(UserFSRSWeights)
+      .set({
+        weights: optimized,
+        optimizedAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(UserFSRSWeights.id, userWeights.id));
+  } else {
+    await db.insert(UserFSRSWeights).values({
+      userId,
+      courseId,
+      weights: optimized,
+      optimizedAt: new Date(),
+      reviewCount,
+    });
+  }
+
+  return { optimized: true, reviewCount };
 }
