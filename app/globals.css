@@ -1,65 +1,47 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-body {
-  font-family: var(--font-inter), system-ui, sans-serif;
+@theme {
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  --color-background: oklch(1 0 0);
+  --color-foreground: oklch(0.145 0 0);
+  --color-card: oklch(1 0 0);
+  --color-card-foreground: oklch(0.145 0 0);
+  --color-popover: oklch(1 0 0);
+  --color-popover-foreground: oklch(0.145 0 0);
+  --color-primary: oklch(0.55 0.2 280);
+  --color-primary-foreground: oklch(0.985 0 0);
+  --color-secondary: oklch(0.965 0 0);
+  --color-secondary-foreground: oklch(0.205 0 0);
+  --color-muted: oklch(0.965 0 0);
+  --color-muted-foreground: oklch(0.556 0 0);
+  --color-accent: oklch(0.965 0 0);
+  --color-accent-foreground: oklch(0.205 0 0);
+  --color-destructive: oklch(0.577 0.245 27.325);
+  --color-destructive-foreground: oklch(0.985 0 0);
+  --color-border: oklch(0.922 0 0);
+  --color-input: oklch(0.922 0 0);
+  --color-ring: oklch(0.55 0.2 280);
+  --color-chart-1: oklch(0.637 0.237 25.331);
+  --color-chart-2: oklch(0.6 0.118 175.622);
+  --color-chart-3: oklch(0.45 0.1 230);
+  --color-chart-4: oklch(0.75 0.15 75);
+  --color-chart-5: oklch(0.65 0.2 25);
+
+  --radius: 0.5rem;
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
 }
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 270 60% 50%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 270 60% 50%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-  }
-  .dark {
-    --background: 240 10% 4%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 6%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 6%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 270 60% 60%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 240 6% 15%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 6% 15%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 240 6% 15%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 6% 15%;
-    --input: 240 6% 15%;
-    --ring: 270 60% 60%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-  }
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
 }
 
 @layer base {
@@ -68,6 +50,33 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+  }
+  .dark {
+    --color-background: oklch(0.145 0.015 280);
+    --color-foreground: oklch(0.985 0 0);
+    --color-card: oklch(0.165 0.015 280);
+    --color-card-foreground: oklch(0.985 0 0);
+    --color-popover: oklch(0.165 0.015 280);
+    --color-popover-foreground: oklch(0.985 0 0);
+    --color-primary: oklch(0.65 0.2 280);
+    --color-primary-foreground: oklch(0.205 0 0);
+    --color-secondary: oklch(0.205 0.015 280);
+    --color-secondary-foreground: oklch(0.985 0 0);
+    --color-muted: oklch(0.205 0.015 280);
+    --color-muted-foreground: oklch(0.72 0 0);
+    --color-accent: oklch(0.205 0.015 280);
+    --color-accent-foreground: oklch(0.985 0 0);
+    --color-destructive: oklch(0.45 0.2 27);
+    --color-destructive-foreground: oklch(0.985 0 0);
+    --color-border: oklch(0.205 0.015 280);
+    --color-input: oklch(0.205 0.015 280);
+    --color-ring: oklch(0.65 0.2 280);
+    --color-chart-1: oklch(0.55 0.15 220);
+    --color-chart-2: oklch(0.55 0.12 175);
+    --color-chart-3: oklch(0.55 0.15 30);
+    --color-chart-4: oklch(0.6 0.15 280);
+    --color-chart-5: oklch(0.6 0.2 340);
+    color-scheme: dark;
   }
 }
 
@@ -86,9 +95,4 @@ body {
 
 .rotate-y-180 {
   transform: rotateY(180deg);
-}
-
-/* Smooth transitions */
-.dark {
-  color-scheme: dark;
 }
