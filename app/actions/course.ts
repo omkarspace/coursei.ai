@@ -482,3 +482,73 @@ export async function getPublishedCoursesWithFilters(
   if (level) filtered = filtered.filter((c) => c.level === level);
   return filtered.slice(page * limit, (page + 1) * limit);
 }
+
+export async function reorderChaptersAction(
+  courseId: string,
+  chapterOrder: { chapterId: number; orderIndex: number }[]
+): Promise<void> {
+  const email = await getUserEmail();
+
+  const course = await db
+    .select()
+    .from(CourseList)
+    .where(and(eq(CourseList.courseId, courseId), eq(CourseList.createdBy, email)));
+  if (!course[0]) throw new Error('Course not found or not owned by you');
+
+  for (const item of chapterOrder) {
+    await db
+      .update(Chapters)
+      .set({ orderIndex: item.orderIndex })
+      .where(and(eq(Chapters.courseId, courseId), eq(Chapters.chapterId, item.chapterId)));
+  }
+
+  revalidatePath(`/course/${courseId}/start`);
+  revalidatePath(`/create-course/${courseId}/outline`);
+}
+
+export async function getNextChapterAction(
+  courseId: string
+): Promise<{ chapterIndex: number; chapterName: string } | null> {
+  const { userId } = await auth();
+  if (!userId) throw new Error('Unauthorized');
+
+  const course = await db.select().from(CourseList).where(eq(CourseList.courseId, courseId));
+  const courseData = course[0];
+  if (!courseData) throw new Error('Course not found');
+
+  const output = courseData.courseOutput as {
+    course: {
+      chapters: { name: string; about: string; prerequisites?: string[] }[];
+    };
+  };
+  const chapters = output.course.chapters;
+
+  const progress = await db
+    .select()
+    .from(UserProgress)
+    .where(and(eq(UserProgress.userId, userId), eq(UserProgress.courseId, courseId)));
+
+  const completedChapterIds = new Set(
+    progress.filter((p) => p.completed).map((p) => p.chapterId)
+  );
+
+  const chapterNames = chapters.map((ch) => ch.name);
+
+  for (let i = 0; i < chapters.length; i++) {
+    const ch = chapters[i];
+    if (!ch) continue;
+    if (completedChapterIds.has(i)) continue;
+
+    const prereqs = ch.prerequisites ?? [];
+    const prereqsMet = prereqs.every((prereqName) => {
+      const prereqIndex = chapterNames.indexOf(prereqName);
+      return prereqIndex === -1 || completedChapterIds.has(prereqIndex);
+    });
+
+    if (prereqsMet) {
+      return { chapterIndex: i, chapterName: ch.name };
+    }
+  }
+
+  return null;
+}
