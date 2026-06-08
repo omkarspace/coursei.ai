@@ -28,6 +28,11 @@ const StudyNotes = dynamic(() => import('@/app/_components/StudyNotes'), {
   ssr: false,
 });
 
+const QuizReview = dynamic(() => import('./QuizReview'), {
+  loading: () => <Skeleton className="h-64 rounded-xl" />,
+  ssr: false,
+});
+
 import AudioPlayer from '@/app/_components/AudioPlayer';
 import WikipediaSidebar from '@/app/_components/WikipediaSidebar';
 import CourseChat from '@/app/_components/CourseChat';
@@ -120,6 +125,7 @@ export default function CourseStartClient({ course, initialChapterContent }) {
     { id: 'content', label: 'Content' },
     { id: 'quiz', label: 'Quiz' },
     { id: 'flashcards', label: 'Flashcards' },
+    { id: 'quiz-review', label: 'Quiz Review' },
     { id: 'notes', label: 'Study Notes' },
     { id: 'audio', label: 'Audio' },
     { id: 'chat', label: 'Chat' },
@@ -320,6 +326,14 @@ export default function CourseStartClient({ course, initialChapterContent }) {
                           chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
                           chapterName={selectedChapter?.name}
                           chapterContent={chapterContent}
+                        />
+                      )}
+                    </TabsContent>
+                    <TabsContent value="quiz-review">
+                      {selectedChapter && (
+                        <QuizReview
+                          courseId={course?.courseId}
+                          chapterId={course?.courseOutput?.course?.chapters.indexOf(selectedChapter)}
                         />
                       )}
                     </TabsContent>
