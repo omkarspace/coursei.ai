@@ -264,7 +264,7 @@ function computeRmse(weights: readonly number[], reviews: ReviewRecord[]): numbe
 export function optimizeWeights(reviews: ReviewRecord[]): number[] {
   if (reviews.length < 5) return [...DEFAULT_WEIGHTS];
 
-  let bestWeights = [...DEFAULT_WEIGHTS];
+  let bestWeights: number[] = [...DEFAULT_WEIGHTS];
   let bestRmse = computeRmse(bestWeights, reviews);
 
   const weightIndices = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
@@ -274,7 +274,7 @@ export function optimizeWeights(reviews: ReviewRecord[]): number[] {
     const step = original * 0.1 || 0.01;
 
     for (const delta of [-step, step]) {
-      const candidate = [...bestWeights];
+      const candidate: number[] = [...bestWeights];
       candidate[idx] = original + delta;
       const rmse = computeRmse(candidate, reviews);
       if (rmse < bestRmse) {
