@@ -90,7 +90,7 @@ export default function RootLayout({ children }) {
           >
             Skip to main content
           </a>
-          <main id="main-content" tabIndex={-1}>
+          <main id="main-content">
             {children}
           </main>
           <Toaster position="top-right" richColors />

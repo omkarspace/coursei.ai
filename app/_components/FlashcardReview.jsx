@@ -57,10 +57,14 @@ export default function FlashcardReview({ initialDue }) {
       <Card
         className="cursor-pointer min-h-[200px] flex items-center justify-center"
         onClick={() => setFlipped(!flipped)}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setFlipped(!flipped); }}
+        tabIndex={0}
+        role="button"
+        aria-label={flipped ? 'Show front of card' : 'Show back of card'}
       >
         <CardContent className="p-8 text-center">
           <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3">
-            {flipped ? 'Back' : 'Front'} — click to flip
+            {flipped ? 'Back' : 'Front'} — Click to flip
           </p>
           <p className="text-lg">{flipped ? current.card.back : current.card.front}</p>
         </CardContent>

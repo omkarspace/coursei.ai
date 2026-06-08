@@ -18,7 +18,7 @@ export default function Navbar() {
       <nav className="mx-auto max-w-7xl px-5 sm:px-10 md:px-12 lg:px-5 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2" aria-label="Coursei.ai Home">
           <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center">
-            <HiOutlineSparkles className="w-5 h-5 text-white" />
+            <HiOutlineSparkles className="w-5 h-5 text-white" aria-hidden="true" />
           </div>
           <span className="text-xl font-bold text-gray-900 dark:text-white">coursei.ai</span>
         </Link>
@@ -30,7 +30,7 @@ export default function Navbar() {
               href={link.href}
               target={link.external ? '_blank' : undefined}
               rel={link.external ? 'noopener noreferrer' : undefined}
-              className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+              className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-150"
             >
               {link.label}
             </Link>
@@ -40,7 +40,7 @@ export default function Navbar() {
         <div className="flex items-center gap-4">
           <Link
             href="/dashboard"
-            className="hidden sm:flex h-10 px-5 items-center rounded-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
+            className="hidden sm:flex h-10 px-5 items-center rounded-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors duration-150"
           >
             Try Free
           </Link>
@@ -66,7 +66,7 @@ export default function Navbar() {
                 key={link.label}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-150"
               >
                 {link.label}
               </Link>

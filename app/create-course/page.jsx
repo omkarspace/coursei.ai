@@ -16,9 +16,9 @@ import TranscriptionInput from '@/app/_components/TranscriptionInput';
 
 function CreateCourse() {
   const StepperOptions = [
-    { id: 1, name: 'Category', icon: <HiMiniSquares2X2 /> },
-    { id: 2, name: 'Topic & Desc.', icon: <HiLightBulb /> },
-    { id: 3, name: 'Options', icon: <HiClipboardDocumentList /> },
+    { id: 1, name: 'Category', icon: <HiMiniSquares2X2 aria-hidden="true" /> },
+    { id: 2, name: 'Topic & Desc.', icon: <HiLightBulb aria-hidden="true" /> },
+    { id: 3, name: 'Options', icon: <HiClipboardDocumentList aria-hidden="true" /> },
   ];
 
   const { userCourseInput, setUserCourseInput } = useContext(UserInputContext);
@@ -136,7 +136,7 @@ function CreateCourse() {
         <div className="flex gap-2 mb-6">
           <button
             onClick={() => setCreationMode('manual')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               creationMode === 'manual'
                 ? 'bg-primary text-white'
                 : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
@@ -146,7 +146,7 @@ function CreateCourse() {
           </button>
           <button
             onClick={() => setCreationMode('transcription')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               creationMode === 'transcription'
                 ? 'bg-primary text-white'
                 : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
@@ -181,7 +181,7 @@ function CreateCourse() {
               )}
               {activeIndex === 2 && (
                 <Button disabled={checkStatus() || loading} onClick={() => GenerateCourseLayout()}>
-                  {loading ? 'Generating...' : 'Generate Course Layout'}
+                  {loading ? 'Generating\u2026' : 'Generate Course Layout'}
                 </Button>
               )}
             </div>

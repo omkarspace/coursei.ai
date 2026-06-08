@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { HiOutlineSparkles, HiArrowRight } from 'react-icons/hi2';
 
 const stats = [
@@ -10,29 +10,30 @@ const stats = [
 ];
 
 export default function Hero() {
+  const prefersReducedMotion = useReducedMotion();
+  const anim = prefersReducedMotion ? {} : { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 } };
+
   return (
     <section className="relative min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900 overflow-hidden pt-16">
       {/* Background decorations */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 rounded-full opacity-[0.07] blur-3xl" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 rounded-full opacity-[0.07] blur-3xl" aria-hidden="true" />
 
       <div className="relative mx-auto max-w-7xl px-5 sm:px-10 md:px-12 lg:px-5 pt-20 sm:pt-28 pb-20">
         {/* Badge */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          {...anim}
           transition={{ duration: 0.5 }}
           className="flex justify-center mb-8"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-50 dark:bg-purple-900/30 border border-purple-100 dark:border-purple-800 rounded-full text-sm text-purple-700 dark:text-purple-300">
-            <HiOutlineSparkles className="w-4 h-4" />
+            <HiOutlineSparkles className="w-4 h-4" aria-hidden="true" />
             <span>Open Source & Free</span>
           </div>
         </motion.div>
 
         {/* Headline */}
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          {...anim}
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-center text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white leading-tight max-w-5xl mx-auto"
         >
@@ -44,8 +45,7 @@ export default function Hero() {
 
         {/* Subheadline */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          {...anim}
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-center text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mt-6 leading-relaxed"
         >
@@ -55,8 +55,7 @@ export default function Hero() {
 
         {/* CTAs */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          {...anim}
           transition={{ duration: 0.5, delay: 0.3 }}
           className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-10"
         >
@@ -86,8 +85,7 @@ export default function Hero() {
 
         {/* Product Demo Placeholder */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
+          {...anim}
           transition={{ duration: 0.7, delay: 0.4 }}
           className="mt-16 mx-auto max-w-4xl"
         >
@@ -131,8 +129,7 @@ export default function Hero() {
 
         {/* Stats */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          {...anim}
           transition={{ duration: 0.5, delay: 0.5 }}
           className="flex flex-wrap justify-center gap-8 sm:gap-16 mt-16"
         >

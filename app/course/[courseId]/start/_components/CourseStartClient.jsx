@@ -154,7 +154,14 @@ export default function CourseStartClient({ course, initialChapterContent }) {
 
       {/* Overlay when mobile menu is open */}
       {isMenuOpen && (
-        <div className="fixed inset-0 bg-black/50 z-20" onClick={() => setIsMenuOpen(false)} />
+        <div
+          className="fixed inset-0 bg-black/50 z-20"
+          onClick={() => setIsMenuOpen(false)}
+          onKeyDown={(e) => { if (e.key === 'Escape') setIsMenuOpen(false); }}
+          role="button"
+          tabIndex={-1}
+          aria-label="Close menu"
+        />
       )}
 
       {/* Sidebar for Desktop and mobile menu */}
@@ -170,9 +177,9 @@ export default function CourseStartClient({ course, initialChapterContent }) {
         </div>
         <div className="overflow-y-auto flex-1" style={{ maxHeight: 'calc(100vh - 200px)' }}>
           {course?.courseOutput?.course?.chapters.map((chapter, index) => (
-            <div
+            <button
               key={index}
-              className={`cursor-pointer hover:bg-purple-50 dark:hover:bg-purple-900/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset
+              className={`w-full text-left cursor-pointer hover:bg-purple-50 dark:hover:bg-purple-900/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset p-0 bg-transparent border-0
                 ${selectedChapter?.name === chapter?.name ? 'bg-purple-100 dark:bg-purple-900/30' : ''}
               `}
               onClick={() => {
@@ -181,23 +188,13 @@ export default function CourseStartClient({ course, initialChapterContent }) {
                 setActiveTab('content');
                 setIsMenuOpen(false);
               }}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  setSelectedChapter(chapter);
-                  GetSelectedChapterContent(index);
-                  setActiveTab('content');
-                  setIsMenuOpen(false);
-                }
-              }}
             >
               <ChapterListCard
                 chapter={chapter}
                 index={index}
                 isCompleted={completedChapters.includes(index)}
               />
-            </div>
+            </button>
           ))}
         </div>
 
@@ -263,7 +260,7 @@ export default function CourseStartClient({ course, initialChapterContent }) {
             <div className="flex gap-6">
               <div className="flex-1 min-w-0">
                 {loadingChapter ? (
-                  <div className="flex justify-center items-center py-12">
+                  <div className="flex justify-center items-center py-12" aria-label="Loading chapter content" role="status">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                   </div>
                 ) : (
