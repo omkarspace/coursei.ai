@@ -80,6 +80,9 @@ export async function generateOutlineAction(input: {
         name: ch.name,
         about: ch.about,
         duration: ch.duration,
+        difficulty: ch.difficulty,
+        learningObjectives: ch.learningObjectives,
+        prerequisites: ch.prerequisites,
       })),
     },
   };
