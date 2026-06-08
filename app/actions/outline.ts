@@ -116,7 +116,7 @@ export async function generateOutlineAction(input: {
 
 export async function saveOutlineAction(
   courseId: string,
-  chapters: { name: string; about: string }[]
+  chapters: { name: string; about: string; difficulty?: string; learningObjectives?: string[]; prerequisites?: string[] }[]
 ): Promise<void> {
   const { userId } = await auth();
   if (!userId) throw new Error('Unauthorized');
@@ -139,18 +139,32 @@ export async function saveOutlineAction(
       description: string;
       noOfChapters: number;
       duration: string;
-      chapters: { name: string; about: string; duration: string }[];
+      chapters: {
+        name: string;
+        about: string;
+        duration: string;
+        difficulty?: string;
+        learningObjectives?: string[];
+        prerequisites?: string[];
+      }[];
     };
   };
+
   const newCourseOutput: typeof existing = {
     ...existing,
     course: {
       ...existing.course,
-      chapters: chapters.map((ch, i) => ({
-        name: ch.name,
-        about: ch.about,
-        duration: existing.course.chapters[i]?.duration ?? '',
-      })),
+      chapters: chapters.map((ch, i) => {
+        const existingCh = existing.course.chapters[i];
+        return {
+          name: ch.name,
+          about: ch.about,
+          duration: existingCh?.duration ?? '',
+          difficulty: ch.difficulty ?? existingCh?.difficulty,
+          learningObjectives: ch.learningObjectives ?? existingCh?.learningObjectives,
+          prerequisites: ch.prerequisites ?? existingCh?.prerequisites,
+        };
+      }),
     },
   };
 
